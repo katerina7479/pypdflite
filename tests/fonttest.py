@@ -1,5 +1,5 @@
 import unittest
-from pdflite.pdffont import PDFFont
+from pypdflite.pdfobjects.pdffont import PDFFont
 
 
 class FontTest(unittest.TestCase):

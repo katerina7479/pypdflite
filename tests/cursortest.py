@@ -1,5 +1,5 @@
 import unittest
-from pdflite.pdfcursor import PDFCursor
+from pypdflite.pdfobjects.pdfcursor import PDFCursor
 
 
 class CursorTest(unittest.TestCase):

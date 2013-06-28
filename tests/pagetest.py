@@ -1,6 +1,6 @@
 import unittest
-from pdflite.pdfpage import PDFPage
-from pdflite.session import Session
+from pypdflite.pdfobjects.pdfpage import PDFPage
+from pypdflite.session import Session
 
 
 class PageTest(unittest.TestCase):
