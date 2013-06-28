@@ -2,6 +2,8 @@ from pypdflite.pdflite import PDFLite
 
 
 Writer = PDFLite("testing.pdf")
+Writer.setInformation(title="Testing")  # set optional information
 Document = Writer.getDocument()
-Document.addText(40, 50, "Testing")
+Document.addText("Testing")
+Document.addText("Testing Again")
 Writer.close()

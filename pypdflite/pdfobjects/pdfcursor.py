@@ -1,7 +1,7 @@
 
 
 class PDFCursor(object):
-    def __init__(self, x=1, y=790):
+    def __init__(self, x=20, y=720):
         self.xmin = 0
         self.xmax = 612
         self.ymin = 792

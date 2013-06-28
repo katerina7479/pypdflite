@@ -84,7 +84,7 @@ class PDFDocument(object):
                 self.SS.out('endobj')
                 #Page content
                 self.SS.newobj()
-                self.SS.out('<<' + '/Filter /Length %s >>' % len(page.buffer))
+                self.SS.out('<<' + '/Length %s >>' % len(page.buffer))
                 self.SS.putstream(page.buffer)
                 self.SS.out('endobj')
 
@@ -100,10 +100,5 @@ class PDFDocument(object):
             self.SS.out('>>')
             self.SS.out('endobj')
 
-    def addText(self, x, y, text):
-        cursor = PDFCursor(x, y)
-        text = PDFText(self.SS, self.page, self.font, self.color, cursor, text)
-        return cursor
-
-    def addTextOnCursor(self, cursor, text):
-        text = PDFText(self.SS, self.page, self.font, self.color, cursor, text)
+    def addText(self, text):
+        text = PDFText(self.SS, self.page, self.font, self.color, text)

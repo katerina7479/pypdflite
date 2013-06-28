@@ -1,12 +1,12 @@
 
 
 class PDFText(object):
-    def __init__(self, session, page, font, color, cursor, text):
+    def __init__(self, session, page, font, color, text):
         self.SS = session
         self.page = page
         self.font = font
         self.color = color
-        self.c = cursor
+        self.c = page.cursor
         self.text = text
         self._text()
 
@@ -24,6 +24,9 @@ class PDFText(object):
                 s = '%s %s' % (s, self._dounderline())
             if(self.color.color_flag):
                 s = 'q %s %s Q' % (self.color.text_color, s)
+        #Set Font for text
+        fs = 'BT /F%d %.2f Tf ET' % (self.font.index, self.font.font_size)
+        self.SS.out(fs, self.page)
         self.SS.out(s, self.page)
         self.c.xplus(self.font.StringWidth(self.text))
 

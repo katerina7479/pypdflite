@@ -2,7 +2,7 @@ from fontref import fpdf_charwidths
 
 
 class PDFFont(object):
-    def __init__(self, family='helvetica', style=None, size=12):
+    def __init__(self, family='helvetica', style=None, size=20):
         self.core_fonts = {'courier': 'Courier', 'courierB': 'Courier-Bold', 'courierI': 'Courier-Oblique', 'courierBI': 'Courier-BoldOblique',
                            'helvetica': 'Helvetica', 'helveticaB': 'Helvetica-Bold', 'helveticaI': 'Helvetica-Oblique', 'helveticaBI': 'Helvetica-BoldOblique',
                            'times': 'Times-Roman', 'timesB': 'Times-Bold', 'timesI': 'Times-Italic', 'timesBI': 'Times-BoldItalic',

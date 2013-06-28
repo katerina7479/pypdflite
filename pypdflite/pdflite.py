@@ -12,31 +12,29 @@ class PDFLite(object):
 
         self.SS = Session(self)
         self.D = PDFDocument(self.SS)
-        # Full width display mode
+
+        # Full width display mode default
         self.set_display_mode()
         # Set default PDF version number
         self.pdf_version = '1.3'
 
-        self.title = None
-        self.subject = None
-        self.author = None
-        self.keywords = None
-        self.creator = None
+        #Initialize PDF information
+        self.setInformation()
 
     def getDocument(self):
         return self.D
 
     def setInformation(self, title=None, subject=None, author=None, keywords=None, creator=None):
-        if title is not None:
-            self.title = title
-        if subject is not None:
-            self.subject = subject
-        if author is not None:
-            self.author = author
-        if keywords is not None:
-            self.keywords = keywords
-        if creator is not None:
-            self.creator = creator
+        testdict = {"title": title, "subject": subject, "author": author, "keywords": keywords, "creator": creator}
+
+        for att, value in testdict.iteritems():
+            if hasattr(self, att):
+                if value is not None:
+                    setattr(self, att, value)
+                elif value is None:
+                    pass
+            else:
+                setattr(self, att, None)
 
     def set_display_mode(self, zoom='fullwidth', layout='continuous'):
         "Set display mode in viewer"
@@ -179,7 +177,6 @@ class PDFLite(object):
         self.SS.out('%%EOF')
 
     def output(self):
-        "Output PDF to some destination"
         #Save to local file
         f = open(self.filename, 'wb')
         if(not f):
