@@ -35,12 +35,8 @@ class PDFPage(object):
             raise Exception('Unknown page format: ', self.format)
 
     def _setWidthHeight(self):
-        if self.margin is None:
-            self.w = self.size[0]
-            self.h = self.size[1]
-        else:
-            self.w = self.size[0] - self.margin.l - self.margin.r
-            self.h = self.size[1] - self.margin.t - self.margin.b
+        self.w = self.size[0]
+        self.h = self.size[1]
 
     def setOrientation(self, orientation):
         self.orientation = orientation.lower()
@@ -88,3 +84,6 @@ class PDFPage(object):
     def newline(self, font, number=1):
         self.cursor.yplus((font.linesize*number))
         self.cursor.xreset()
+
+    def indent(self, font, number=4):
+        self.cursor.xplus(number * font.StringWidth(' '))

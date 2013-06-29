@@ -46,7 +46,6 @@ class PDFDocument(object):
 
         #Select it
         self.font = self.fonts[newfont.fontkey]
-        print self.fonts
         if(self.page.number > 0):
             self.SS.out('BT /F%d %.2f Tf ET' % (self.font.index, self.font.fontsize), self.page)
         else:

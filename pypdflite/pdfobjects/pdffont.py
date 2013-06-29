@@ -98,7 +98,7 @@ class PDFFont(object):
         "Get width of a string in the current font"
         w = 0
         for i in s:
-            w += self.cw.get(i, 0)
+            w += self.cw[i]
         return w * self.fontsize/1000.0
 
     def setNumber(self, value):

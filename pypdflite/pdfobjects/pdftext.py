@@ -52,9 +52,9 @@ class PDFText(object):
                 self.text = myline  # Output line, add a new line and reset
                 self._text()
                 self._newline()
-                myline = ''
+                myline = word
             else:
-                if myline is '':  # Avoids adding a space at the begining of the lines.
+                if myline is '':  # Avoids adding a space at the begining of the first line.
                     myline = word
                 else:
                     myline += ' %s' % word
