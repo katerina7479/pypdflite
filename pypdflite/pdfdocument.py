@@ -29,11 +29,15 @@ class PDFDocument(object):
         self.page.setIndex(len(self.pages))
         self.pages.append(self.page)
 
-    def setFont(self, family, style=None, size=None):
+    def setFont(self, family=None, style=None, size=None, font=None):
         "Select a font; size given in points"
         if size is None:
             size = self.font.fontsize
-        newfont = PDFFont(family, style, size)
+
+        if font is not None:
+            newfont = font
+        else:
+            newfont = PDFFont(family, style, size)
 
         #Test if font is already selected
         if not newfont.equals(self.font):
@@ -41,14 +45,17 @@ class PDFDocument(object):
             if newfont.fontkey not in self.fonts:
                 i = len(self.fonts) + 1
                 newfont.setIndex(i)
-                self.fonts[newfont.fontkey] = newfont
+                self.fonts.append(newfont)
 
         #Select it
-        self.font = self.fonts[newfont.fontkey]
+        self.font = newfont
         if(self.page.number > 0):
             self.SS.out('BT /F%d %.2f Tf ET' % (self.font.index, self.font.fontsize), self.page)
         else:
             del newfont
+
+    def getFont(self):
+        return self.font
 
     def setFontSize(self, size):
         "Set font size in points"

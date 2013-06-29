@@ -6,7 +6,7 @@
 /Contents 4 0 R>>
 endobj
 4 0 obj
-<<  /Length 329 >>
+<<  /Length 485 >>
 stream
 BT /F1 20.00 Tf ET
 BT 20.00 720.00 Td (Testing) Tj ET
@@ -16,6 +16,10 @@ BT /F1 20.00 Tf ET
 BT 42.24 600.00 Td (This should be enough text to test going over the edge of the) Tj ET
 BT /F1 20.00 Tf ET
 BT 20.00 576.00 Td (page, and having to wrap back around. Let's see if it works.) Tj ET
+BT /F2 24.00 Tf ET
+BT 20.00 518.40 Td (1.0 Testing a Header) Tj ET
+BT /F3 20.00 Tf ET
+BT 42.24 470.40 Td (And we're back to normal after the header.) Tj ET
 
 endstream
 endobj
@@ -33,22 +37,38 @@ endobj
 /Encoding /WinAnsiEncoding
 >>
 endobj
+6 0 obj
+<</Type /Font
+/BaseFont /Helvetica-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+>>
+endobj
+7 0 obj
+<</Type /Font
+/BaseFont /Helvetica
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+>>
+endobj
 2 0 obj
 <<
 /ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
 /Font <<
-/F1 5 0 R
+/F3 7 0 R
+/F2 6 0 R
+/F3 7 0 R
 >>
 >>
 endobj
-6 0 obj
+8 0 obj
 <<
 /Producer (PDFLite, https://github.com/katerina7479)
 /Title (Testing)
-/CreationDate (D:20130628203352)
+/CreationDate (D:20130628205347)
 >>
 endobj
-7 0 obj
+9 0 obj
 <<
 /Type /Catalog
 /Pages 1 0 R
@@ -57,21 +77,23 @@ endobj
 >>
 endobj
 xref
-0 8
+0 10
 0000000000 65535 f 
-0000000564 00000 n 
-0000001770 00000 n 
+0000000720 00000 n 
+0000004150 00000 n 
 0000000009 00000 n 
 0000000096 00000 n 
-0000001119 00000 n 
-0000002510 00000 n 
-0000003374 00000 n 
+0000001431 00000 n 
+0000002238 00000 n 
+0000003146 00000 n 
+0000005263 00000 n 
+0000006500 00000 n 
 trailer
 <<
-/Size 8
-/Root 7 0 R
-/Info 6 0 R
+/Size 10
+/Root 9 0 R
+/Info 8 0 R
 >>
 startxref
-1192
+1607
 %%EOF

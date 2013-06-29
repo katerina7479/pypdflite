@@ -86,10 +86,10 @@ class PDFFont(object):
             return False
 
     def equals(self, font):
-        if font.font_family == self.font_family:
-            if font.fontsize == self.fontsize:
-                if font.style == self.style:
-                    ans = True
+        if (font.font_family == self.font_family) and\
+           (font.fontsize == self.fontsize) and\
+           (font.style == self.style):
+            ans = True
         else:
             ans = False
         return ans
