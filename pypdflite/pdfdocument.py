@@ -111,10 +111,16 @@ class PDFDocument(object):
             self.SS.out('endobj')
 
     def addText(self, text):
-        text = PDFText(self.SS, self.page, self.font, self.color, text)
+        try:
+            text = PDFText(self.SS, self.page, self.font, self.color, text)
+        except ValueError:
+            self.addPage()
 
     def newline(self, number=1):
-        self.page.newline(self.font, number)
+        try:
+            self.page.newline(self.font, number)
+        except ValueError:
+            self.addPage()
 
     def indent(self):
         self.page.indent(self.font)

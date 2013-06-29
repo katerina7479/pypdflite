@@ -86,7 +86,7 @@ class PDFLite(object):
         for i in xrange(0, len(self.D.pages)):
             kids += str(3 + 2*i) + ' 0 R '
         self.SS.out(kids + ']')
-        self.SS.out('/Count ' + str(self.D.page.number))
+        self.SS.out('/Count %s' % len(self.D.pages))
         self.SS.out('/MediaBox [0 0 %.2f %.2f]' % (w, h))
         self.SS.out('>>')
         self.SS.out('endobj')

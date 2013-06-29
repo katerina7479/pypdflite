@@ -6,7 +6,7 @@
 /Contents 4 0 R>>
 endobj
 4 0 obj
-<<  /Length 485 >>
+<<  /Length 993 >>
 stream
 BT /F1 20.00 Tf ET
 BT 20.00 720.00 Td (Testing) Tj ET
@@ -15,33 +15,55 @@ BT 20.00 624.00 Td (Testing Again) Tj ET
 BT /F1 20.00 Tf ET
 BT 42.24 600.00 Td (This should be enough text to test going over the edge of the) Tj ET
 BT /F1 20.00 Tf ET
-BT 20.00 576.00 Td (page, and having to wrap back around. Let's see if it works.) Tj ET
+BT 20.00 576.00 Td (page, and having to wrap back around. Let's see if it works!) Tj ET
 BT /F2 24.00 Tf ET
 BT 20.00 518.40 Td (1.0 Testing a Header) Tj ET
 BT /F3 20.00 Tf ET
 BT 42.24 470.40 Td (And we're back to normal after the header.) Tj ET
+BT /F4 12.00 Tf ET
+BT 20.00 422.40 Td (Testing Bold Underline Italic Style) Tj ET 20.00 420.40 194.05 2.00 re f
+BT /F4 12.00 Tf ET
+BT 20.00 350.40 Td (What) Tj ET 20.00 348.40 29.33 2.00 re f
+BT /F4 12.00 Tf ET
+BT 20.00 278.40 Td (will) Tj ET 20.00 276.40 19.34 2.00 re f
+BT /F4 12.00 Tf ET
+BT 20.00 206.40 Td (happen) Tj ET 20.00 204.40 42.67 2.00 re f
+BT /F4 12.00 Tf ET
+BT 20.00 134.40 Td (when) Tj ET 20.00 132.40 30.67 2.00 re f
+BT /F4 12.00 Tf ET
+BT 20.00 62.40 Td (I) Tj ET 20.00 60.40 3.34 2.00 re f
+
+endstream
+endobj
+5 0 obj
+<</Type /Page
+/Parent 1 0 R
+/Resources 2 0 R
+/Contents 6 0 R>>
+endobj
+6 0 obj
+<<  /Length 474 >>
+stream
+BT /F4 12.00 Tf ET
+BT 20.00 720.00 Td (go) Tj ET 20.00 718.00 14.66 2.00 re f
+BT /F4 12.00 Tf ET
+BT 20.00 648.00 Td (on) Tj ET 20.00 646.00 14.66 2.00 re f
+BT /F4 12.00 Tf ET
+BT 20.00 576.00 Td (to) Tj ET 20.00 574.00 11.33 2.00 re f
+BT /F4 12.00 Tf ET
+BT 20.00 504.00 Td (the) Tj ET 20.00 502.00 18.00 2.00 re f
+BT /F4 12.00 Tf ET
+BT 20.00 432.00 Td (next) Tj ET 20.00 430.00 24.67 2.00 re f
+BT /F4 12.00 Tf ET
+BT 20.00 360.00 Td (page?) Tj ET 20.00 358.00 35.34 2.00 re f
 
 endstream
 endobj
 1 0 obj
 <</Type /Pages
-/Kids [3 0 R ]
-/Count 0
+/Kids [3 0 R 5 0 R ]
+/Count 2
 /MediaBox [0 0 612.00 792.00]
->>
-endobj
-5 0 obj
-<</Type /Font
-/BaseFont /Helvetica
-/Subtype /Type1
-/Encoding /WinAnsiEncoding
->>
-endobj
-6 0 obj
-<</Type /Font
-/BaseFont /Helvetica-Bold
-/Subtype /Type1
-/Encoding /WinAnsiEncoding
 >>
 endobj
 7 0 obj
@@ -51,24 +73,46 @@ endobj
 /Encoding /WinAnsiEncoding
 >>
 endobj
+8 0 obj
+<</Type /Font
+/BaseFont /Helvetica-Bold
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+>>
+endobj
+9 0 obj
+<</Type /Font
+/BaseFont /Helvetica
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+>>
+endobj
+10 0 obj
+<</Type /Font
+/BaseFont /Helvetica-BoldOblique
+/Subtype /Type1
+/Encoding /WinAnsiEncoding
+>>
+endobj
 2 0 obj
 <<
 /ProcSet [/PDF /Text /ImageB /ImageC /ImageI]
 /Font <<
-/F3 7 0 R
-/F2 6 0 R
-/F3 7 0 R
+/F3 9 0 R
+/F2 8 0 R
+/F3 9 0 R
+/F4 10 0 R
 >>
 >>
 endobj
-8 0 obj
+11 0 obj
 <<
 /Producer (PDFLite, https://github.com/katerina7479)
 /Title (Testing)
-/CreationDate (D:20130628205347)
+/CreationDate (D:20130628211117)
 >>
 endobj
-9 0 obj
+12 0 obj
 <<
 /Type /Catalog
 /Pages 1 0 R
@@ -77,23 +121,26 @@ endobj
 >>
 endobj
 xref
-0 10
+0 13
 0000000000 65535 f 
-0000000720 00000 n 
-0000004150 00000 n 
+0000004174 00000 n 
+0000014307 00000 n 
 0000000009 00000 n 
 0000000096 00000 n 
-0000001431 00000 n 
-0000002238 00000 n 
-0000003146 00000 n 
-0000005263 00000 n 
-0000006500 00000 n 
+0000001228 00000 n 
+0000002438 00000 n 
+0000006003 00000 n 
+0000007928 00000 n 
+0000009954 00000 n 
+0000012076 00000 n 
+0000016658 00000 n 
+0000019134 00000 n 
 trailer
 <<
-/Size 10
-/Root 9 0 R
-/Info 8 0 R
+/Size 13
+/Root 12 0 R
+/Info 11 0 R
 >>
 startxref
-1607
+2909
 %%EOF
