@@ -52,6 +52,26 @@ class PDFCursor(object):
         else:
             self._y = value
 
+    def xfit(self, testlength):
+        if (self.x + testlength) >= self.xmax:
+            return False
+        else:
+            return True
+
+    def yfit(self, testlength):
+        if (self.y - testlength) <= self.ymax:
+            return False
+        else:
+            return True
+
+    @property
+    def xleft(self):
+        return self.xmax - self.x
+
+    @property
+    def yleft(self):
+        return self.y - self.ymax
+
     def _isCoordinate(self, testord):
         if isinstance(testord, PDFCursor):
             return True
