@@ -3,6 +3,7 @@ from pdfobjects.pdfobject import PDFObject
 
 class Session(object):
     def __init__(self, parent):
+        self.parent = parent
         self.buffer = ''
         self.offset = 0
         self.objects = []
@@ -43,3 +44,7 @@ class Session(object):
             self.objects[flag] = obj
         self.out(str(objnum) + ' 0 obj')
         return obj
+
+    def addPage(self, text):
+        self.parent.D.addPage()
+        self.parent.D.addText(text)

@@ -28,6 +28,8 @@ class PDFDocument(object):
         self.page = PDFPage(self.SS)
         self.page.setIndex(len(self.pages))
         self.pages.append(self.page)
+        currentfont = self.font
+        self.setFont(font=currentfont)
 
     def setFont(self, family=None, style=None, size=None, font=None):
         "Select a font; size given in points"
@@ -111,10 +113,7 @@ class PDFDocument(object):
             self.SS.out('endobj')
 
     def addText(self, text):
-        try:
-            text = PDFText(self.SS, self.page, self.font, self.color, text)
-        except ValueError:
-            self.addPage()
+        text = PDFText(self.SS, self.page, self.font, self.color, text)
 
     def newline(self, number=1):
         try:

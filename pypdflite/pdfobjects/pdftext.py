@@ -15,7 +15,6 @@ class PDFText(object):
             self._write()
 
     def _normalize_text(self):
-        "Check that text input is in the correct format/encoding"
         self.text = self.text.encode('latin1')
 
     def _testLength(self, value=None):
@@ -25,8 +24,28 @@ class PDFText(object):
             test = self.c.xfit(self.font.StringWidth(value))
         return test
 
-    def _text(self):
-        "Output a string"
+    def _splitIntoLines(self, text):
+        tc = self.c.Copy()  # Test cursor
+        textarray = text.split()
+        myline = ''
+        linearray = []
+        for word in textarray:
+            segment = myline + ' ' + word
+            if tc.xfit(self.font.StringWidth(segment)) is False:
+                linearray.append(myline)
+                myline = word
+                tc.xreset()
+            else:
+                if myline == '':
+                    myline = word
+                else:
+                    myline += ' %s' % word
+        linearray.append(myline)
+        return linearray
+
+    def _text(self, value=None):
+        if value is not None:
+            self.text = value
         self._normalize_text()
         textstring = self._textstring(self.text)
         if self.text != '':
@@ -39,27 +58,22 @@ class PDFText(object):
             fs = 'BT /F%d %.2f Tf ET' % (self.font.index, self.font.fontsize)
             self.SS.out(fs, self.page)
             self.SS.out(s, self.page)
-            self.c.xplus(self.font.StringWidth(self.text))
+            try:
+                self.c.xplus(self.font.StringWidth(self.text))
+            except ValueError:
+                self._newline()
         else:
             pass
 
     def _write(self):
-        textarray = self.text.split()
-        myline = ''
-        for word in textarray:
-            segment = myline + ' ' + word  # See if the next word will go over the line
-            if self._testLength(segment) is False:  # if it won't fit
-                self.text = myline  # Output line, add a new line and reset
-                self._text()
+        linearray = self._splitIntoLines(self.text)
+        test = self.c.yfit(self.font.linesize * len(linearray))
+        if test is False:
+            self.SS.addPage(self.text)
+        else:
+            for line in linearray:
+                self._text(line)
                 self._newline()
-                myline = word
-            else:
-                if myline is '':  # Avoids adding a space at the begining of the first line.
-                    myline = word
-                else:
-                    myline += ' %s' % word
-        self.text = myline  # outputs any leftovers
-        self._text()
 
     def _textstring(self, txt):
         txt = self._escapetext(txt)

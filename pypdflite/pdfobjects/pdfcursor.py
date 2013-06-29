@@ -121,7 +121,9 @@ class PDFCursor(object):
             return False
 
     def Copy(self):
-        return self.__class__(self.x, self.y)
+        newcursor = self.__class__(self.x, self.y)
+        newcursor.setBounds(self.xmin,  self.ymin, self.xmax, self.ymax)
+        return newcursor
 
     def Add(self, addord):
         self._isCoordinate(addord)
