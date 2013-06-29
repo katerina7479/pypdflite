@@ -1,5 +1,6 @@
 from pdfmargin import PDFMargin
 from pdfcursor import PDFCursor
+from zlib import compress
 
 
 class PDFPage(object):
@@ -19,6 +20,9 @@ class PDFPage(object):
 
         self.orientation_change = False
         self.buffer = ""
+
+    def compress(self):
+        self.buffer = compress(self.buffer)
 
     def setIndex(self, value):
         self.number = value

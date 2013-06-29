@@ -84,7 +84,12 @@ class PDFDocument(object):
                 self.SS.out('endobj')
                 #Page content
                 self.SS.newobj()
-                self.SS.out('<<' + '/Length %s >>' % len(page.buffer))
+                if self.SS.compression is True:
+                    textfilter = '/Filter /FlateDecode'
+                    page.compress()
+                else:
+                    textfilter = ''
+                self.SS.out('<< %s /Length %s >>' % (textfilter, len(page.buffer)))
                 self.SS.putstream(page.buffer)
                 self.SS.out('endobj')
 

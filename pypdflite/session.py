@@ -7,6 +7,13 @@ class Session(object):
         self.offset = 0
         self.objects = []
         self._createplaceholders()
+        self.compression = False
+
+    def setCompression(self, value):
+        if type(value) is bool:
+            self.compression = value
+        else:
+            raise Exception(TypeError, "%s is not a valid option for compression" % value)
 
     def _createplaceholders(self):
         self.objects.append("Zeroth")

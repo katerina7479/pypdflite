@@ -20,6 +20,10 @@ class PDFLite(object):
 
         #Initialize PDF information
         self.setInformation()
+        self.setCompression()
+
+    def setCompression(self, value=False):
+        self.SS.setCompression(value)
 
     def getDocument(self):
         return self.D
