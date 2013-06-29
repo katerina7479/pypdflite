@@ -6,5 +6,6 @@ Writer = PDFLite("testing.pdf")
 Writer.setInformation(title="Testing")  # set optional information
 Document = Writer.getDocument()
 Document.addText("Testing")
+Document.newline(4)
 Document.addText("Testing Again")
 Writer.close()

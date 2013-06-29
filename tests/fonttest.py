@@ -22,7 +22,7 @@ class FontTest(unittest.TestCase):
         self.testclass.setFont()
         result = self.testclass
         self.assertEqual(result.font_family, "helvetica")
-        self.assertEqual(result.font_size, 20)
+        self.assertEqual(result.fontsize, 20)
         self.assertEqual(result.style, None)
         self.assertEqual(result.fontkey, "helvetica")
         self.assertEqual(result.name, "Helvetica")
@@ -31,7 +31,7 @@ class FontTest(unittest.TestCase):
         self.testclass.setFont("Times", "IBU", 20)
         result = self.testclass
         self.assertEqual(result.font_family, "times")
-        self.assertEqual(result.font_size, 20)
+        self.assertEqual(result.fontsize, 20)
         self.assertEqual(result.style, "BI")
         self.assertEqual(result.underline, True)
         self.assertEqual(result.fontkey, "timesBI")

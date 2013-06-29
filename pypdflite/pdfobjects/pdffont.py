@@ -48,8 +48,8 @@ class PDFFont(object):
         if size is None:
             pass
         else:
-            self.font_size = float(size)
-            self.line_width = self.font_size * 0.2
+            self.fontsize = float(size)
+            self.linesize = self.fontsize * 1.2
 
     def _setFontKey(self):
         if self.style is None:
@@ -87,7 +87,7 @@ class PDFFont(object):
 
     def equals(self, font):
         if font.font_family == self.font_family:
-            if font.font_size == self.font_size:
+            if font.fontsize == self.fontsize:
                 if font.style == self.style:
                     ans = True
         else:
@@ -99,13 +99,11 @@ class PDFFont(object):
         w = 0
         for i in s:
             w += self.cw.get(i, 0)
-        return w * self.font_size/1000.0
+        return w * self.fontsize/1000.0
 
     def setNumber(self, value):
         self.number = value
 
-    def set_line_width(self, width):
-        "Set line width"
-        self.line_width = width
-        if(self.page.number > 0):
-            self.SS.out('%.2f w' % width)
+    def set_linesize(self, width):
+        "Set line size"
+        self.linesize = width

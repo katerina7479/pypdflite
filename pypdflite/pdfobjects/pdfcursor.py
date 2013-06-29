@@ -147,3 +147,9 @@ class PDFCursor(object):
             self.y = self.y + self.dy
         else:
             self.y = self.y + dy
+
+    def xreset(self):
+        self.x = self.xmin
+
+    def yreset(self):
+        self.y = self.ymin
