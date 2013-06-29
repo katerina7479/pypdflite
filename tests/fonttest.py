@@ -37,6 +37,6 @@ class FontTest(unittest.TestCase):
         self.assertEqual(result.fontkey, "timesBI")
         self.assertEqual(result.name, "Times-BoldItalic")
 
-    def testStringWidth(self):
-        result = self.testclass.StringWidth("Testing")
+    def teststringWidth(self):
+        result = self.testclass.stringWidth("Testing")
         self.assertEqual(result, 65.58)

@@ -11,10 +11,10 @@ class PDFLite(object):
         self.filename = filepath
 
         self.SS = Session(self)
-        self.D = PDFDocument(self.SS)
+        self.document = PDFDocument(self.SS)
 
         # Full width display mode default
-        self.set_display_mode()
+        self.setDisplayMode()
         # Set default PDF version number
         self.pdf_version = '1.3'
 
@@ -26,7 +26,7 @@ class PDFLite(object):
         self.SS.setCompression(value)
 
     def getDocument(self):
-        return self.D
+        return self.document
 
     def setInformation(self, title=None, subject=None, author=None, keywords=None, creator=None):
         testdict = {"title": title, "subject": subject, "author": author, "keywords": keywords, "creator": creator}
@@ -40,7 +40,7 @@ class PDFLite(object):
             else:
                 setattr(self, att, None)
 
-    def set_display_mode(self, zoom='fullwidth', layout='continuous'):
+    def setDisplayMode(self, zoom='fullwidth', layout='continuous'):
         "Set display mode in viewer"
         self.zoom_options = ["fullpage", "fullwidth", "real", "default"]
         self.layout_options = ["single", "continuous", "two", "default"]
@@ -56,68 +56,65 @@ class PDFLite(object):
     def close(self):
         "Generate the document"
         #close document
-        self._putheader()
-        self._putpages()
-        self._putresources()
+        self._putHeader()
+        self._putPages()
+        self._putResources()
         #Info
-        self._putinfo()
+        self._putInformation()
         #Catalog
-        self._putcatalog()
+        self._putCatalog()
         #Cross-ref
-        self._putcrossref()
+        self._putCrossReference()
         #Trailer
-        self._puttrailer()
+        self._putTrailer()
         self.output()
 
-    def _putheader(self):
+    def _putHeader(self):
         self.SS.out('%%PDF-%s' % self.pdf_version)
 
-    def _putpages(self):
-        self.D._getOrientationChanges()
-        self.D.outputPages()
-
-        w = self.D.page.w
-        h = self.D.page.h
+    def _putPages(self):
+        self.document.getOrientationChanges()
+        self.document.outputPages()
 
         #Pages root
-        self.SS.newobj(1)
+        self.SS.addObject(1)
         self.SS.out('<</Type /Pages')
         kids = '/Kids ['
-        for i in xrange(0, len(self.D.pages)):
+        for i in xrange(0, len(self.document.pages)):
             kids += str(3 + 2*i) + ' 0 R '
         self.SS.out(kids + ']')
-        self.SS.out('/Count %s' % len(self.D.pages))
-        self.SS.out('/MediaBox [0 0 %.2f %.2f]' % (w, h))
+        self.SS.out('/Count %s' % len(self.document.pages))
+        self.SS.out('/MediaBox [0 0 %.2f %.2f]' % (self.document.page.width, self.document.page.height))
         self.SS.out('>>')
         self.SS.out('endobj')
 
-    def _putresources(self):
-        self._putfonts()
-        self._putimages()
+    def _putResources(self):
+        self._putFonts()
+        self._putImages()
 
         #Resource dictionary
 
-        self._putresourcedict()
+        self._putResourceDict()
 
-    def _putfonts(self):
-        self.D.outputFonts()
+    def _putFonts(self):
+        self.document.outputFonts()
 
-    def _putimages(self):
+    def _putImages(self):
         pass
 
-    def _putresourcedict(self):
-        self.SS.newobj(2)
+    def _putResourceDict(self):
+        self.SS.addObject(2)
         self.SS.out('<<')
         self.SS.out('/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]')
         self.SS.out('/Font <<')
-        for font in self.D.fonts:
+        for font in self.document.fonts:
             self.SS.out('/F' + str(font.index) + ' ' + str(font.number) + ' 0 R')
         self.SS.out('>>')
         self.SS.out('>>')
         self.SS.out('endobj')
 
-    def _putinfo(self):
-        self.SS.newobj()
+    def _putInformation(self):
+        self.SS.addObject()
         self.SS.out('<<')
         self.SS.out('/Producer '+self._textstring('PDFLite, https://github.com/katerina7479'))
         if self.title is not None:
@@ -134,8 +131,8 @@ class PDFLite(object):
         self.SS.out('>>')
         self.SS.out('endobj')
 
-    def _putcatalog(self):
-        self.SS.newobj()
+    def _putCatalog(self):
+        self.SS.addObject()
         self.SS.out('<<')
 
         self.SS.out('/Type /Catalog')
@@ -158,17 +155,17 @@ class PDFLite(object):
         self.SS.out('>>')
         self.SS.out('endobj')
 
-    def _putcrossref(self):
+    def _putCrossReference(self):
         self.SS.out('xref')
         self.SS.out('0 %s' % len(self.SS.objects))
         self.SS.out('0000000000 65535 f ')
         for obj in self.SS.objects:
-            if type(obj) == str:
+            if isinstance(obj, basestring):
                 pass
             else:
                 self.SS.out('%010d 00000 n ' % obj.offset)
 
-    def _puttrailer(self):
+    def _putTrailer(self):
         objnum = len(self.SS.objects)
         self.SS.out('trailer')
         self.SS.out('<<')

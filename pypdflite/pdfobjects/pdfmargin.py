@@ -24,7 +24,7 @@ class PDFMargin(object):
             self.b = self.t
         else:
             self.b = bottom
-        self.setTrigger(2 * self.b)
+        self._setTrigger(2 * self.b)
 
-    def setTrigger(self, value):
+    def _setTrigger(self, value):
         self.trigger = 2 * self.b

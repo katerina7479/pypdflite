@@ -1,4 +1,4 @@
-from fontref import fpdf_charwidths
+from fontref import pdf_character_widths
 
 
 class PDFFont(object):
@@ -11,7 +11,7 @@ class PDFFont(object):
         self.families = ['courier', 'helvetica', 'arial', 'times', 'symbol', 'zapfdingbats']
         self.setFont(family, style, size)
 
-    def _setfamily(self, family=None):
+    def _setFamily(self, family=None):
         if family is None:
             pass
         else:
@@ -53,7 +53,7 @@ class PDFFont(object):
             self.fontsize = float(size)
             self.linesize = self.fontsize * 1.2
 
-    def _setFontKey(self):
+    def _setFontkey(self):
         if self.style is None:
             self.fontkey = self.font_family
         else:
@@ -63,14 +63,14 @@ class PDFFont(object):
         self.name = self.core_fonts[self.fontkey]
 
     def _setCharacterWidths(self):
-        self.cw = fpdf_charwidths[self.fontkey]
+        self.cw = pdf_character_widths[self.fontkey]
 
     def setFont(self, family=None, style=None, size=None):
         "Select a font; size given in points"
-        self._setfamily(family)
+        self._setFamily(family)
         self._setSize(size)
         self._setStyle(style)
-        self._setFontKey()
+        self._setFontkey()
         self._setName()
         self._setCharacterWidths()
 
@@ -96,7 +96,7 @@ class PDFFont(object):
             ans = False
         return ans
 
-    def StringWidth(self, s):
+    def stringWidth(self, s):
         "Get width of a string in the current font"
         w = 0
         for i in s:
@@ -106,6 +106,6 @@ class PDFFont(object):
     def setNumber(self, value):
         self.number = value
 
-    def set_linesize(self, width):
-        "Set line size"
+    def setLineSize(self, width):
+        "Set linesize"
         self.linesize = width

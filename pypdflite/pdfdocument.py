@@ -24,8 +24,11 @@ class PDFDocument(object):
         self.font.setIndex()
         self.fonts.append(self.font)
 
-    def addPage(self):
-        self.page = PDFPage(self.SS)
+    def addPage(self, page=None):
+        if page is None:
+            self.page = PDFPage(self.SS)
+        else:
+            self.page = page
         self.page.setIndex(len(self.pages))
         self.pages.append(self.page)
         currentfont = self.font
@@ -66,7 +69,7 @@ class PDFDocument(object):
         else:
             self.setFont(self.font.family, self.font.style, size)
 
-    def _getOrientationChanges(self):
+    def getOrientationChanges(self):
         self.orientation_changes = []
         for page in self.pages:
             if page.orientation_change is True:
@@ -81,28 +84,28 @@ class PDFDocument(object):
         else:
             #Page
             for page in self.pages:
-                self.SS.newobj()
+                self.SS.addObject()
                 self.SS.out('<</Type /Page')
                 self.SS.out('/Parent 1 0 R')
                 if page in self.orientation_changes:
-                    self.SS.out('/MediaBox [0 0 %.2f %.2f]' % (page.h, page.w))
+                    self.SS.out('/MediaBox [0 0 %.2f %.2f]' % (page.width, page.height))
                 self.SS.out('/Resources 2 0 R')
                 self.SS.out('/Contents %s 0 R>>' % len(self.SS.objects))
                 self.SS.out('endobj')
                 #Page content
-                self.SS.newobj()
+                self.SS.addObject()
                 if self.SS.compression is True:
                     textfilter = '/Filter /FlateDecode'
                     page.compress()
                 else:
                     textfilter = ''
                 self.SS.out('<< %s /Length %s >>' % (textfilter, len(page.buffer)))
-                self.SS.putstream(page.buffer)
+                self.SS.putStream(page.buffer)
                 self.SS.out('endobj')
 
     def outputFonts(self):
         for font in self.fonts:
-            obj = self.SS.newobj()
+            obj = self.SS.addObject()
             font.setNumber(obj.id)
             self.SS.out('<</Type /Font')
             self.SS.out('/BaseFont /' + font.name)
@@ -115,11 +118,11 @@ class PDFDocument(object):
     def addText(self, text):
         text = PDFText(self.SS, self.page, self.font, self.color, text)
 
-    def newline(self, number=1):
+    def addNewline(self, number=1):
         try:
-            self.page.newline(self.font, number)
+            self.page.addNewline(self.font, number)
         except ValueError:
             self.addPage()
 
-    def indent(self):
-        self.page.indent(self.font)
+    def addIndent(self):
+        self.page.addIndent(self.font)

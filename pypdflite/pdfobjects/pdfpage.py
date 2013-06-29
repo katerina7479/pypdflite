@@ -34,9 +34,9 @@ class PDFPage(object):
         else:
             raise Exception('Unknown page format: ', self.format)
 
-    def _setWidthHeight(self):
-        self.w = self.size[0]
-        self.h = self.size[1]
+    def setDimensions(self):
+        self.width = self.size[0]
+        self.height = self.size[1]
 
     def setOrientation(self, orientation):
         self.orientation = orientation.lower()
@@ -46,14 +46,14 @@ class PDFPage(object):
             self.size = (self.pagesize[1], self.pagesize[0])
         else:
             raise Exception('Incorrect orientation: ', self.orientation)
-        self._setWidthHeight()
+        self.setDimensions()
         self._setBounds()
 
     def changeOrientation(self):
         if self.orientation_change is False:
             self.size = (self.size[1], self.size[0])
             self.orientation_change = True
-            self._setWidthHeight()
+            self.setDimensions()
             self._setBounds()
         else:
             pass
@@ -65,7 +65,7 @@ class PDFPage(object):
             self.margin = margin
         else:
             raise Exception("Invalid Margin object")
-        self._setWidthHeight()
+        self.setDimensions()
         self._setBounds()
 
     def _setBounds(self):
@@ -81,9 +81,9 @@ class PDFPage(object):
             ymax = 0 + self.margin.b
         self.cursor.setBounds(xmin, ymin, xmax, ymax)
 
-    def newline(self, font, number=1):
-        self.cursor.yplus((font.linesize*number))
-        self.cursor.xreset()
+    def addNewline(self, font, number=1):
+        self.cursor.yPlus((font.linesize*number))
+        self.cursor.xReset()
 
-    def indent(self, font, number=4):
-        self.cursor.xplus(number * font.StringWidth(' '))
+    def addIndent(self, font, number=4):
+        self.cursor.xPlus(number * font.stringWidth(' '))

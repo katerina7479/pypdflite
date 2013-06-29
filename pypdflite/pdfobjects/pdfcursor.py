@@ -120,58 +120,58 @@ class PDFCursor(object):
         else:
             return False
 
-    def Copy(self):
+    def copy(self):
         newcursor = self.__class__(self.x, self.y)
         newcursor.setBounds(self.xmin,  self.ymin, self.xmax, self.ymax)
         return newcursor
 
-    def Add(self, addord):
+    def add(self, addord):
         self._isCoordinate(addord)
         x = self.x + addord.x
         y = self.y - addord.y
         return self.__class__(x, y)
 
-    def Subtract(self, subord):
+    def subtract(self, subord):
         self._isCoordinate(subord)
         x = self.x - subord.x
         y = self.y + subord.y
         return self.__class__(x, y)
 
-    def Scale(self, scale):
+    def scale(self, scale):
         scale = float(scale)
         x = self.x * scale
         y = self.y * scale
         return self.__class__(x, y)
 
-    def Invert(self):
+    def invert(self):
         return self.__class__(self.y, self.x)
 
-    def xplus(self, dx=None):
+    def xPlus(self, dx=None):
         if dx is None:
             self.x = self.x + self.dx
         else:
             self.x = self.x + dx
 
-    def yplus(self, dy=None):
+    def yPlus(self, dy=None):
         if dy is None:
             self.y = self.y - self.dy
         else:
             self.y = self.y - dy
 
-    def xminus(self, dx=None):
+    def xMinus(self, dx=None):
         if dx is None:
             self.x = self.x - self.dx
         else:
             self.x = self.x - dx
 
-    def yminus(self, dy=None):
+    def yMinus(self, dy=None):
         if dy is None:
             self.y = self.y + self.dy
         else:
             self.y = self.y + dy
 
-    def xreset(self):
+    def xReset(self):
         self.x = self.xmin
 
-    def yreset(self):
+    def yReset(self):
         self.y = self.ymin
