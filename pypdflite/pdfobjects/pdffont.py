@@ -36,8 +36,10 @@ class PDFFont(object):
             if('U' in self.style):
                 self.underline = True
                 self.style = self.style.replace("U", "")
-                self.underlinethickness = 2
-                self.underlineposition = 2
+                self.underlinethickness = int(1*self.fontsize/8)
+                if self.underlinethickness < 1:
+                    self.underlinethickness = 1
+                self.underlineposition = int(3*self.fontsize/8)
             else:
                 self.underline = False
             # Correct order of bold-italic
@@ -66,8 +68,8 @@ class PDFFont(object):
     def setFont(self, family=None, style=None, size=None):
         "Select a font; size given in points"
         self._setfamily(family)
-        self._setStyle(style)
         self._setSize(size)
+        self._setStyle(style)
         self._setFontKey()
         self._setName()
         self._setCharacterWidths()
