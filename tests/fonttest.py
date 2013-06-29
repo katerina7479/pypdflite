@@ -22,7 +22,7 @@ class FontTest(unittest.TestCase):
         self.testclass.setFont()
         result = self.testclass
         self.assertEqual(result.font_family, "helvetica")
-        self.assertEqual(result.font_size, 12)
+        self.assertEqual(result.font_size, 20)
         self.assertEqual(result.style, None)
         self.assertEqual(result.fontkey, "helvetica")
         self.assertEqual(result.name, "Helvetica")
@@ -39,4 +39,4 @@ class FontTest(unittest.TestCase):
 
     def testStringWidth(self):
         result = self.testclass.StringWidth("Testing")
-        self.assertEqual(result, 39.348)
+        self.assertEqual(result, 65.58)

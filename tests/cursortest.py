@@ -9,7 +9,7 @@ class CursorTest(unittest.TestCase):
     def testBase(self):
         x = self.testclass.x
         y = self.testclass.y
-        self.assertEqual((x, y), (1, 790))
+        self.assertEqual((x, y), (20, 720))
 
     def testBounds(self):
         xmax = self.testclass.xmax
