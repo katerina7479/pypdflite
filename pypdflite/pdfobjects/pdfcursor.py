@@ -34,7 +34,7 @@ class PDFCursor(object):
     def x(self, value):
         if value <= self.xmin:
             self._x = self.xmin
-        elif value >= self.xmax:
+        elif value > self.xmax:
             raise ValueError("%s is > bounds %s" % (value, self.xmax))
         else:
             self._x = value
@@ -47,7 +47,7 @@ class PDFCursor(object):
     def y(self, value):
         if value >= self.ymin:
             self._y = self.ymin
-        elif value <= self.ymax:
+        elif value < self.ymax:
             raise ValueError("%s is < bounds %s" % (value, self.ymax))
         else:
             self._y = value
@@ -128,13 +128,13 @@ class PDFCursor(object):
     def add(self, addord):
         self._isCoordinate(addord)
         x = self.x + addord.x
-        y = self.y - addord.y
+        y = self.y + addord.y
         return self.__class__(x, y)
 
     def subtract(self, subord):
         self._isCoordinate(subord)
         x = self.x - subord.x
-        y = self.y + subord.y
+        y = self.y - subord.y
         return self.__class__(x, y)
 
     def scale(self, scale):

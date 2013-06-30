@@ -1,11 +1,12 @@
-
+        # Note (not written, if color flag is True, then the string must be wrapped for output as follows:
+        # s = 'q ' + s (from here) + ' ' + text s + ' Q'
 
 class PDFText(object):
-    def __init__(self, session, page, font, color, text):
+    def __init__(self, session, page, font, colorscheme, text):
         self.SS = session
         self.page = page
         self.font = font
-        self.color = color
+        self.colorscheme = colorscheme
         self.c = page.cursor
         self.text = text
 
@@ -52,8 +53,8 @@ class PDFText(object):
             s = 'BT %.2f %.2f Td %s Tj ET' % (self.c.x, self.c.y, textstring)
             if(self.font.underline):
                 s = '%s %s' % (s, self._underline())
-            if(self.color.color_flag):
-                s = 'q %s %s Q' % (self.color.text_color, s)
+            if(self.colorscheme._getColorFlag()):  # Only called if text != fill colors in current scheme
+                s = 'q %s %s Q' % (self.color._getTextColorString(), s)
             #Set Font for text
             fs = 'BT /F%d %.2f Tf ET' % (self.font.index, self.font.fontsize)
             self.SS._out(fs, self.page)

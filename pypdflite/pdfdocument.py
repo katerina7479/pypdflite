@@ -1,7 +1,10 @@
 from pdfobjects.pdffont import PDFFont
 from pdfobjects.pdfpage import PDFPage
-from pdfobjects.pdfcolor import PDFColor
+from pdfobjects.pdfcolorscheme import PDFColorScheme
 from pdfobjects.pdftext import PDFText
+from pdfobjects.pdfcursor import PDFCursor
+from pdfobjects.pdfline import PDFLine
+from pdfobjects.pdfrectangle import PDFRectangle
 
 
 class PDFDocument(object):
@@ -28,24 +31,21 @@ class PDFDocument(object):
         self._setDefaults()
 
     def _setDefaults(self):
-        self.setColor()
+        self.setColorScheme()
         self._setDefaultFont()
         self.addPage()
 
-    def setColor(self, color=None):
+    def setColorScheme(self, colorscheme=None):
         """ Default color object is black.
-            Future use this method to pass a
-            specialized color object.
 
         """
-        if color is None:
-            self.color = PDFColor()
+        if colorscheme is None:
+            self.colorscheme = PDFColorScheme()
         else:
-            self.color = color
-
-        self.color.setDrawColor()
-        self.color.setFillColor()
-        self.color.setTextColor()
+            if isinstance(colorscheme, PDFColorScheme):
+                self.colorscheme = colorscheme
+            else:
+                raise Exception("invalid color scheme")
 
     def _setDefaultFont(self):
         """ Internal method to set the
@@ -195,7 +195,7 @@ class PDFDocument(object):
             future version.
 
         """
-        text = PDFText(self.SS, self.page, self.font, self.color, text)
+        text = PDFText(self.SS, self.page, self.font, self.colorscheme, text)
 
     def addNewline(self, number=1):
         """ Starts over again at the new line. If number is specified,
@@ -214,4 +214,50 @@ class PDFDocument(object):
         """
         self.page.addIndent(self.font)
 
-    def addLine(self, x1, y1, x2, y2):
+    def addLine(self, x1=None, y1=None, x2=None, y2=None, cursor1=None, cursor2=None):
+        if cursor1 is not None:
+            if cursor2 is not None:
+                pass
+        else:
+            cursor1 = PDFCursor(x1, y1)
+            cursor2 = PDFCursor(x2, y2)
+
+        myline = PDFLine(self.SS, self.page, self.colorscheme, cursor1, cursor2)
+        myline.draw()
+
+    def drawHorizonalLine(self):
+        endcursor = self.page.cursor.copy()
+        endcursor.x = endcursor.xmax
+
+        myline = PDFLine(self.SS, self.page, self.colorscheme, self.page.cursor, endcursor)
+        myline.draw()
+
+    def drawRectangle(self, x1=None, y1=None, x2=None, y2=None, width=None, height=None, cursor1=None, cursor2=None, style='S'):
+        if cursor1 is not None:
+            if cursor2 is not None:
+                pass
+            elif width is not None and height is not None:
+                dims = PDFCursor(width, height)
+                cursor2 = cursor1.add(dims)
+            elif x2 is not None and y2 is not None:
+                cursor2 = PDFCursor(x2, y2)
+            else:
+                raise Exception("Rectanlge not defined")
+        else:
+            if x1 is not None and y1 is not None:
+                cursor1 = PDFCursor(x1, y1)
+                if x2 is not None and y2 is not None:
+                    cursor2 = PDFCursor(x2, y2)
+                elif width is not None and height is not None:
+                    dims = PDFCursor(width, height)
+                    cursor2 = cursor1.add(dims)
+                else:
+                    raise Exception("Rectanlge not defined")
+            else:
+                raise Exception("Rectanlge not defined")
+
+        rect = PDFRectangle(self.SS, self.page, self.colorscheme, cursor1, cursor2, size=1, style=style)
+        rect.draw()
+
+    def addTable(self, datalist, headerlist=None, cursor=None):
+        pass
