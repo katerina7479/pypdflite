@@ -1,6 +1,6 @@
 from pdfobjects.pdffont import PDFFont
 from pdfobjects.pdfpage import PDFPage
-from pdfobjects.pdfcolors import PDFColors
+from pdfobjects.pdfcolor import PDFColor
 from pdfobjects.pdftext import PDFText
 
 
@@ -34,14 +34,18 @@ class PDFDocument(object):
 
     def setColor(self, color=None):
         """ Default color object is black.
-            May use this method to pass a
+            Future use this method to pass a
             specialized color object.
 
         """
         if color is None:
-            self.color = PDFColors()
+            self.color = PDFColor()
         else:
             self.color = color
+
+        self.color.setDrawColor()
+        self.color.setFillColor()
+        self.color.setTextColor()
 
     def _setDefaultFont(self):
         """ Internal method to set the
@@ -209,3 +213,5 @@ class PDFDocument(object):
         """ Adds a standard tab of 4 spaces.
         """
         self.page.addIndent(self.font)
+
+    def addLine(self, x1, y1, x2, y2):
