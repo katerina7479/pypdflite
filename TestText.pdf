@@ -241,14 +241,14 @@ endobj
 <<
 /Producer (PDFLite, https://github.com/katerina7479)
 /Title (Testing Text)
-/CreationDate (D:20130629150953)
+/CreationDate (D:20130629172937)
 >>
 endobj
 21 0 obj
 <<
 /Type /Catalog
 /Pages 1 0 R
-/OpenAction [3 0 R /FitH null]
+/OpenAction [3 0 R /Fit]
 /PageLayout /OneColumn
 >>
 endobj
@@ -283,5 +283,5 @@ trailer
 /Info 20 0 R
 >>
 startxref
-6994
+6988
 %%EOF

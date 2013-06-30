@@ -11,11 +11,11 @@ class FontTest(unittest.TestCase):
         self.assertEqual(result['timesB'], 'Times-Bold')
 
     def testCoreCheck(self):
-        result = self.testclass.inCoreFonts('helvetica')
+        result = self.testclass._inCoreFonts('helvetica')
         self.assertEqual(result, True)
-        result = self.testclass.inCoreFonts('Helvetica')
+        result = self.testclass._inCoreFonts('Helvetica')
         self.assertEqual(result, True)
-        result = self.testclass.inCoreFonts('Arial')
+        result = self.testclass._inCoreFonts('Arial')
         self.assertEqual(result, False)
 
     def testDefaultFontSet(self):

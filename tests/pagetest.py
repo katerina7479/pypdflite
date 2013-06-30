@@ -1,12 +1,10 @@
 import unittest
 from pypdflite.pdfobjects.pdfpage import PDFPage
-from pypdflite.session import Session
 
 
 class PageTest(unittest.TestCase):
     def setUp(self):
-        self.SS = Session(self)
-        self.__class__.testclass = PDFPage(self.SS)
+        self.__class__.testclass = PDFPage()
 
     def testCore(self):
         result = self.testclass.pagesize[0]

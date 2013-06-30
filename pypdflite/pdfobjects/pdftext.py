@@ -56,8 +56,8 @@ class PDFText(object):
                 s = 'q %s %s Q' % (self.color.text_color, s)
             #Set Font for text
             fs = 'BT /F%d %.2f Tf ET' % (self.font.index, self.font.fontsize)
-            self.SS.out(fs, self.page)
-            self.SS.out(s, self.page)
+            self.SS._out(fs, self.page)
+            self.SS._out(s, self.page)
             try:
                 self.c.xPlus(self.font.stringWidth(self.text))
             except ValueError:
@@ -69,7 +69,7 @@ class PDFText(object):
         linearray = self._splitIntoLines(self.text)
         test = self.c.yfit(self.font.linesize * len(linearray))
         if test is False:
-            self.SS.addPage(self.text)
+            self.SS._addPage(self.text)
         else:
             for line in linearray:
                 self._text(line)

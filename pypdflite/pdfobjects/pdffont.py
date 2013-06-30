@@ -74,20 +74,24 @@ class PDFFont(object):
         self._setName()
         self._setCharacterWidths()
 
-    def setIndex(self, index=1):
+    def _setIndex(self, index=1):
+        """ Index is the number of the font, not the same as
+            object number, both are used and set in document.
+
+        """
         self.index = index
 
     def dict(self):
         return {'i': self.index, 'type': 'core', 'name': self.name, 'up': 100, 'ut': 50, 'cw': self.cw}
 
-    def inCoreFonts(self, key):
+    def _inCoreFonts(self, key):
         test = key.lower()
         if test in self.core_fonts:
             return True
         else:
             return False
 
-    def equals(self, font):
+    def _equals(self, font):
         if (font.font_family == self.font_family) and\
            (font.fontsize == self.fontsize) and\
            (font.style == self.style):
@@ -103,9 +107,10 @@ class PDFFont(object):
             w += self.cw[i]
         return w * self.fontsize/1000.0
 
-    def setNumber(self, value):
+    def _setNumber(self, value):
+        "This is the font pdf object number."
         self.number = value
 
-    def setLineSize(self, width):
+    def setLineSize(self, value):
         "Set linesize"
-        self.linesize = width
+        self.linesize = value

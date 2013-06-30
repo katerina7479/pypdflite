@@ -13,8 +13,8 @@ class PDFColors(object):
             self.draw_color = '%.3f G' % r/255.0
         else:
             self.draw_color = '%.3f %.3f %.3f RG' % (r/255.0, g/255.0, b/255.0)
-        if(self.page.number > 0):
-            self.SS.out(self.draw_color)
+        if(self.page.index > 0):
+            self.SS._out(self.draw_color)
 
     def set_fill_color(self, r, g=-1, b=-1):
         "Set color for all filling operations"
@@ -24,8 +24,8 @@ class PDFColors(object):
             self.fill_color = '%.3f %.3f %.3f rg' % (r/255.0, g/255.0, b/255.0)
         self.color_flag = (self.fill_color != self.text_color)
 
-        if(self.page.number > 0):
-            self.SS.out(self.fill_color)
+        if(self.page.index > 0):
+            self.SS._out(self.fill_color)
 
     def set_text_color(self, r, g=-1, b=-1):
         "Set color for text"
