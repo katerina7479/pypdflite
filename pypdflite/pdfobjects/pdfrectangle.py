@@ -35,7 +35,7 @@ class PDFRectangle(object):
         if colorscheme is None:
             self.SS._out(self.colorscheme._getDrawColorString(), self.page)
             self.SS._out(self.colorscheme._getFillColorString(), self.page)
-            print "Did coloscheme in rect", self.colorscheme._getFillColorString()
+            print "Did colorscheme in rect", self.colorscheme._getFillColorString()
         else:
             self.colorscheme = colorscheme
             self.setColor(None)
