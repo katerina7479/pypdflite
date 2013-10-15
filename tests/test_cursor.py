@@ -4,14 +4,14 @@ from pypdflite.pdfobjects.pdfcursor import PDFCursor
 
 class CursorTest(unittest.TestCase):
     def setUp(self):
-        self.__class__.testclass = PDFCursor()
+        self.testclass = PDFCursor()
 
-    def testBase(self):
+    def test_base(self):
         x = self.testclass.x
         y = self.testclass.y
         self.assertEqual((x, y), (20, 720))
 
-    def testBounds(self):
+    def test_bounds(self):
         xmax = self.testclass.xmax
         self.assertEqual(xmax, 612)
         try:
