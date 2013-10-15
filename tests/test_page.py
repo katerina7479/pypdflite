@@ -4,9 +4,9 @@ from pypdflite.pdfobjects.pdfpage import PDFPage
 
 class PageTest(unittest.TestCase):
     def setUp(self):
-        self.__class__.testclass = PDFPage()
+        self.testclass = PDFPage()
 
-    def testCore(self):
+    def test_core(self):
         result = self.testclass.pagesize[0]
         self.assertEqual(result, 612)
         result = self.testclass.pagesize[1]
