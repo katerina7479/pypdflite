@@ -4,8 +4,8 @@ class PDFCursor(object):
     def __init__(self, x=20, y=720):
         self.xmin = 0
         self.xmax = 612
-        self.ymin = 792
-        self.ymax = 0
+        self.ymin = 0
+        self.ymax = 792
 
         self.x = x
         self.y = y
@@ -13,7 +13,7 @@ class PDFCursor(object):
         self.dx = 2
         self.dy = 2
 
-    def setBounds(self, xmin=0,  ymin=792, xmax=612, ymax=0):
+    def setBounds(self, xmin=0,  ymin=0, xmax=612, ymax=792):
         self.xmin = xmin
         self.ymin = ymin
         self.xmax = xmax
@@ -59,7 +59,7 @@ class PDFCursor(object):
             return True
 
     def yfit(self, testlength):
-        if (self.y - testlength) <= self.ymax:
+        if (self.y + testlength) >= self.ymax:
             return False
         else:
             return True
@@ -70,7 +70,7 @@ class PDFCursor(object):
 
     @property
     def yleft(self):
-        return self.y - self.ymax
+        return self.y - self.ymin
 
     def _isCoordinate(self, testord):
         if isinstance(testord, PDFCursor):

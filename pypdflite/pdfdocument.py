@@ -242,7 +242,7 @@ class PDFDocument(object):
             elif x2 is not None and y2 is not None:
                 cursor2 = PDFCursor(x2, y2)
             else:
-                raise Exception("Rectanlge not defined")
+                raise Exception("Rectangle not defined")
         else:
             if x1 is not None and y1 is not None:
                 cursor1 = PDFCursor(x1, y1)
@@ -252,9 +252,9 @@ class PDFDocument(object):
                     dims = PDFCursor(width, height)
                     cursor2 = cursor1.add(dims)
                 else:
-                    raise Exception("Rectanlge not defined")
+                    raise Exception("Rectangle not defined")
             else:
-                raise Exception("Rectanlge not defined")
+                raise Exception("Rectangle not defined")
 
         rect = PDFRectangle(self.SS, self.page, self.colorscheme, cursor1, cursor2, size=1, style=style)
         rect.draw()

@@ -17,6 +17,6 @@ lightblue = PDFColor(name='lightblue')
 newscheme = PDFColorScheme(fillcolor=lightblue)
 
 Document.setColorScheme(newscheme)
-Document.drawRectangle(150, 500, 300, 600, style='B')
+Document.drawRectangle(0, 0, 10, 10, style='B')
 
 Writer.close()
