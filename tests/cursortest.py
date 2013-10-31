@@ -6,7 +6,7 @@ class CursorTest(unittest.TestCase):
     def setUp(self):
         self.__class__.testclass = PDFCursor()
 
-    def testBase(self):
+    def test_base(self):
         x = self.testclass.x
         y = self.testclass.y
         self.assertEqual((x, y), (20, 720))

@@ -25,29 +25,29 @@ class PDFDocument(object):
     """
     def __init__(self, session):
         "Sets up a standard default document."
-        self.SS = session
+        self.session = session
         self.pages = []
         self.fonts = []               # array of used fonts
-        self._setDefaults()
+        self._set_defaults()
 
-    def _setDefaults(self):
-        self.setColorScheme()
-        self._setDefaultFont()
-        self.addPage()
+    def _set_defaults(self):
+        self.set_color_scheme()
+        self._set_default_font()
+        self.add_page()
 
-    def setColorScheme(self, colorscheme=None):
+    def set_color_scheme(self, color_scheme=None):
         """ Default color object is black.
 
         """
-        if colorscheme is None:
-            self.colorscheme = PDFColorScheme()
+        if color_scheme is None:
+            self.color_scheme = PDFColorScheme()
         else:
-            if isinstance(colorscheme, PDFColorScheme):
-                self.colorscheme = colorscheme
+            if isinstance(color_scheme, PDFColorScheme):
+                self.color_scheme = color_scheme
             else:
                 raise Exception("invalid color scheme")
 
-    def _setDefaultFont(self):
+    def _set_default_font(self):
         """ Internal method to set the
             initial default font. Change
             the font using setFont method.
@@ -57,7 +57,7 @@ class PDFDocument(object):
         self.font._setIndex()
         self.fonts.append(self.font)
 
-    def addPage(self, page=None):
+    def add_page(self, page=None):
         """ May generate and add a PDFPage
             separately, or use this to generate
             a default page.
@@ -106,7 +106,7 @@ class PDFDocument(object):
         #Select it
         self.font = newfont
         if(self.page.index > 0):
-            self.SS._out('BT /F%d %.2f Tf ET' % (self.font.index, self.font.fontsize), self.page)
+            self.session._out('BT /F%d %.2f Tf ET' % (self.font.index, self.font.fontsize), self.page)
         else:
             del newfont
 
@@ -147,24 +147,24 @@ class PDFDocument(object):
         else:
             #Page
             for page in self.pages:
-                self.SS._addObject()
-                self.SS._out('<</Type /Page')
-                self.SS._out('/Parent 1 0 R')
+                self.session._add_object()
+                self.session._out('<</Type /Page')
+                self.session._out('/Parent 1 0 R')
                 if page in self.orientation_changes:
-                    self.SS._out('/MediaBox [0 0 %.2f %.2f]' % (page.width, page.height))
-                self.SS._out('/Resources 2 0 R')
-                self.SS._out('/Contents %s 0 R>>' % len(self.SS.objects))
-                self.SS._out('endobj')
+                    self.session._out('/MediaBox [0 0 %.2f %.2f]' % (page.width, page.height))
+                self.session._out('/Resources 2 0 R')
+                self.session._out('/Contents %s 0 R>>' % len(self.session.objects))
+                self.session._out('endobj')
                 #Page content
-                self.SS._addObject()
-                if self.SS.compression is True:
+                self.session._add_object()
+                if self.session.compression is True:
                     textfilter = '/Filter /FlateDecode'
                     page._compress()
                 else:
                     textfilter = ''
-                self.SS._out('<< %s /Length %s >>' % (textfilter, len(page.buffer)))
-                self.SS._putStream(page.buffer)
-                self.SS._out('endobj')
+                self.session._out('<< %s /Length %s >>' % (textfilter, len(page.buffer)))
+                self.session._putStream(page.buffer)
+                self.session._out('endobj')
 
     def _outputFonts(self):
         """ Called by the PDFLite object to prompt creating
@@ -172,22 +172,22 @@ class PDFDocument(object):
 
         """
         for font in self.fonts:
-            obj = self.SS._addObject()
-            font._setNumber(obj.id)
-            self.SS._out('<</Type /Font')
-            self.SS._out('/BaseFont /' + font.name)
-            self.SS._out('/Subtype /Type1')
+            obj = self.session._add_object()
+            font._set_number(obj.id)
+            self.session._out('<</Type /Font')
+            self.session._out('/BaseFont /' + font.name)
+            self.session._out('/Subtype /Type1')
             if(font.name != 'Symbol' and font.name != 'ZapfDingbats'):
-                self.SS._out('/Encoding /WinAnsiEncoding')
-            self.SS._out('>>')
-            self.SS._out('endobj')
+                self.session._out('/Encoding /WinAnsiEncoding')
+            self.session._out('>>')
+            self.session._out('endobj')
 
     """ The following methods are the core ways to input content.
 
     """
     def addText(self, text):
         """ Input text, short or long. Writes in order, within the
-            pre-defined page boundaries. Use addNewline as a return
+            pre-defined page boundaries. Use add_newline as a return
             character. Sequential addText commands will print without
             additional whitespace.
 
@@ -195,26 +195,26 @@ class PDFDocument(object):
             future version.
 
         """
-        text = PDFText(self.SS, self.page, self.font, self.colorscheme, text)
+        text = PDFText(self.session, self.page, self.font, self.color_scheme, text)
 
-    def addNewline(self, number=1):
+    def add_newline(self, number=1):
         """ Starts over again at the new line. If number is specified,
             it will leave multiple lines.
         """
         if isinstance(number, int):
             try:
-                self.page.addNewline(self.font, number)
+                self.page.add_newline(self.font, number)
             except ValueError:
-                self.addPage()
+                self.add_page()
         else:
             raise TypeError("Number of newlines must be an integer.")
 
-    def addIndent(self):
+    def add_indent(self):
         """ Adds a standard tab of 4 spaces.
         """
-        self.page.addIndent(self.font)
+        self.page.add_indent(self.font)
 
-    def addLine(self, x1=None, y1=None, x2=None, y2=None, cursor1=None, cursor2=None):
+    def add_line(self, x1=None, y1=None, x2=None, y2=None, cursor1=None, cursor2=None):
         if cursor1 is not None:
             if cursor2 is not None:
                 pass
@@ -222,17 +222,17 @@ class PDFDocument(object):
             cursor1 = PDFCursor(x1, y1)
             cursor2 = PDFCursor(x2, y2)
 
-        myline = PDFLine(self.SS, self.page, self.colorscheme, cursor1, cursor2)
+        myline = PDFLine(self.session, self.page, self.color_scheme, cursor1, cursor2)
         myline.draw()
 
-    def drawHorizonalLine(self):
-        endcursor = self.page.cursor.copy()
-        endcursor.x = endcursor.xmax
+    def draw_horizonal_line(self):
+        end_cursor = self.page.cursor.copy()
+        end_cursor.x = end_cursor.xmax
 
-        myline = PDFLine(self.SS, self.page, self.colorscheme, self.page.cursor, endcursor)
+        myline = PDFLine(self.session, self.page, self.color_scheme, self.page.cursor, end_cursor)
         myline.draw()
 
-    def drawRectangle(self, x1=None, y1=None, x2=None, y2=None, width=None, height=None, cursor1=None, cursor2=None, style='S'):
+    def draw_rectangle(self, x1=None, y1=None, x2=None, y2=None, width=None, height=None, cursor1=None, cursor2=None, style='S'):
         if cursor1 is not None:
             if cursor2 is not None:
                 pass
@@ -256,8 +256,8 @@ class PDFDocument(object):
             else:
                 raise Exception("Rectangle not defined")
 
-        rect = PDFRectangle(self.SS, self.page, self.colorscheme, cursor1, cursor2, size=1, style=style)
-        rect.draw()
+        rectangle = PDFRectangle(self.session, self.page, self.color_scheme, cursor1, cursor2, size=1, style=style)
+        rectangle.draw()
 
     def addTable(self, datalist, headerlist=None, cursor=None):
         pass
