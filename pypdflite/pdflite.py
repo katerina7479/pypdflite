@@ -23,8 +23,8 @@ class PDFLite(object):
     def __init__(self, filepath):
         self.filepath = filepath
 
-        self.SS = _Session(self)
-        self.document = PDFDocument(self.SS)
+        self.session = _Session(self)
+        self.document = PDFDocument(self.session)
 
         # Full width display mode default
         self.setDisplayMode()
@@ -32,17 +32,17 @@ class PDFLite(object):
         self.pdf_version = '1.3'
 
         #Initialize PDF information
-        self.setInformation()
-        self.setCompression()
+        self.set_information()
+        self.set_compression()
 
-    def setCompression(self, value=False):
+    def set_compression(self, value=False):
         # False is easier to read with a text editor.
-        self.SS._setCompression(value)
+        self.session._set_compression(value)
 
     def getDocument(self):
         return self.document
 
-    def setInformation(self, title=None, subject=None, author=None, keywords=None, creator=None):
+    def set_information(self, title=None, subject=None, author=None, keywords=None, creator=None):
         """ Convinence function to add property info, can set any
             attribute and leave the others blank, it won't over-write
             previously set items, but to delete, you must set the attribute
@@ -94,7 +94,7 @@ class PDFLite(object):
 
     def _putHeader(self):
         "Standard first line"
-        self.SS._out('%%PDF-%s' % self.pdf_version)
+        self.session._out('%%PDF-%s' % self.pdf_version)
 
     def _putPages(self):
         """ First, the Document object does the heavy-lifting for the
@@ -107,15 +107,15 @@ class PDFLite(object):
         self.document._outputPages()
 
         # Pages Object, provides reference to page objects (Kids list).
-        self.SS._addObject(1)
-        self.SS._out('<</Type /Pages')
+        self.session._addObject(1)
+        self.session._out('<</Type /Pages')
         kids = '/Kids ['
         for i in xrange(0, len(self.document.pages)):
             kids += str(3 + 2*i) + ' 0 R '
-        self.SS._out(kids + ']')
-        self.SS._out('/Count %s' % len(self.document.pages))
-        self.SS._out('/MediaBox [0 0 %.2f %.2f]' % (self.document.page.width, self.document.page.height))  # Overal size of the default PDF page
-        self.SS._out('>>')
+        self.session._out(kids + ']')
+        self.session._out('/Count %s' % len(self.document.pages))
+        self.session._out('/MediaBox [0 0 %.2f %.2f]' % (self.document.page.width, self.document.page.height))  # Overal size of the default PDF page
+        self.session._out('>>')
         self.SS._out('endobj')
 
     def _putResources(self):
