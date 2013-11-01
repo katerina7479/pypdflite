@@ -44,5 +44,5 @@ class PDFRectangle(object):
 
     def draw(self):
         s = '%.2f %.2f %.2f %.2f re %s' % (
-            self.corner.x, self.corner.y, self.width, self.height, self.style)
+            self.corner.x, self.corner.y_prime, self.width, self.height, self.style)
         self.session._out(s, self.page)

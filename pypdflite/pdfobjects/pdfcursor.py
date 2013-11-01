@@ -54,6 +54,10 @@ class PDFCursor(object):
             self._y = value
             self._y_real = self.ymax-self._y
 
+    @property
+    def y_prime(self):
+        return self.ymax-self.y
+
     def x_fit(self, test_length):
         if (self.x + test_length) >= self.xmax:
             return False

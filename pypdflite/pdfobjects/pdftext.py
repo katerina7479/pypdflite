@@ -52,7 +52,7 @@ class PDFText(object):
         self._normalize_text()
         text_string = self._text_to_string(self.text)
         if self.text != '':
-            s = 'BT %.2f %.2f Td %s Tj ET' % (self.cursor.x, self.cursor.y, text_string)
+            s = 'BT %.2f %.2f Td %s Tj ET' % (self.cursor.x, self.cursor.y_prime, text_string)
             if(self.font.underline):
                 s = '%s %s' % (s, self._underline())
             # Only called if text != fill colors in current scheme
@@ -94,7 +94,7 @@ class PDFText(object):
         up = self.font.underline_position
         ut = self.font.underline_thickness
         w = self.font.string_width(self.text)
-        s = '%.2f %.2f %.2f %.2f re f' % (self.cursor.x, self.cursor.y - up, w, ut)
+        s = '%.2f %.2f %.2f %.2f re f' % (self.cursor.x, self.cursor.y_prime - up, w, ut)
         return s
 
     def _newline(self):

@@ -27,5 +27,5 @@ class PDFLine(object):
 
     def draw(self):
         s = '%.2f %.2f m %.2f %.2f l S' % (
-            self.start.x, self.start.y, self.end.x, self.end.y)
+            self.start.x, self.start.y_prime, self.end.x, self.end.y_prime)
         self.session._out(s, self.page)
