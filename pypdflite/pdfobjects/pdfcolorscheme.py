@@ -2,6 +2,7 @@ from pdfcolor import PDFColor
 
 
 class PDFColorScheme(object):
+
     """ ColorScheme is made up of three PDFColors,
         for the draw (stroke operations), fill, and text
         colors.
@@ -11,58 +12,58 @@ class PDFColorScheme(object):
         PDFColorSchemes for different situations.
 
     """
-    def __init__(self, drawcolor=None, fillcolor=None, textcolor=None):
-        self.setDrawColor(drawcolor)
-        self.setFillColor(fillcolor)
-        self.setTextColor(textcolor)
 
-    def setDrawColor(self, drawcolor):
-        if drawcolor is None:
-            drawcolor = PDFColor("d")
-        elif isinstance(drawcolor, PDFColor) and drawcolor.colortype is "d":
+    def __init__(self, draw_color=None, fill_color=None, text_color=None):
+        self.set_draw_color(draw_color)
+        self.set_fill_color(fill_color)
+        self.set_text_color(text_color)
+
+    def set_draw_color(self, draw_color):
+        if draw_color is None:
+            draw_color = PDFColor("d")
+        elif isinstance(draw_color, PDFColor) and draw_color.color_type is "d":
             pass
         else:
-            drawcolor.setColorType("d")
-        self.drawcolor = drawcolor
+            draw_color.set_color_type("d")
+        self.draw_color = draw_color
 
-    def setFillColor(self, fillcolor):
-        if fillcolor is None:
-            fillcolor = PDFColor("f")
-        elif isinstance(fillcolor, PDFColor) and fillcolor.colortype is "f":
+    def set_fill_color(self, fill_color):
+        if fill_color is None:
+            fill_color = PDFColor("f")
+        elif isinstance(fill_color, PDFColor) and fill_color.color_type is "f":
             pass
         else:
-            fillcolor.setColorType("f")
-        self.fillcolor = fillcolor
-        self._setColorFlag()
+            fill_color.set_color_type("f")
+        self.fill_color = fill_color
+        self._set_color_flag()
 
-    def setTextColor(self, textcolor):
-        if textcolor is None:
-            textcolor = PDFColor("t")
-        elif isinstance(textcolor, PDFColor) and textcolor.colortype is "t":
+    def set_text_color(self, text_color):
+        if text_color is None:
+            text_color = PDFColor("t")
+        elif isinstance(text_color, PDFColor) and text_color.color_type is "t":
             pass
         else:
-            textcolor.setColorType("t")
-        self.textcolor = textcolor
-        self._setColorFlag()
+            text_color.set_color_type("t")
+        self.text_color = text_color
+        self._set_color_flag()
 
-    def _setColorFlag(self):
-        if hasattr(self, "textcolor") and hasattr(self, "fillcolor"):
-            if self.textcolor.isEqual(self.fillcolor):
-                self.colorFlag = False
+    def _set_color_flag(self):
+        if hasattr(self, "text_color") and hasattr(self, "fill_color"):
+            if self.text_color.is_equal(self.fill_color):
+                self.color_flag = False
             else:
-                self.colorFlag = True
+                self.color_flag = True
         else:
             pass
 
-    def _getColorFlag(self):
-        return self.colorFlag
+    def _get_color_flag(self):
+        return self.color_flag
 
-    def _getDrawColorString(self):
-        return self.drawcolor._getColorString()
+    def _get_draw_color_string(self):
+        return self.draw_color._getColorString()
 
-    def _getFillColorString(self):
-        return self.fillcolor._getColorString()
+    def _get_fill_color_string(self):
+        return self.fill_color._getColorString()
 
-    def _getTextColorString(self, text=None):
-        s = self.fillcolor._getColorString()
-        return s
+    def _get_text_color_string(self, text=None):
+        return self.fill_color._getColorString()

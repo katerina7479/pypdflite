@@ -1,30 +1,31 @@
 
 
 class PDFMargin(object):
+
     def __init__(self, left=20, top=20, right=None, bottom=None):
-        self._setLeft(left)
-        self._setTop(top)
-        self._setRight(right)
-        self._setBottom(bottom)
+        self._set_left(left)
+        self._set_top(top)
+        self._set_right(right)
+        self._set_bottom(bottom)
 
-    def _setLeft(self, left):
-        self.l = left
+    def _set_left(self, left):
+        self.left = left
 
-    def _setTop(self, top):
-        self.t = top
+    def _set_top(self, top):
+        self.top = top
 
-    def _setRight(self, right):
+    def _set_right(self, right):
         if right is None:
-            self.r = self.l
+            self.right = self.left
         else:
-            self.r = right
+            self.right = right
 
-    def _setBottom(self, bottom):
+    def _set_bottom(self, bottom):
         if bottom is None:
-            self.b = self.t
+            self.bottom = self.top
         else:
-            self.b = bottom
-        self._setTrigger(2 * self.b)
+            self.bottom = bottom
+        self._set_trigger(2 * self.bottom)
 
-    def _setTrigger(self, value):
-        self.trigger = 2 * self.b
+    def _set_trigger(self, value):
+        self.trigger = 2 * self.bottom

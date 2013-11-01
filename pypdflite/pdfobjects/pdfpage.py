@@ -4,16 +4,18 @@ from zlib import compress
 
 
 class PDFPage(object):
+
     """ Defines the structure of an individual page.
         Margins are set by default. If you want to change
         them, it should be done through the Document object,
         or before any content is written to the page.
 
     """
+
     def __init__(self, orientation="P", layout="letter"):
         # Additional layout sizes may be added to this dictionary.
         # Width then height, in pixels, in portrait orientation.
-        self.layoutdict = {'a3': (841.89, 1190.55),
+        self.layout_dict = {'a3': (841.89, 1190.55),
                            'a4': (595.28, 841.89),
                            'a5': (420.94, 595.28),
                            'letter': (612, 792),
@@ -21,7 +23,7 @@ class PDFPage(object):
                            '11x17': (792, 1224)
                            }
 
-        self._setPageSize(layout)
+        self._set_page_size(layout)
 
         # "P" or "L"
         self.orientation = orientation
@@ -32,8 +34,8 @@ class PDFPage(object):
         # Initialize the Page Margin.
         self.margin = None
 
-        self.setOrientation(orientation)
-        self.setMargins()
+        self.set_orientation(orientation)
+        self.set_margins()
 
         self.orientation_change = False
         self.buffer = ""
@@ -46,66 +48,66 @@ class PDFPage(object):
         """
         self.buffer = compress(self.buffer)
 
-    def _setIndex(self, value):
+    def _set_index(self, value):
         self.index = value
 
-    def _setPageSize(self, layout):
+    def _set_page_size(self, layout):
         self.layout = layout.lower()
-        if self.layout in self.layoutdict:
-            self.pagesize = self.layoutdict[self.layout]
+        if self.layout in self.layout_dict:
+            self.page_size = self.layout_dict[self.layout]
         else:
             raise Exception('Unknown page layout: ', self.layout)
 
-    def _setDimensions(self):
+    def _set_dimensions(self):
         self.width = self.size[0]
         self.height = self.size[1]
 
-    def setOrientation(self, orientation="P"):
+    def set_orientation(self, orientation="P"):
         self.orientation = orientation.lower()
         if(self.orientation == 'p' or self.orientation == 'portrait'):
-            self.size = self.pagesize
+            self.size = self.page_size
         elif(self.orientation == 'l' or self.orientation == 'landscape'):
-            self.size = (self.pagesize[1], self.pagesize[0])
+            self.size = (self.page_size[1], self.page_size[0])
         else:
             raise Exception('Incorrect orientation: ', self.orientation)
-        self._setDimensions()
-        self._setBounds()
+        self._set_dimensions()
+        self._set_bounds()
 
-    def changeOrientation(self):
+    def change_orientation(self):
         if self.orientation_change is False:
             self.size = (self.size[1], self.size[0])
             self.orientation_change = True
-            self._setDimensions()
-            self._setBounds()
+            self._set_dimensions()
+            self._set_bounds()
         else:
             pass
 
-    def setMargins(self, margin=None):
+    def set_margins(self, margin=None):
         if margin is None:
             self.margin = PDFMargin()
         elif isinstance(margin, PDFMargin):
             self.margin = margin
         else:
             raise Exception("Invalid Margin object")
-        self._setDimensions()
-        self._setBounds()
+        self._set_dimensions()
+        self._set_bounds()
 
-    def _setBounds(self):
+    def _set_bounds(self):
         if self.margin is None:
             xmin = 0
             xmax = self.size[0]
-            ymin = self.size[1]
-            ymax = 0
+            ymin = 0
+            ymax = self.size[1]
         else:
-            xmin = 0 + self.margin.l
-            xmax = self.size[0] - self.margin.r
-            ymin = self.size[1] - self.margin.t
-            ymax = 0 + self.margin.b
-        self.cursor.setBounds(xmin, ymin, xmax, ymax)
+            xmin = 0 + self.margin.left
+            xmax = self.size[0] - self.margin.right
+            ymin = 0 + self.margin.bottom
+            ymax = self.size[1] - self.margin.top
+        self.cursor.set_bounds(xmin, ymin, xmax, ymax)
 
-    def addNewline(self, font, number=1):
-        self.cursor.yPlus((font.linesize*number))
-        self.cursor.xReset()
+    def add_newline(self, font, number=1):
+        self.cursor.y_plus((font.line_size * number))
+        self.cursor.x_reset()
 
-    def addIndent(self, font, number=4):
-        self.cursor.xPlus(number * font.stringWidth(' '))
+    def add_indent(self, font, number=4):
+        self.cursor.x_plus(number * font.string_width(' '))

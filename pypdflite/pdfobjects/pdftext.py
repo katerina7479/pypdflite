@@ -1,82 +1,85 @@
         # Note (not written, if color flag is True, then the string must be wrapped for output as follows:
         # s = 'q ' + s (from here) + ' ' + text s + ' Q'
 
+
 class PDFText(object):
-    def __init__(self, session, page, font, colorscheme, text):
-        self.SS = session
+
+    def __init__(self, session, page, font, color_scheme, text):
+        self.session = session
         self.page = page
         self.font = font
-        self.colorscheme = colorscheme
-        self.c = page.cursor
+        self.color_scheme = color_scheme
+        self.cursor = page.cursor
         self.text = text
 
-        if self._testXfit() is True:
+        if self._test_x_fit() is True:
             self._text()
         else:
             self._write()
 
-    def _normalizeText(self):
+    def _normalize_text(self):
         self.text = self.text.encode('latin1')
 
-    def _testXfit(self, value=None):
+    def _test_x_fit(self, value=None):
         if value is None:
-            test = self.c.xfit(self.font.stringWidth(self.text))
+            test = self.cursor.x_fit(self.font.string_width(self.text))
         else:
-            test = self.c.xfit(self.font.stringWidth(value))
+            test = self.cursor.x_fit(self.font.string_width(value))
         return test
 
-    def _splitIntoLines(self, text):
-        tc = self.c.copy()  # Test cursor
-        textarray = text.split()
+    def _split_into_lines(self, text):
+        test_cursor = self.cursor.copy()  # Test cursor
+        text_array = text.split()
         myline = ''
-        linearray = []
-        for word in textarray:
+        line_array = []
+        for word in text_array:
             segment = myline + ' ' + word
-            if tc.xfit(self.font.stringWidth(segment)) is False:
-                linearray.append(myline)
+            if test_cursor.x_fit(self.font.string_width(segment)) is False:
+                line_array.append(myline)
                 myline = word
-                tc.xReset()
+                test_cursor.x_reset()
             else:
                 if myline == '':
                     myline = word
                 else:
                     myline += ' %s' % word
-        linearray.append(myline)
-        return linearray
+        line_array.append(myline)
+        return line_array
 
     def _text(self, value=None):
         if value is not None:
             self.text = value
-        self._normalizeText()
-        textstring = self._textstring(self.text)
+        self._normalize_text()
+        text_string = self._text_to_string(self.text)
         if self.text != '':
-            s = 'BT %.2f %.2f Td %s Tj ET' % (self.c.x, self.c.y, textstring)
+            s = 'BT %.2f %.2f Td %s Tj ET' % (self.cursor.x, self.cursor.y, text_string)
             if(self.font.underline):
                 s = '%s %s' % (s, self._underline())
-            if(self.colorscheme._getColorFlag()):  # Only called if text != fill colors in current scheme
-                s = 'q %s %s Q' % (self.color._getTextColorString(), s)
-            #Set Font for text
-            fs = 'BT /F%d %.2f Tf ET' % (self.font.index, self.font.fontsize)
-            self.SS._out(fs, self.page)
-            self.SS._out(s, self.page)
+            # Only called if text != fill colors in current scheme
+            if(self.color_scheme._get_color_flag()):
+                s = 'q %s %s Q' % (self.color._get_text_color_string(), s)
+            # Set Font for text
+            fs = 'BT /F%d %.2f Tf ET' % (self.font.index, self.font.font_size)
+            self.session._out(fs, self.page)
+            self.session._out(s, self.page)
             try:
-                self.c.xPlus(self.font.stringWidth(self.text))
+                self.cursor.x_plus(self.font.string_width(self.text))
             except ValueError:
                 self._newline()
         else:
             pass
 
     def _write(self):
-        linearray = self._splitIntoLines(self.text)
-        test = self.c.yfit(self.font.linesize * len(linearray))
+        line_array = self._split_into_lines(self.text)
+        test = self.cursor.y_fit(self.font.line_size * len(line_array))
         if test is False:
-            self.SS._addPage(self.text)
+            self.session._add_page(self.text)
         else:
-            for line in linearray:
+            for line in line_array:
                 self._text(line)
                 self._newline()
 
-    def _textstring(self, txt):
+    def _text_to_string(self, txt):
         txt = self._escape(txt)
         txt = "(%s)" % txt
         return str(txt)
@@ -87,13 +90,13 @@ class PDFText(object):
         return text
 
     def _underline(self):
-        #Underline text
-        up = self.font.underlineposition
-        ut = self.font.underlinethickness
-        w = self.font.stringWidth(self.text)
-        s = '%.2f %.2f %.2f %.2f re f' % (self.c.x, self.c.y-up, w, ut)
+        # Underline text
+        up = self.font.underline_position
+        ut = self.font.underline_thickness
+        w = self.font.string_width(self.text)
+        s = '%.2f %.2f %.2f %.2f re f' % (self.cursor.x, self.cursor.y - up, w, ut)
         return s
 
     def _newline(self):
-        self.c.yPlus(self.font.linesize)
-        self.c.xReset()
+        self.cursor.y_plus(self.font.line_size)
+        self.cursor.x_reset()

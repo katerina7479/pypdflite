@@ -1,45 +1,48 @@
 
 
 class PDFRectangle(object):
-    def __init__(self, session, page, colorscheme, cursor1, cursor2, size=1, style='S'):
-        self.SS = session
+
+    def __init__(self, session, page, color_scheme, cursor_start, cursor_end, size=1, style='S'):
+        self.session = session
         self.page = page
-        self.colorscheme = colorscheme
+        self.color_scheme = color_scheme
 
-        self.stylelist = ['S', 'B', 'F']  # S is plain, B is filled with border, F is filled no border.
+        # S is plain, B is filled with border, F is filled no border.
+        self.style_list = ['S', 'B', 'F']
 
-        self._setDimensions(cursor1, cursor2)
-        self._setStyle(style)
-        self.setSize(size)
-        self.setColor()
+        self._set_dimensions(cursor_start, cursor_end)
+        self._set_style(style)
+        self.set_size(size)
+        self.set_color()
 
-    def _setDimensions(self, cursor1, cursor2):
-        self.corner = cursor1
-        difference = cursor2.subtract(cursor1)
+    def _set_dimensions(self, cursor_start, cursor_end):
+        self.corner = cursor_start
+        difference = cursor_end.subtract(cursor_start)
 
         self.width = difference.x
         self.height = difference.y
 
-    def _setStyle(self, style='S'):
+    def _set_style(self, style='S'):
         style = style.upper()
-        if style in self.stylelist:
+        if style in self.style_list:
             self.style = style
         else:
             self.style = 'S'
 
-    def setSize(self, linesize=1):
-        self.linesize = linesize
-        self.SS._out('%.2f w' % self.linesize)
+    def set_size(self, line_size=1):
+        self.line_size = line_size
+        self.session._out('%.2f w' % self.line_size)
 
-    def setColor(self, colorscheme=None):
-        if colorscheme is None:
-            self.SS._out(self.colorscheme._getDrawColorString(), self.page)
-            self.SS._out(self.colorscheme._getFillColorString(), self.page)
-            print "Did colorscheme in rect", self.colorscheme._getFillColorString()
+    def set_color(self, color_scheme=None):
+        if color_scheme is None:
+            self.session._out(self.color_scheme._get_draw_color_string(), self.page)
+            self.session._out(self.color_scheme._get_fill_color_string(), self.page)
+            print "Did color_scheme in rect", self.color_scheme._get_fill_color_string()
         else:
-            self.colorscheme = colorscheme
-            self.setColor(None)
+            self.color_scheme = color_scheme
+            self.set_color(None)
 
     def draw(self):
-        s = '%.2f %.2f %.2f %.2f re %s' % (self.corner.x, self.corner.y, self.width, self.height, self.style)
-        self.SS._out(s, self.page)
+        s = '%.2f %.2f %.2f %.2f re %s' % (
+            self.corner.x, self.corner.y, self.width, self.height, self.style)
+        self.session._out(s, self.page)

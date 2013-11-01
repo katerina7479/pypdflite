@@ -8,6 +8,7 @@ from pdfobjects.pdfrectangle import PDFRectangle
 
 
 class PDFDocument(object):
+
     """ The Document object is the base class that
         is used to add and manage the content of the
         pdf file.
@@ -23,6 +24,7 @@ class PDFDocument(object):
         the current font passed to them.
 
     """
+
     def __init__(self, session):
         "Sets up a standard default document."
         self.session = session
@@ -50,11 +52,11 @@ class PDFDocument(object):
     def _set_default_font(self):
         """ Internal method to set the
             initial default font. Change
-            the font using setFont method.
+            the font using set_font method.
 
         """
         self.font = PDFFont()
-        self.font._setIndex()
+        self.font._set_index()
         self.fonts.append(self.font)
 
     def add_page(self, page=None):
@@ -67,16 +69,16 @@ class PDFDocument(object):
             self.page = PDFPage()
         else:
             self.page = page
-        self.page._setIndex(len(self.pages))
+        self.page._set_index(len(self.pages))
         self.pages.append(self.page)
         currentfont = self.font
-        self.setFont(font=currentfont)
+        self.set_font(font=currentfont)
 
-    def getPage(self):
+    def get_page(self):
         "Returns reference to current page object."
         return self.page
 
-    def setFont(self, family=None, style=None, size=None, font=None):
+    def set_font(self, family=None, style=None, size=None, font=None):
         """ Set the document font object, size given in points.
             If family, style, and/or size is given, generates
             a new Font object, checks to see if it is already
@@ -88,43 +90,44 @@ class PDFDocument(object):
         """
 
         if size is None:
-            size = self.font.fontsize
+            size = self.font.font_size
 
         if font is not None:
-            newfont = font
+            new_font = font
         else:
-            newfont = PDFFont(family, style, size)
+            new_font = PDFFont(family, style, size)
 
-        #Test if font is already selected
-        if not newfont._equals(self.font):
-            #Test if used for the first time
-            if newfont.fontkey not in self.fonts:
+        # Test if font is already selected
+        if not new_font._equals(self.font):
+            # Test if used for the first time
+            if new_font.font_key not in self.fonts:
                 i = len(self.fonts) + 1
-                newfont._setIndex(i)
-                self.fonts.append(newfont)
+                new_font._set_index(i)
+                self.fonts.append(new_font)
 
-        #Select it
-        self.font = newfont
+        # Select it
+        self.font = new_font
         if(self.page.index > 0):
-            self.session._out('BT /F%d %.2f Tf ET' % (self.font.index, self.font.fontsize), self.page)
+            self.session._out('BT /F%d %.2f Tf ET' %
+                              (self.font.index, self.font.font_size), self.page)
         else:
-            del newfont
+            del new_font
 
-    def getFont(self):
+    def get_font(self):
         """ Get the current font object. Useful for storing
             in variables, and switching between styles.
 
         """
         return self.font
 
-    def setFontSize(self, size):
+    def set_font_size(self, size):
         "Convinence method for just changing font size."
-        if(self.font.fontsize == size):
+        if(self.font.font_size == size):
             pass
         else:
-            self.setFont(self.font.family, self.font.style, size)
+            self.set_font(self.font.family, self.font.style, size)
 
-    def _getOrientationChanges(self):
+    def _get_orientation_changes(self):
         """ Returns a list of the pages that have
             orientation changes.
 
@@ -137,36 +140,39 @@ class PDFDocument(object):
                 pass
         return self.orientation_changes
 
-    def _outputPages(self):
+    def _output_pages(self):
         """ Called by the PDFLite object to prompt creating
             the page objects.
 
         """
         if self.orientation_changes is None:
-            self._getOrientationChanges()
+            self._get_orientation_changes()
         else:
-            #Page
+            # Page
             for page in self.pages:
                 self.session._add_object()
                 self.session._out('<</Type /Page')
                 self.session._out('/Parent 1 0 R')
                 if page in self.orientation_changes:
-                    self.session._out('/MediaBox [0 0 %.2f %.2f]' % (page.width, page.height))
+                    self.session._out(
+                        '/MediaBox [0 0 %.2f %.2f]' % (page.width, page.height))
                 self.session._out('/Resources 2 0 R')
-                self.session._out('/Contents %s 0 R>>' % len(self.session.objects))
+                self.session._out(
+                    '/Contents %s 0 R>>' % len(self.session.objects))
                 self.session._out('endobj')
-                #Page content
+                # Page content
                 self.session._add_object()
                 if self.session.compression is True:
                     textfilter = '/Filter /FlateDecode'
                     page._compress()
                 else:
                     textfilter = ''
-                self.session._out('<< %s /Length %s >>' % (textfilter, len(page.buffer)))
-                self.session._putStream(page.buffer)
+                self.session._out('<< %s /Length %s >>' %
+                                  (textfilter, len(page.buffer)))
+                self.session._put_stream(page.buffer)
                 self.session._out('endobj')
 
-    def _outputFonts(self):
+    def _output_fonts(self):
         """ Called by the PDFLite object to prompt creating
             the font objects.
 
@@ -185,17 +191,19 @@ class PDFDocument(object):
     """ The following methods are the core ways to input content.
 
     """
-    def addText(self, text):
+
+    def add_text(self, text):
         """ Input text, short or long. Writes in order, within the
             pre-defined page boundaries. Use add_newline as a return
-            character. Sequential addText commands will print without
+            character. Sequential add_text commands will print without
             additional whitespace.
 
             Currently all "left-justified", although that may change in
             future version.
 
         """
-        text = PDFText(self.session, self.page, self.font, self.color_scheme, text)
+        text = PDFText(
+            self.session, self.page, self.font, self.color_scheme, text)
 
     def add_newline(self, number=1):
         """ Starts over again at the new line. If number is specified,
@@ -222,14 +230,16 @@ class PDFDocument(object):
             cursor1 = PDFCursor(x1, y1)
             cursor2 = PDFCursor(x2, y2)
 
-        myline = PDFLine(self.session, self.page, self.color_scheme, cursor1, cursor2)
+        myline = PDFLine(
+            self.session, self.page, self.color_scheme, cursor1, cursor2)
         myline.draw()
 
     def draw_horizonal_line(self):
         end_cursor = self.page.cursor.copy()
         end_cursor.x = end_cursor.xmax
 
-        myline = PDFLine(self.session, self.page, self.color_scheme, self.page.cursor, end_cursor)
+        myline = PDFLine(self.session, self.page,
+                         self.color_scheme, self.page.cursor, end_cursor)
         myline.draw()
 
     def draw_rectangle(self, x1=None, y1=None, x2=None, y2=None, width=None, height=None, cursor1=None, cursor2=None, style='S'):
@@ -256,8 +266,9 @@ class PDFDocument(object):
             else:
                 raise Exception("Rectangle not defined")
 
-        rectangle = PDFRectangle(self.session, self.page, self.color_scheme, cursor1, cursor2, size=1, style=style)
+        rectangle = PDFRectangle(
+            self.session, self.page, self.color_scheme, cursor1, cursor2, size=1, style=style)
         rectangle.draw()
 
-    def addTable(self, datalist, headerlist=None, cursor=None):
+    def add_table(self, datalist, headerlist=None, cursor=None):
         pass

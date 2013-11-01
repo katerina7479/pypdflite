@@ -1,7 +1,7 @@
 # Reference Names for colors with RGB values
 
 
-ColorRef = {'black': (0, 0, 0),
+color_reference = {'black': (0, 0, 0),
             'red': (255, 0, 0),
             'crimson': (220, 20, 60),
             'pink': (255, 192, 203),

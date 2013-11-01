@@ -1,10 +1,11 @@
 from datetime import datetime
 
 from session import _Session
-from pdfdocument import PDFDocument
+from .pdfdocument import PDFDocument
 
 
 class PDFLite(object):
+
     """ PDF Generator, this class creates a document,
         session object, and creates the PDF outline.
 
@@ -15,7 +16,7 @@ class PDFLite(object):
 
         When using this module, start by creating an
         instance of PDFLite, then request the document
-        object with getDocument. Make your inputs to that
+        object with get_document. Make your inputs to that
         object, and finish by closing through PDFLite.
 
     """
@@ -27,11 +28,11 @@ class PDFLite(object):
         self.document = PDFDocument(self.session)
 
         # Full width display mode default
-        self.setDisplayMode()
+        self.set_display_mode()
         # Set default PDF version number
         self.pdf_version = '1.3'
 
-        #Initialize PDF information
+        # Initialize PDF information
         self.set_information()
         self.set_compression()
 
@@ -39,7 +40,7 @@ class PDFLite(object):
         # False is easier to read with a text editor.
         self.session._set_compression(value)
 
-    def getDocument(self):
+    def get_document(self):
         return self.document
 
     def set_information(self, title=None, subject=None, author=None, keywords=None, creator=None):
@@ -50,9 +51,10 @@ class PDFLite(object):
             program the likely-hood of such usage would be minimal.)
 
         """
-        testdict = {"title": title, "subject": subject, "author": author, "keywords": keywords, "creator": creator}
+        info_dict = {"title": title, "subject": subject, "author":
+                    author, "keywords": keywords, "creator": creator}
 
-        for att, value in testdict.iteritems():
+        for att, value in info_dict.iteritems():
             if hasattr(self, att):
                 if value is not None:
                     setattr(self, att, value)
@@ -61,7 +63,7 @@ class PDFLite(object):
             else:
                 setattr(self, att, None)
 
-    def setDisplayMode(self, zoom='fullpage', layout='continuous'):
+    def set_display_mode(self, zoom='fullpage', layout='continuous'):
         "Set display mode in viewer"
         self.zoom_options = ["fullpage", "fullwidth", "real", "default"]
         self.layout_options = ["single", "continuous", "two", "default"]
@@ -79,117 +81,123 @@ class PDFLite(object):
     def close(self):
         "Generate the document"
         # Places header, pages, page content first.
-        self._putHeader()
-        self._putPages()
-        self._putResources()
+        self._put_header()
+        self._put_pages()
+        self._put_resources()
         # Information object
-        self._putInformation()
+        self._put_information()
         # Catalog object
-        self._putCatalog()
+        self._put_catalog()
         # Cross-reference object
-        self._putCrossReference()
+        self._put_cross_reference()
         # Trailer object
-        self._putTrailer()
-        self._outputToFile()
+        self._put_trailer()
+        self._output_to_file()
 
-    def _putHeader(self):
+    def _put_header(self):
         "Standard first line"
         self.session._out('%%PDF-%s' % self.pdf_version)
 
-    def _putPages(self):
+    def _put_pages(self):
         """ First, the Document object does the heavy-lifting for the
             individual page objects and content.
 
             Then, the overall "Pages" object is generated.
 
         """
-        self.document._getOrientationChanges()
-        self.document._outputPages()
+        self.document._get_orientation_changes()
+        self.document._output_pages()
 
         # Pages Object, provides reference to page objects (Kids list).
-        self.session._addObject(1)
+        self.session._add_object(1)
         self.session._out('<</Type /Pages')
         kids = '/Kids ['
         for i in xrange(0, len(self.document.pages)):
-            kids += str(3 + 2*i) + ' 0 R '
+            kids += str(3 + 2 * i) + ' 0 R '
         self.session._out(kids + ']')
         self.session._out('/Count %s' % len(self.document.pages))
-        self.session._out('/MediaBox [0 0 %.2f %.2f]' % (self.document.page.width, self.document.page.height))  # Overal size of the default PDF page
+        # Overal size of the default PDF page
+        self.session._out('/MediaBox [0 0 %.2f %.2f]' %
+                          (self.document.page.width, self.document.page.height))
         self.session._out('>>')
-        self.SS._out('endobj')
+        self.session._out('endobj')
 
-    def _putResources(self):
+    def _put_resources(self):
         "Resource objects can be used several times, but are defined here."
-        self._putFonts()
-        self._putImages()
+        self._put_fonts()
+        self._put_images()
 
-        #Resource dictionary
-        self._putResourceDict()
+        # Resource dictionary
+        self._put_resource_dict()
 
-    def _putFonts(self):
+    def _put_fonts(self):
         "Fonts definitions objects."
-        self.document._outputFonts()
+        self.document._output_fonts()
 
-    def _putImages(self):
+    def _put_images(self):
         pass
 
-    def _putResourceDict(self):
+    def _put_resource_dict(self):
         "PDF reference to resource objects."
-        self.SS._addObject(2)
-        self.SS._out('<<')
-        self.SS._out('/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]')
-        self.SS._out('/Font <<')
+        self.session._add_object(2)
+        self.session._out('<<')
+        self.session._out('/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]')
+        self.session._out('/Font <<')
         for font in self.document.fonts:
-            self.SS._out('/F' + str(font.index) + ' ' + str(font.number) + ' 0 R')
-        self.SS._out('>>')
-        self.SS._out('>>')
-        self.SS._out('endobj')
+            self.session._out(
+                '/F' + str(font.index) + ' ' + str(font.number) + ' 0 R')
+        self.session._out('>>')
+        self.session._out('>>')
+        self.session._out('endobj')
 
-    def _putInformation(self):
+    def _put_information(self):
         "PDF Information object."
-        self.SS._addObject()
-        self.SS._out('<<')
-        self.SS._out('/Producer '+self._textstring('PDFLite, https://github.com/katerina7479'))
+        self.session._add_object()
+        self.session._out('<<')
+        self.session._out('/Producer ' + self._text_to_string(
+            'PDFLite, https://github.com/katerina7479'))
         if self.title is not None:
-            self.SS._out('/Title '+self._textstring(self.title))
+            self.session._out('/Title ' + self._text_to_string(self.title))
         if self.subject is not None:
-            self.SS._out('/Subject '+self._textstring(self.subject))
+            self.session._out('/Subject ' + self._text_to_string(self.subject))
         if self.author is not None:
-            self.SS._out('/Author '+self._textstring(self.author))
+            self.session._out('/Author ' + self._text_to_string(self.author))
         if self.keywords is not None:
-            self.SS._out('/Keywords '+self._textstring(self.keywords))
+            self.session._out('/Keywords ' + self._text_to_string(self.keywords))
         if self.creator is not None:
-            self.SS._out('/Creator '+self._textstring(self.creator))
-        self.SS._out('/CreationDate '+self._textstring('D:'+datetime.now().strftime('%Y%m%d%H%M%S')))
-        self.SS._out('>>')
-        self.SS._out('endobj')
+            self.session._out('/Creator ' + self._text_to_string(self.creator))
+        self.session._out('/CreationDate ' + self._text_to_string(
+            'D:' + datetime.now().strftime('%Y%m%d%H%M%S')))
+        self.session._out('>>')
+        self.session._out('endobj')
 
-    def _putCatalog(self):
+    def _put_catalog(self):
         "Catalog object."
-        self.SS._addObject()
-        self.SS._out('<<')
+        self.session._add_object()
+        self.session._out('<<')
 
-        self.SS._out('/Type /Catalog')
-        self.SS._out('/Pages 1 0 R')
+        self.session._out('/Type /Catalog')
+        self.session._out('/Pages 1 0 R')
         if(self.zoom_mode == 'fullpage'):
-            self.SS._out('/OpenAction [3 0 R /Fit]')
+            self.session._out('/OpenAction [3 0 R /Fit]')
         elif(self.zoom_mode == 'fullwidth'):
-            self.SS._out('/OpenAction [3 0 R /FitH null]')
+            self.session._out('/OpenAction [3 0 R /FitH null]')
         elif(self.zoom_mode == 'real'):
-            self.SS._out('/OpenAction [3 0 R /XYZ null null 1]')
+            self.session._out('/OpenAction [3 0 R /XYZ null null 1]')
         elif(not isinstance(self.zoom_mode, basestring)):
-            self.SS._out('/OpenAction [3 0 R /XYZ null null '+(self.zoom_mode/100)+']')
+            self.session._out(
+                '/OpenAction [3 0 R /XYZ null null ' + (self.zoom_mode / 100) + ']')
 
         if(self.layout_mode == 'single'):
-            self.SS._out('/PageLayout /SinglePage')
+            self.session._out('/PageLayout /SinglePage')
         elif(self.layout_mode == 'continuous'):
-            self.SS._out('/PageLayout /OneColumn')
+            self.session._out('/PageLayout /OneColumn')
         elif(self.layout_mode == 'two'):
-            self.SS._out('/PageLayout /TwoColumnLeft')
-        self.SS._out('>>')
-        self.SS._out('endobj')
+            self.session._out('/PageLayout /TwoColumnLeft')
+        self.session._out('>>')
+        self.session._out('endobj')
 
-    def _putCrossReference(self):
+    def _put_cross_reference(self):
         """ Cross Reference Object, calculates
             the position in bytes to the start
             (first number) of each object in
@@ -197,32 +205,32 @@ class PDFLite(object):
             from the begining of the file.
 
         """
-        self.SS._out('xref')
-        self.SS._out('0 %s' % len(self.SS.objects))
-        self.SS._out('0000000000 65535 f ')
-        for obj in self.SS.objects:
+        self.session._out('xref')
+        self.session._out('0 %s' % len(self.session.objects))
+        self.session._out('0000000000 65535 f ')
+        for obj in self.session.objects:
             if isinstance(obj, basestring):
                 pass
             else:
-                self.SS._out('%010d 00000 n ' % obj.offset)
+                self.session._out('%010d 00000 n ' % obj.offset)
 
-    def _putTrailer(self):
+    def _put_trailer(self):
         """ Final Trailer calculations, and EOF
             reference.
 
         """
-        objnum = len(self.SS.objects)
-        self.SS._out('trailer')
-        self.SS._out('<<')
-        self.SS._out('/Size %s' % objnum)
-        self.SS._out('/Root %s 0 R' % (objnum-1))
-        self.SS._out('/Info %s 0 R' % (objnum-2))
-        self.SS._out('>>')
-        self.SS._out('startxref')
-        self.SS._out(len(self.SS.buffer))
-        self.SS._out('%%EOF')
+        objnum = len(self.session.objects)
+        self.session._out('trailer')
+        self.session._out('<<')
+        self.session._out('/Size %s' % objnum)
+        self.session._out('/Root %s 0 R' % (objnum - 1))
+        self.session._out('/Info %s 0 R' % (objnum - 2))
+        self.session._out('>>')
+        self.session._out('startxref')
+        self.session._out(len(self.session.buffer))
+        self.session._out('%%EOF')
 
-    def _outputToFile(self):
+    def _output_to_file(self):
         """ Save to filepath specified on
             init. (Will throw an error if
             the document is already open).
@@ -231,10 +239,10 @@ class PDFLite(object):
         f = open(self.filepath, 'wb')
         if(not f):
             raise Exception('Unable to create output file: ', self.filepath)
-        f.write(self.SS.buffer)
+        f.write(self.session.buffer)
         f.close()
 
-    def _textstring(self, text):
+    def _text_to_string(self, text):
         """ Provides for escape characters and converting to
             pdf text object (pdf strings are in parantheses).
             Mainly for use in the information block here, this

@@ -1,29 +1,31 @@
 
 
 class PDFLine(object):
-    def __init__(self, session, page, colorscheme, cursor1, cursor2, size=1):
-        self.SS = session
-        self.start = cursor1
-        self.end = cursor2
+
+    def __init__(self, session, page, color_scheme, cursor_start, cursor_end, size=1):
+        self.session = session
+        self.start = cursor_start
+        self.end = cursor_end
 
         self.page = page
 
-        self.colorscheme = colorscheme
-        self.setSize(size)
-        self.setColor()
+        self.color_scheme = color_scheme
+        self.set_size(size)
+        self.set_color()
 
+    def set_size(self, line_size=1):
+        self.line_size = line_size
+        self.session._out('%.2f w' % self.line_size)
 
-    def setSize(self, linesize=1):
-        self.linesize = linesize
-        self.SS._out('%.2f w' % self.linesize)
-
-    def setColor(self, colorscheme=None):
-        if colorscheme is None:
-            self.SS._out(self.colorscheme._getDrawColorString(), self.page)
+    def set_color(self, color_scheme=None):
+        if color_scheme is None:
+            self.session._out(
+                self.color_scheme._get_draw_color_string(), self.page)
         else:
-            self.colorscheme = colorscheme
-            self.setColor(None)
+            self.color_scheme = color_scheme
+            self.set_color(None)
 
     def draw(self):
-        s = '%.2f %.2f m %.2f %.2f l S' % (self.start.x, self.start.y, self.end.x, self.end.y)
-        self.SS._out(s, self.page)
+        s = '%.2f %.2f m %.2f %.2f l S' % (
+            self.start.x, self.start.y, self.end.x, self.end.y)
+        self.session._out(s, self.page)

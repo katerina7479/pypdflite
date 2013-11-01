@@ -3,6 +3,7 @@ from pypdflite.pdfobjects.pdffont import PDFFont
 
 
 class FontTest(unittest.TestCase):
+
     def setUp(self):
         self.__class__.testclass = PDFFont()
 

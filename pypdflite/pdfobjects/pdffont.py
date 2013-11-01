@@ -2,16 +2,19 @@ from fontref import pdf_character_widths
 
 
 class PDFFont(object):
+
     def __init__(self, family='helvetica', style=None, size=20):
-        self.core_fonts = {'courier': 'Courier', 'courierB': 'Courier-Bold', 'courierI': 'Courier-Oblique', 'courierBI': 'Courier-BoldOblique',
-                           'helvetica': 'Helvetica', 'helveticaB': 'Helvetica-Bold', 'helveticaI': 'Helvetica-Oblique', 'helveticaBI': 'Helvetica-BoldOblique',
-                           'times': 'Times-Roman', 'timesB': 'Times-Bold', 'timesI': 'Times-Italic', 'timesBI': 'Times-BoldItalic',
-                           'symbol': 'Symbol', 'zapfdingbats': 'ZapfDingbats'}
+        self.core_fonts = {
+            'courier': 'Courier', 'courierB': 'Courier-Bold', 'courierI': 'Courier-Oblique', 'courierBI': 'Courier-BoldOblique',
+            'helvetica': 'Helvetica', 'helveticaB': 'Helvetica-Bold', 'helveticaI': 'Helvetica-Oblique', 'helveticaBI': 'Helvetica-BoldOblique',
+            'times': 'Times-Roman', 'timesB': 'Times-Bold', 'timesI': 'Times-Italic', 'timesBI': 'Times-BoldItalic',
+            'symbol': 'Symbol', 'zapfdingbats': 'ZapfDingbats'}
 
-        self.families = ['courier', 'helvetica', 'arial', 'times', 'symbol', 'zapfdingbats']
-        self.setFont(family, style, size)
+        self.families = [
+            'courier', 'helvetica', 'arial', 'times', 'symbol', 'zapfdingbats']
+        self.set_font(family, style, size)
 
-    def _setFamily(self, family=None):
+    def _set_family(self, family=None):
         if family is None:
             pass
         else:
@@ -22,7 +25,7 @@ class PDFFont(object):
             else:
                 self.font_family = family
 
-    def _setStyle(self, style):
+    def _set_style(self, style):
         if style is None:
             self.style = None
             self.underline = False
@@ -36,45 +39,45 @@ class PDFFont(object):
             if('U' in self.style):
                 self.underline = True
                 self.style = self.style.replace("U", "")
-                self.underlinethickness = int(1*self.fontsize/8)
-                if self.underlinethickness < 1:
-                    self.underlinethickness = 1
-                self.underlineposition = int(3*self.fontsize/8)
+                self.underline_thickness = int(1 * self.font_size / 8)
+                if self.underline_thickness < 1:
+                    self.underline_thickness = 1
+                self.underline_position = int(3 * self.font_size / 8)
             else:
                 self.underline = False
             # Correct order of bold-italic
             if(self.style == 'IB'):
                 self.style = 'BI'
 
-    def _setSize(self, size):
+    def _set_size(self, size):
         if size is None:
             pass
         else:
-            self.fontsize = float(size)
-            self.linesize = self.fontsize * 1.2
+            self.font_size = float(size)
+            self.line_size = self.font_size * 1.2
 
-    def _setFontkey(self):
+    def _set_font_key(self):
         if self.style is None:
-            self.fontkey = self.font_family
+            self.font_key = self.font_family
         else:
-            self.fontkey = self.font_family + self.style
+            self.font_key = self.font_family + self.style
 
-    def _setName(self):
-        self.name = self.core_fonts[self.fontkey]
+    def _set_name(self):
+        self.name = self.core_fonts[self.font_key]
 
-    def _setCharacterWidths(self):
-        self.cw = pdf_character_widths[self.fontkey]
+    def _set_character_widths(self):
+        self.character_width = pdf_character_widths[self.font_key]
 
-    def setFont(self, family=None, style=None, size=None):
+    def set_font(self, family=None, style=None, size=None):
         "Select a font; size given in points"
-        self._setFamily(family)
-        self._setSize(size)
-        self._setStyle(style)
-        self._setFontkey()
-        self._setName()
-        self._setCharacterWidths()
+        self._set_family(family)
+        self._set_size(size)
+        self._set_style(style)
+        self._set_font_key()
+        self._set_name()
+        self._set_character_widths()
 
-    def _setIndex(self, index=1):
+    def _set_index(self, index=1):
         """ Index is the number of the font, not the same as
             object number, both are used and set in document.
 
@@ -82,9 +85,9 @@ class PDFFont(object):
         self.index = index
 
     def dict(self):
-        return {'i': self.index, 'type': 'core', 'name': self.name, 'up': 100, 'ut': 50, 'cw': self.cw}
+        return {'i': self.index, 'type': 'core', 'name': self.name, 'up': 100, 'ut': 50, 'character_width': self.character_width}
 
-    def _inCoreFonts(self, key):
+    def _in_core_fonts(self, key):
         test = key.lower()
         if test in self.core_fonts:
             return True
@@ -93,24 +96,24 @@ class PDFFont(object):
 
     def _equals(self, font):
         if (font.font_family == self.font_family) and\
-           (font.fontsize == self.fontsize) and\
+           (font.font_size == self.font_size) and\
            (font.style == self.style):
             ans = True
         else:
             ans = False
         return ans
 
-    def stringWidth(self, s):
+    def string_width(self, s):
         "Get width of a string in the current font"
         w = 0
         for i in s:
-            w += self.cw[i]
-        return w * self.fontsize/1000.0
+            w += self.character_width[i]
+        return w * self.font_size / 1000.0
 
-    def _setNumber(self, value):
+    def _set_number(self, value):
         "This is the font pdf object number."
         self.number = value
 
-    def setLineSize(self, value):
-        "Set linesize"
-        self.linesize = value
+    def set_line_size(self, value):
+        "Set line_size"
+        self.line_size = value

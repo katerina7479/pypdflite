@@ -3,6 +3,7 @@ from pypdflite.pdfobjects.pdfpage import PDFPage
 
 
 class PageTest(unittest.TestCase):
+
     def setUp(self):
         self.__class__.testclass = PDFPage()
 
