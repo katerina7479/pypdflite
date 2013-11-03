@@ -41,5 +41,8 @@ nosetests.xml
 # Rope
 .ropeproject
 
+#PyCharm
+.idea
+
 #Adobe
 .pdf

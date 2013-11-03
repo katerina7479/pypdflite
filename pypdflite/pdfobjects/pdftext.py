@@ -1,5 +1,3 @@
-        # Note (not written, if color flag is True, then the string must be wrapped for output as follows:
-        # s = 'q ' + s (from here) + ' ' + text s + ' Q'
 
 
 class PDFText(object):
@@ -17,8 +15,8 @@ class PDFText(object):
         else:
             self._write()
 
-    def _normalize_text(self):
-        self.text = self.text.encode('latin1')
+    #def _normalize_text(self):
+    #    self.text = self.text.encode('latin1')
 
     def _test_x_fit(self, value=None):
         if value is None:
@@ -49,10 +47,11 @@ class PDFText(object):
     def _text(self, value=None):
         if value is not None:
             self.text = value
-        self._normalize_text()
+        #self._normalize_text()
         text_string = self._text_to_string(self.text)
         if self.text != '':
-            s = 'BT %.2f %.2f Td %s Tj ET' % (self.cursor.x, self.cursor.y_prime, text_string)
+            s = 'BT %.2f %.2f Td %s Tj ET' % (
+                self.cursor.x, self.cursor.y_prime, text_string)
             if(self.font.underline):
                 s = '%s %s' % (s, self._underline())
             # Only called if text != fill colors in current scheme
@@ -94,7 +93,8 @@ class PDFText(object):
         up = self.font.underline_position
         ut = self.font.underline_thickness
         w = self.font.string_width(self.text)
-        s = '%.2f %.2f %.2f %.2f re f' % (self.cursor.x, self.cursor.y_prime - up, w, ut)
+        s = '%.2f %.2f %.2f %.2f re f' % (self.cursor.x,
+            self.cursor.y_prime - up, w, ut)
         return s
 
     def _newline(self):

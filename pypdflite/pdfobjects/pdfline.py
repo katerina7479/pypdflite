@@ -2,7 +2,8 @@
 
 class PDFLine(object):
 
-    def __init__(self, session, page, color_scheme, cursor_start, cursor_end, size=1):
+    def __init__(self, session, page, color_scheme,
+                 cursor_start, cursor_end, size=1):
         self.session = session
         self.start = cursor_start
         self.end = cursor_end

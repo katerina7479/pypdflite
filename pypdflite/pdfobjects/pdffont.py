@@ -5,32 +5,42 @@ class PDFFont(object):
 
     def __init__(self, family='helvetica', style=None, size=20):
         self.core_fonts = {
-            'courier': 'Courier', 'courierB': 'Courier-Bold', 'courierI': 'Courier-Oblique', 'courierBI': 'Courier-BoldOblique',
-            'helvetica': 'Helvetica', 'helveticaB': 'Helvetica-Bold', 'helveticaI': 'Helvetica-Oblique', 'helveticaBI': 'Helvetica-BoldOblique',
-            'times': 'Times-Roman', 'timesB': 'Times-Bold', 'timesI': 'Times-Italic', 'timesBI': 'Times-BoldItalic',
+            'courier': 'Courier', 'courierB': 'Courier-Bold',
+            'courierI': 'Courier-Oblique', 'courierBI': 'Courier-BoldOblique',
+            'helvetica': 'Helvetica', 'helveticaB': 'Helvetica-Bold',
+            'helveticaI': 'Helvetica-Oblique',
+            'helveticaBI': 'Helvetica-BoldOblique',
+            'times': 'Times-Roman', 'timesB': 'Times-Bold',
+            'timesI': 'Times-Italic', 'timesBI': 'Times-BoldItalic',
             'symbol': 'Symbol', 'zapfdingbats': 'ZapfDingbats'}
 
         self.families = [
             'courier', 'helvetica', 'arial', 'times', 'symbol', 'zapfdingbats']
         self.set_font(family, style, size)
 
-    def _set_family(self, family=None):
-        if family is None:
-            pass
-        else:
+    def _set_family(self, family):
+        if family is not None:
             family = family.lower()
-            assert family in self.families, "%s is not a valid font name" % family
+            assert family in self.families, "%s not a valid font name" % family
             if(family == 'arial'):
                 family = 'helvetica'
             else:
-                self.font_family = family
+                self.family = family
+        else:
+            self.family = "helvetica"
 
-    def _set_style(self, style):
+    def _set_style(self, style=None):
+        """ Style should be a string, containing the letters 'B' for bold,
+        'U' for underline, or 'I' for italic, or should be None, for no style.
+        Symbol will not be underlined. The underline style can further be
+        modified by specifying the underline thickness and position.
+
+        """
         if style is None:
             self.style = None
             self.underline = False
         # No syling for symbol
-        elif self.font_family == ('symbol' or 'zapfdingbats'):
+        elif self.family == ('symbol' or 'zapfdingbats'):
             self.style = None
             self.underline = False
         else:
@@ -38,29 +48,32 @@ class PDFFont(object):
             # SetUnderline
             if('U' in self.style):
                 self.underline = True
+
+                # Remove U from style string, in case there is a bold / italic
                 self.style = self.style.replace("U", "")
+
+                # Does a good job visually representing an underline
                 self.underline_thickness = int(1 * self.font_size / 8)
                 if self.underline_thickness < 1:
                     self.underline_thickness = 1
                 self.underline_position = int(3 * self.font_size / 8)
             else:
                 self.underline = False
+
             # Correct order of bold-italic
             if(self.style == 'IB'):
                 self.style = 'BI'
 
-    def _set_size(self, size):
-        if size is None:
-            pass
-        else:
+    def _set_size(self, size=None):
+        if size is not None:
             self.font_size = float(size)
             self.line_size = self.font_size * 1.2
 
     def _set_font_key(self):
         if self.style is None:
-            self.font_key = self.font_family
+            self.font_key = self.family
         else:
-            self.font_key = self.font_family + self.style
+            self.font_key = self.family + self.style
 
     def _set_name(self):
         self.name = self.core_fonts[self.font_key]
@@ -85,7 +98,8 @@ class PDFFont(object):
         self.index = index
 
     def dict(self):
-        return {'i': self.index, 'type': 'core', 'name': self.name, 'up': 100, 'ut': 50, 'character_width': self.character_width}
+        return {'i': self.index, 'type': 'core', 'name': self.name, 'up': 100,
+                'ut': 50, 'character_width': self.character_width}
 
     def _in_core_fonts(self, key):
         test = key.lower()
@@ -95,7 +109,7 @@ class PDFFont(object):
             return False
 
     def _equals(self, font):
-        if (font.font_family == self.font_family) and\
+        if (font.family == self.family) and\
            (font.font_size == self.font_size) and\
            (font.style == self.style):
             ans = True

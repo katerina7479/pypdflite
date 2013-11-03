@@ -6,24 +6,25 @@ from .pdfdocument import PDFDocument
 
 class PDFLite(object):
 
-    """ PDF Generator, this class creates a document,
-        session object, and creates the PDF outline.
+    """ PDF generator, this class creates a document,
+        session object, and the PDF outline.
 
-        Has some overall pdf options to set, like
-        the meta-data in Information (it won't print
+        There are some overall pdf options to set, like
+        the meta-data in information (this won't print
         anywhere in the document, but can be seen in
         Properties, in Adobe reader.)
 
         When using this module, start by creating an
         instance of PDFLite, then request the document
         object with get_document. Make your inputs to that
-        object, and finish by closing through PDFLite.
+        object, and finish by closing the PDFLite.
 
     """
 
     def __init__(self, filepath):
         self.filepath = filepath
 
+        # Create session and document objects
         self.session = _Session(self)
         self.document = PDFDocument(self.session)
 
@@ -43,16 +44,18 @@ class PDFLite(object):
     def get_document(self):
         return self.document
 
-    def set_information(self, title=None, subject=None, author=None, keywords=None, creator=None):
-        """ Convinence function to add property info, can set any
+    def set_information(self, title=None, subject=None, author=None,
+                        keywords=None, creator=None):
+        """ Convenience function to add property info, can set any
             attribute and leave the others blank, it won't over-write
             previously set items, but to delete, you must set the attribute
-            directly to None. (Since it is expected this will be in a generating
-            program the likely-hood of such usage would be minimal.)
+            directly to None. (It is expected that there should be only
+            rare need to delete set data.)
 
         """
-        info_dict = {"title": title, "subject": subject, "author":
-                    author, "keywords": keywords, "creator": creator}
+        info_dict = {"title": title, "subject": subject,
+                     "author": author, "keywords": keywords,
+                     "creator": creator}
 
         for att, value in info_dict.iteritems():
             if hasattr(self, att):
@@ -64,7 +67,9 @@ class PDFLite(object):
                 setattr(self, att, None)
 
     def set_display_mode(self, zoom='fullpage', layout='continuous'):
-        "Set display mode in viewer"
+        """ Set the default viewing options.
+
+        """
         self.zoom_options = ["fullpage", "fullwidth", "real", "default"]
         self.layout_options = ["single", "continuous", "two", "default"]
 
@@ -79,7 +84,9 @@ class PDFLite(object):
             raise Exception('Incorrect layout display mode: ' + layout)
 
     def close(self):
-        "Generate the document"
+        """ Prompt the objects to output pdf code, and save to file.
+
+        """
         # Places header, pages, page content first.
         self._put_header()
         self._put_pages()
@@ -95,7 +102,7 @@ class PDFLite(object):
         self._output_to_file()
 
     def _put_header(self):
-        "Standard first line"
+        " Standard first line in a PDF. "
         self.session._out('%%PDF-%s' % self.pdf_version)
 
     def _put_pages(self):
@@ -116,14 +123,19 @@ class PDFLite(object):
             kids += str(3 + 2 * i) + ' 0 R '
         self.session._out(kids + ']')
         self.session._out('/Count %s' % len(self.document.pages))
+
         # Overal size of the default PDF page
         self.session._out('/MediaBox [0 0 %.2f %.2f]' %
-                          (self.document.page.width, self.document.page.height))
+                          (self.document.page.width,
+                           self.document.page.height))
         self.session._out('>>')
         self.session._out('endobj')
 
     def _put_resources(self):
-        "Resource objects can be used several times, but are defined here."
+        """ Resource objects can be used several times throughout the document,
+        but the pdf code defining them are all defined here.
+
+        """
         self._put_fonts()
         self._put_images()
 
@@ -131,14 +143,18 @@ class PDFLite(object):
         self._put_resource_dict()
 
     def _put_fonts(self):
-        "Fonts definitions objects."
+        """ Fonts definitions objects.
+
+        """
         self.document._output_fonts()
 
     def _put_images(self):
         pass
 
     def _put_resource_dict(self):
-        "PDF reference to resource objects."
+        """ Creates PDF reference to resource objects.
+
+        """
         self.session._add_object(2)
         self.session._out('<<')
         self.session._out('/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]')
@@ -163,7 +179,8 @@ class PDFLite(object):
         if self.author is not None:
             self.session._out('/Author ' + self._text_to_string(self.author))
         if self.keywords is not None:
-            self.session._out('/Keywords ' + self._text_to_string(self.keywords))
+            self.session._out('/Keywords ' +
+                              self._text_to_string(self.keywords))
         if self.creator is not None:
             self.session._out('/Creator ' + self._text_to_string(self.creator))
         self.session._out('/CreationDate ' + self._text_to_string(
@@ -186,7 +203,8 @@ class PDFLite(object):
             self.session._out('/OpenAction [3 0 R /XYZ null null 1]')
         elif(not isinstance(self.zoom_mode, basestring)):
             self.session._out(
-                '/OpenAction [3 0 R /XYZ null null ' + (self.zoom_mode / 100) + ']')
+                '/OpenAction [3 0 R /XYZ null null ' +
+                (self.zoom_mode / 100) + ']')
 
         if(self.layout_mode == 'single'):
             self.session._out('/PageLayout /SinglePage')
@@ -215,7 +233,7 @@ class PDFLite(object):
                 self.session._out('%010d 00000 n ' % obj.offset)
 
     def _put_trailer(self):
-        """ Final Trailer calculations, and EOF
+        """ Final Trailer calculations, and ebd-of-file
             reference.
 
         """
@@ -246,7 +264,7 @@ class PDFLite(object):
         """ Provides for escape characters and converting to
             pdf text object (pdf strings are in parantheses).
             Mainly for use in the information block here, this
-            functionality is replicated elsewhere.
+            functionality is also present in the text object.
 
         """
         if text is not None:

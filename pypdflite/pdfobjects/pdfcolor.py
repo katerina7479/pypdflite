@@ -4,8 +4,11 @@ from colorref import color_reference
 class PDFColor(object):
 
     def __init__(self, color_type="d", r=0, g=0, b=0, name=None):
+
+        # Get color dictionary
         self.color_dict = color_reference
 
+        # Type may be "draw", "fill", or "text"
         self.type_list = ["d", "f", "t"]
         self.set_color_type(color_type)
 
@@ -16,14 +19,17 @@ class PDFColor(object):
 
     def set_color_type(self, color_type):
         color_type = color_type[0].lower()  # Just get the first letter right.
+
+        # Check to see if it's in the allowed types
         if color_type in self.type_list:
             self.color_type = color_type
         else:
             raise TypeError(
-                "Invalid color_type %s, must be draw, fill or text" % color_type)
+                "Invalid color_type %s, must be draw, fill or text" %
+                color_type)
 
     def _set_from_dict(self, name):
-        self.value = self.color_dict[name]
+        self.value = self.color_dict[name]  # Triplet from color ref
         self.name = name
         self.red = self.value[0]
         self.blue = self.value[1]
@@ -32,9 +38,12 @@ class PDFColor(object):
     def set_color_by_name(self, name, r, g, b):
         name = name.lower()
         if name in self.color_dict:
+            # Ignore r, g, b
             self._set_from_dict(name)
         elif (r != 0 or g != 0 or b != 0):
             # Not default, assume defining new color
+            # (If all 0, then it's black and already defined)
+            # Could check for int between 0 - 255 here.
             self.color_dict[name] = (r, g, b)
             self._set_from_dict(name)
         else:
@@ -44,10 +53,12 @@ class PDFColor(object):
         self.red = r
         self.blue = b
         self.green = g
+
         self.value = (self.red, self.blue, self.green)
         self.name = None
 
     def is_equal(self, test_color):
+        "Equality test"
         if self.name == test_color.name:
             ans = True
         elif (self.red == test_color.red and
@@ -59,6 +70,7 @@ class PDFColor(object):
         return ans
 
     def _get_color_string(self):
+        "Adobe output string for defining colors"
         if self.color_type == "d":
             if self.name is "black":
                 s = '%.3f G' % 0

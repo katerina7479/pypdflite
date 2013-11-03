@@ -2,7 +2,8 @@
 
 class PDFRectangle(object):
 
-    def __init__(self, session, page, color_scheme, cursor_start, cursor_end, size=1, style='S'):
+    def __init__(self, session, page, color_scheme,
+                 cursor_start, cursor_end, size=1, style='S'):
         self.session = session
         self.page = page
         self.color_scheme = color_scheme
@@ -35,14 +36,16 @@ class PDFRectangle(object):
 
     def set_color(self, color_scheme=None):
         if color_scheme is None:
-            self.session._out(self.color_scheme._get_draw_color_string(), self.page)
-            self.session._out(self.color_scheme._get_fill_color_string(), self.page)
-            print "Did color_scheme in rect", self.color_scheme._get_fill_color_string()
+            self.session._out(
+                self.color_scheme._get_draw_color_string(), self.page)
+            self.session._out(
+                self.color_scheme._get_fill_color_string(), self.page)
         else:
             self.color_scheme = color_scheme
             self.set_color(None)
 
     def draw(self):
         s = '%.2f %.2f %.2f %.2f re %s' % (
-            self.corner.x, self.corner.y_prime, self.width, self.height, self.style)
+            self.corner.x, self.corner.y_prime,
+            self.width, self.height, self.style)
         self.session._out(s, self.page)

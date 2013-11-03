@@ -65,5 +65,5 @@ class PDFColorScheme(object):
     def _get_fill_color_string(self):
         return self.fill_color._getColorString()
 
-    def _get_text_color_string(self, text=None):
+    def _get_text_color_string(self):
         return self.fill_color._getColorString()

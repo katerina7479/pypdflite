@@ -29,16 +29,19 @@ class PDFDocument(object):
         "Sets up a standard default document."
         self.session = session
         self.pages = []
-        self.fonts = []               # array of used fonts
+        self.fonts = []
+        self.fontkeys = []               # array of used fonts
         self._set_defaults()
 
     def _set_defaults(self):
+        "Set color scheme & font to defaults."
         self.set_color_scheme()
         self._set_default_font()
-        self.add_page()
+        self.add_page()     # add first page
 
     def set_color_scheme(self, color_scheme=None):
-        """ Default color object is black.
+        """ Default color object is black letters
+            & black lines.
 
         """
         if color_scheme is None:
@@ -47,7 +50,7 @@ class PDFDocument(object):
             if isinstance(color_scheme, PDFColorScheme):
                 self.color_scheme = color_scheme
             else:
-                raise Exception("invalid color scheme")
+                raise Exception("Color scheme not a PDFColorScheme object")
 
     def _set_default_font(self):
         """ Internal method to set the
@@ -58,6 +61,7 @@ class PDFDocument(object):
         self.font = PDFFont()
         self.font._set_index()
         self.fonts.append(self.font)
+        self.fontkeys = self.font.font_key
 
     def add_page(self, page=None):
         """ May generate and add a PDFPage
@@ -89,29 +93,27 @@ class PDFDocument(object):
 
         """
 
+        # If size is not defined, keep the last size.
         if size is None:
             size = self.font.font_size
 
-        if font is not None:
-            new_font = font
+        # Create a font to test its key
+        testfont = PDFFont(family, style, size)
+        testkey = testfont.font_key
+
+        if testkey in self.fontkeys:
+            # It's already there.
+            index = self.fontkeys.index(testkey)
+            self.font = self.fonts[index]
         else:
-            new_font = PDFFont(family, style, size)
+            self.font = testfont
+            self.font._set_index(len(self.fonts) + 1)
+            self.fonts.append(self.font)
 
-        # Test if font is already selected
-        if not new_font._equals(self.font):
-            # Test if used for the first time
-            if new_font.font_key not in self.fonts:
-                i = len(self.fonts) + 1
-                new_font._set_index(i)
-                self.fonts.append(new_font)
-
-        # Select it
-        self.font = new_font
         if(self.page.index > 0):
             self.session._out('BT /F%d %.2f Tf ET' %
-                              (self.font.index, self.font.font_size), self.page)
-        else:
-            del new_font
+                              (self.font.index, self.font.font_size),
+                              self.page)
 
     def get_font(self):
         """ Get the current font object. Useful for storing
@@ -155,7 +157,8 @@ class PDFDocument(object):
                 self.session._out('/Parent 1 0 R')
                 if page in self.orientation_changes:
                     self.session._out(
-                        '/MediaBox [0 0 %.2f %.2f]' % (page.width, page.height))
+                        '/MediaBox [0 0 %.2f %.2f]' %
+                        (page.width, page.height))
                 self.session._out('/Resources 2 0 R')
                 self.session._out(
                     '/Contents %s 0 R>>' % len(self.session.objects))
@@ -222,7 +225,8 @@ class PDFDocument(object):
         """
         self.page.add_indent(self.font)
 
-    def add_line(self, x1=None, y1=None, x2=None, y2=None, cursor1=None, cursor2=None):
+    def add_line(self, x1=None, y1=None, x2=None, y2=None,
+                 cursor1=None, cursor2=None):
         if cursor1 is not None:
             if cursor2 is not None:
                 pass
@@ -242,7 +246,9 @@ class PDFDocument(object):
                          self.color_scheme, self.page.cursor, end_cursor)
         myline.draw()
 
-    def draw_rectangle(self, x1=None, y1=None, x2=None, y2=None, width=None, height=None, cursor1=None, cursor2=None, style='S'):
+    def draw_rectangle(self, x1=None, y1=None, x2=None, y2=None,
+                       width=None, height=None, cursor1=None, cursor2=None,
+                       style='S'):
         if cursor1 is not None:
             if cursor2 is not None:
                 pass
@@ -267,7 +273,9 @@ class PDFDocument(object):
                 raise Exception("Rectangle not defined")
 
         rectangle = PDFRectangle(
-            self.session, self.page, self.color_scheme, cursor1, cursor2, size=1, style=style)
+            self.session, self.page, self.color_scheme, cursor1, cursor2,
+            size=1, style=style)
+
         rectangle.draw()
 
     def add_table(self, datalist, headerlist=None, cursor=None):
