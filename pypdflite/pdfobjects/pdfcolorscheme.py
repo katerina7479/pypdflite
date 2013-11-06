@@ -60,10 +60,10 @@ class PDFColorScheme(object):
         return self.color_flag
 
     def _get_draw_color_string(self):
-        return self.draw_color._getColorString()
+        return self.draw_color._get_color_string()
 
     def _get_fill_color_string(self):
-        return self.fill_color._getColorString()
+        return self.fill_color._get_color_string()
 
     def _get_text_color_string(self):
-        return self.fill_color._getColorString()
+        return self.fill_color._get_color_string()

@@ -5,6 +5,7 @@ from pdfobjects.pdftext import PDFText
 from pdfobjects.pdfcursor import PDFCursor
 from pdfobjects.pdfline import PDFLine
 from pdfobjects.pdfrectangle import PDFRectangle
+from pdfobjects.pdftable import PDFTable
 
 
 class PDFDocument(object):
@@ -278,5 +279,11 @@ class PDFDocument(object):
 
         rectangle.draw()
 
-    def add_table(self, datalist, headerlist=None, cursor=None):
-        pass
+    def add_table(self, datalist, cursor=None):
+        if cursor is None:
+            tablecursor = self.page.cursor.copy()
+        else:
+            tablecursor = cursor
+
+        table = PDFTable(datalist, tablecursor)
+        table.draw()

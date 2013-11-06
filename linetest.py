@@ -30,7 +30,7 @@ def main():
 
     # Create color Object, apply to fill color
     lightblue = PDFColor(name='lightblue')
-    new_scheme = PDFColorScheme(fillcolor=lightblue)
+    new_scheme = PDFColorScheme(fill_color=lightblue)
 
     # Draw styled rectangle.
     document.set_color_scheme(new_scheme)
