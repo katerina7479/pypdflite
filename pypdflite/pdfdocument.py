@@ -227,7 +227,7 @@ class PDFDocument(object):
         self.page.add_indent(self.font)
 
     def add_line(self, x1=None, y1=None, x2=None, y2=None,
-                 cursor1=None, cursor2=None):
+                 cursor1=None, cursor2=None, style="solid"):
         if cursor1 is not None:
             if cursor2 is not None:
                 pass
@@ -236,7 +236,8 @@ class PDFDocument(object):
             cursor2 = PDFCursor(x2, y2)
 
         myline = PDFLine(
-            self.session, self.page, self.color_scheme, cursor1, cursor2)
+            self.session, self.page, self.color_scheme,
+            cursor1, cursor2, style)
         myline.draw()
 
     def draw_horizonal_line(self):
@@ -244,7 +245,7 @@ class PDFDocument(object):
         end_cursor.x = end_cursor.xmax
 
         myline = PDFLine(self.session, self.page,
-                         self.color_scheme, self.page.cursor, end_cursor)
+                         self.color_scheme, self.page.cursor, end_cursor, None)
         myline.draw()
 
     def draw_rectangle(self, x1=None, y1=None, x2=None, y2=None,
@@ -279,11 +280,13 @@ class PDFDocument(object):
 
         rectangle.draw()
 
-    def add_table(self, datalist, cursor=None):
+    def add_table(self, datalist, cursor=None, ):
         if cursor is None:
             tablecursor = self.page.cursor.copy()
         else:
             tablecursor = cursor
 
-        table = PDFTable(datalist, tablecursor)
+        table = PDFTable(self.session, self.page, datalist, self.font,
+                         self.color_scheme, tablecursor)
+
         table.draw()

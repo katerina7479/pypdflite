@@ -36,6 +36,9 @@ def main():
     document.set_color_scheme(new_scheme)
     document.draw_rectangle(150, 500, 300, 600, style='B')
 
+    # Draw Dashed Line
+    document.add_line(300, 250, 300, 500, style="dashed")
+
     # Close Document
     writer.close()
 

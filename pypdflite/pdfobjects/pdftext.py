@@ -2,12 +2,15 @@
 
 class PDFText(object):
 
-    def __init__(self, session, page, font, color_scheme, text):
+    def __init__(self, session, page, font, color_scheme, text, cursor=None):
         self.session = session
         self.page = page
         self.font = font
         self.color_scheme = color_scheme
-        self.cursor = page.cursor
+        if cursor is None:
+            self.cursor = page.cursor
+        else:
+            self.cursor = cursor
         self.text = text
 
         if self._test_x_fit() is True:

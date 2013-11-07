@@ -41,8 +41,12 @@ nosetests.xml
 # Rope
 .ropeproject
 
-#PyCharm
+# PyCharm
 .idea
+
+# Sublime
+.sublime-project
+.sublime-workspace
 
 #Adobe
 .pdf
