@@ -1,20 +1,26 @@
+from pdfrow import PDFRow
+from pdfcolumn import PDFColumn
 from pdfcell import PDFCell
 
 
 class PDFTable(object):
 
-    def __init__(self, session, page, table_data, text_font, color_scheme,
+    def __init__(self, session, page, table_data, font, color_scheme,
                  cursor, bycols=False):
         self.session = session
         self.page = page
         self.table_data = table_data
-        self.text_font = text_font
+        self.font = font
         self.color_scheme = color_scheme
         self.cursor = cursor
         if bycols is True:
             self.invert_table_data()
         self.initiate_cells()
-        self.set_text_cursor()
+        self.text_cursor = self.cursor.copy()
+        self.border_cursor = self.cursor.copy()
+
+        for column in self.columns:
+            column.get_max_sizes()
 
     def invert_table_data(self):
         rows = []
@@ -30,41 +36,41 @@ class PDFTable(object):
 
     def initiate_cells(self):
         self.rows = []
+        self.columns = []
         row_index = 0
+        number_of_columns = len(self.table_data)
+        for x in range(0, number_of_columns):
+            self.columns.append(PDFColumn(self, self.font, self.color_scheme))
+
         for row in self.table_data:
-            temp_row = []
+            temp_row = PDFRow(self, self.font, self.color_scheme)
             column_index = 0
             for text in row:
-                temp_row.append(PDFCell(self, text, self.text_font,
-                                self.color_scheme, row_index, column_index))
+                cell = PDFCell(self, text, self.font,
+                               self.color_scheme, row_index, column_index)
+                temp_row.add_cell(cell)
+                self.columns[column_index].add_cell(cell)
                 column_index += 1
             row_index += 1
             self.rows.append(temp_row)
 
-        print self.rows
-
-    def set_text_cursor(self):
-        self.text_cursor = self.cursor.copy()
-        self.text_cursor.x_plus(3)
-        self.text_cursor.y_plus(4)
-
-    def _advance_text_cursor_x(self):
-        self.text_cursor.x_plus(10)
-
-    def _advance_text_cursor_y(self):
-        self.text_cursor.y_plus(7)
-        self.text_cursor.x_reset()
+    def set_final_cursor(self):
+        if self.text_cursor.is_greater_than(self.border_cursor):
+            self.cursor = self.text_cursor
+        else:
+            self.cursor = self.border_cursor
 
     def draw(self):
         self.draw_text()
         self.draw_borders()
+        self.set_final_cursor()
 
     def draw_text(self):
         for row in self.rows:
-            for cell in row:
-                cell.draw_text(self.text_cursor)
-                self._advance_text_cursor_x()
-            self._advance_text_cursor_y()
+            row.draw_text(self.text_cursor.copy())
+            self.text_cursor.y_plus(row.max_height)
 
     def draw_borders(self):
-        pass
+        for row in self.rows:
+            row.draw_borders(self.border_cursor.copy())
+            self.border_cursor.y_plus(row.max_height)

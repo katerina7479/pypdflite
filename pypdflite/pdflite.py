@@ -31,7 +31,7 @@ class PDFLite(object):
         # Full width display mode default
         self.set_display_mode()
         # Set default PDF version number
-        self.pdf_version = '1.3'
+        self.pdf_version = '1.7'
 
         # Initialize PDF information
         self.set_information()
@@ -59,10 +59,8 @@ class PDFLite(object):
 
         for att, value in info_dict.iteritems():
             if hasattr(self, att):
-                if value is not None:
+                if value:
                     setattr(self, att, value)
-                elif value is None:
-                    pass
             else:
                 setattr(self, att, None)
 
@@ -149,7 +147,10 @@ class PDFLite(object):
         self.document._output_fonts()
 
     def _put_images(self):
-        pass
+        """ Image definition objects.
+
+        """
+        self.document._output_images()
 
     def _put_resource_dict(self):
         """ Creates PDF reference to resource objects.
@@ -160,9 +161,13 @@ class PDFLite(object):
         self.session._out('/ProcSet [/PDF /Text /ImageB /ImageC /ImageI]')
         self.session._out('/Font <<')
         for font in self.document.fonts:
-            self.session._out(
-                '/F' + str(font.index) + ' ' + str(font.number) + ' 0 R')
+            self.session._out('/F%s %s 0 R' % (font.index, font.number))
         self.session._out('>>')
+        if self.document.images:
+            self.session._out('/XObject <<')
+            for image in self.document.images:
+                self.session._out('/I%s %s 0 R' % (image.index, image.number))
+            self.session._out('>>')
         self.session._out('>>')
         self.session._out('endobj')
 
@@ -172,16 +177,16 @@ class PDFLite(object):
         self.session._out('<<')
         self.session._out('/Producer ' + self._text_to_string(
             'PDFLite, https://github.com/katerina7479'))
-        if self.title is not None:
+        if self.title:
             self.session._out('/Title ' + self._text_to_string(self.title))
-        if self.subject is not None:
+        if self.subject:
             self.session._out('/Subject ' + self._text_to_string(self.subject))
-        if self.author is not None:
+        if self.author:
             self.session._out('/Author ' + self._text_to_string(self.author))
-        if self.keywords is not None:
+        if self.keywords:
             self.session._out('/Keywords ' +
                               self._text_to_string(self.keywords))
-        if self.creator is not None:
+        if self.creator:
             self.session._out('/Creator ' + self._text_to_string(self.creator))
         self.session._out('/CreationDate ' + self._text_to_string(
             'D:' + datetime.now().strftime('%Y%m%d%H%M%S')))
@@ -255,7 +260,7 @@ class PDFLite(object):
 
         """
         f = open(self.filepath, 'wb')
-        if(not f):
+        if not f:
             raise Exception('Unable to create output file: ', self.filepath)
         f.write(self.session.buffer)
         f.close()
@@ -267,7 +272,7 @@ class PDFLite(object):
             functionality is also present in the text object.
 
         """
-        if text is not None:
+        if text:
             for i, j in {"\\": "\\\\", ")": "\\)", "(": "\\("}.iteritems():
                 text = text.replace(i, j)
             text = "(%s)" % text

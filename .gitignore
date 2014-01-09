@@ -48,5 +48,8 @@ nosetests.xml
 .sublime-project
 .sublime-workspace
 
-#Adobe
+# Adobe
 .pdf
+
+# Images
+.png

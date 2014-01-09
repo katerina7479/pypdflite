@@ -40,6 +40,9 @@ class PDFCursor(object):
         self.dx = dx
         self.dy = dy
 
+    def __repr__(self):
+        return "(%s, %s)" % (self.x, self.y)
+
     # Setters / getters for x & y
     @property
     def x(self):

@@ -31,7 +31,7 @@ def main():
         page, and having to wrap back around. Let's see if it works!")
     document.add_page()
 
-    # Save eisting font, define a new font, use it for a header
+    # Save existing font, define a new font, use it for a header
     normal_font = document.get_font()
     document.set_font('helvetica', style='B', size=24)
     header_font = document.get_font()

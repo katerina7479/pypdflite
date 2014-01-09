@@ -2,6 +2,9 @@ from colorref import color_reference
 
 
 class PDFColor(object):
+    """ Black by default.
+
+    """
 
     def __init__(self, color_type="d", r=0, g=0, b=0, name=None):
 

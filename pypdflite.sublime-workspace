@@ -1,0 +1,710 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"sof",
+				"soft_mask_data"
+			],
+			[
+				"bits",
+				"bits_per_component"
+			],
+			[
+				"tra",
+				"transparent_string"
+			],
+			[
+				"h",
+				"height"
+			],
+			[
+				"so",
+				"soft_mask"
+			],
+			[
+				"PDF",
+				"PDFSoftMask"
+			],
+			[
+				"data",
+				"image_data"
+			],
+			[
+				"PD",
+				"PDFImage"
+			],
+			[
+				"bit",
+				"bits_per_component"
+			],
+			[
+				"i",
+				"__init__"
+			],
+			[
+				"image",
+				"image_data"
+			],
+			[
+				"I",
+				"IHDR"
+			],
+			[
+				"im",
+				"image_data"
+			],
+			[
+				"colo",
+				"color_space"
+			],
+			[
+				"tr",
+				"transparent"
+			],
+			[
+				"d",
+				"decode"
+			],
+			[
+				"bi",
+				"bits_per_component"
+			],
+			[
+				"pa",
+				"palette"
+			],
+			[
+				"E",
+				"Exception"
+			],
+			[
+				"chu",
+				"chunk_len_type"
+			],
+			[
+				"len",
+				"length"
+			],
+			[
+				"_get",
+				"_get_file"
+			],
+			[
+				"b",
+				"bpc"
+			],
+			[
+				"con",
+				"content_type"
+			],
+			[
+				"put_",
+				"_put_stream"
+			],
+			[
+				"com",
+				"compression"
+			],
+			[
+				"co",
+				"colorspace"
+			],
+			[
+				"_put",
+				"_put_image"
+			],
+			[
+				"ima",
+				"imagecursor"
+			],
+			[
+				"is",
+				"isinstance"
+			],
+			[
+				"p",
+				"pdfobjects"
+			],
+			[
+				"smas",
+				"soft_mask"
+			],
+			[
+				"_",
+				"_out"
+			],
+			[
+				"color",
+				"colorspace"
+			],
+			[
+				"se",
+				"session"
+			],
+			[
+				"right",
+				"right"
+			],
+			[
+				"ma",
+				"max_height"
+			],
+			[
+				"col",
+				"column"
+			],
+			[
+				"te",
+				"text_font"
+			],
+			[
+				"height",
+				"max_height"
+			],
+			[
+				"cursor",
+				"text_cursor"
+			],
+			[
+				"max",
+				"max_height"
+			],
+			[
+				"_a",
+				"_advance_text_cursor_y"
+			],
+			[
+				"x",
+				"xplus"
+			],
+			[
+				"tex",
+				"text_cursor"
+			],
+			[
+				"text",
+				"text_font"
+			],
+			[
+				"padding",
+				"padding_left"
+			],
+			[
+				"row",
+				"row_index"
+			],
+			[
+				"table",
+				"table_data"
+			],
+			[
+				"curso",
+				"cursor_end"
+			],
+			[
+				"bor",
+				"border_style"
+			],
+			[
+				"bo",
+				"border_style"
+			],
+			[
+				"fontkey",
+				"font_key"
+			],
+			[
+				"coor",
+				"coordinate"
+			],
+			[
+				"y",
+				"y_prime"
+			],
+			[
+				"y_re",
+				"_y_real"
+			],
+			[
+				"set",
+				"set_deltas"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "ImageTest.pdf",
+			"settings":
+			{
+				"buffer_size": 2632,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "imagetest.py",
+			"settings":
+			{
+				"buffer_size": 709,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "pypdflite/pdfdocument.py",
+			"settings":
+			{
+				"buffer_size": 14102,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "pypdflite/session.py",
+			"settings":
+			{
+				"buffer_size": 3314,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "pypdflite/pdfobjects/pdfimage.py",
+			"settings":
+			{
+				"buffer_size": 9010,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 287.0,
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 476.0
+	},
+	"console":
+	{
+		"height": 125.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/Users/katerina/Projects/pypdflite/circle.png",
+		"/Users/katerina/Projects/pypdflite/ImageTest.pdf",
+		"/Users/katerina/Projects/pypdflite/examplepng.pdf",
+		"/Users/katerina/Projects/pypdflite/pypdflite/pdfobjects/pdfimage.py",
+		"/Users/katerina/Projects/pypdflite/pypdflite/pdfobjects/pypng.py",
+		"/Users/katerina/apple_logo.png",
+		"/Users/katerina/Projects/pypdflite/pypdflite/pdflite.py",
+		"/Users/katerina/Library/Application Support/Sublime Text 2/Packages/User/Pep8Lint.sublime-settings",
+		"/Users/katerina/Library/Application Support/Sublime Text 2/Packages/Pep8Lint/Pep8Lint.sublime-settings",
+		"/Users/katerina/Projects/pypdflite/texttest.py",
+		"/Users/katerina/Projects/pypdflite/pypdflite/session.py",
+		"/Users/katerina/Projects/pypdflite/TestText.pdf",
+		"/Users/katerina/Projects/pypdflite/LICENSE.md",
+		"/Users/katerina/Projects/pypdflite/imagetest.py",
+		"/Users/katerina/Projects/pypdflite/apple_logo.png",
+		"/Users/katerina/Programs/pypdflite/texttest.py",
+		"/Users/katerina/pypdflite/tabletest.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfdocument.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdfborder.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdftext.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdfrow.py",
+		"/Users/katerina/pypdflite/linetest.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdfcolorscheme.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdfline.py",
+		"/Users/katerina/pypdflite/.gitignore",
+		"/Users/katerina/pypdflite/pypdflite/session.py",
+		"/Users/katerina/LineSizer/controller/session.py",
+		"/Users/katerina/LineSizer/controller/reporter.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdfcolor.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdftable.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdfcellborder.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdfcell.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdfcursor.py",
+		"/Users/katerina/pypdflite/LinesTest.pdf",
+		"/Users/katerina/pypdflite/texttest.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdffont.py",
+		"/Users/katerina/pypdflite/pypdflite/pdflite.py",
+		"/Users/katerina/pypdflite/__init__.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdfmargin.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdfrectangle.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdfpage.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/pdfobject.py",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/fontref.py",
+		"/Users/katerina/Library/Application Support/Sublime Text 2/Packages/AutoPEP8/AutoPep8.sublime-settings",
+		"/Users/katerina/Library/Application Support/Sublime Text 2/Packages/User/Preferences.sublime-settings",
+		"/Users/katerina/pypdflite/pypdflite/pdfobjects/colorref.py",
+		"/Users/katerina/pypdflite/tests/cursortest.py",
+		"/Users/katerina/pypdflite/unittests.py",
+		"/Users/katerina/Library/Application Support/Sublime Text 2/Packages/AutoPEP8/Default (OSX).sublime-keymap",
+		"/Users/katerina/Library/Application Support/Sublime Text 2/Packages/Default/Preferences.sublime-settings",
+		"/Users/katerina/Library/Application Support/Sublime Text 2/Packages/User/Default (OSX).sublime-keymap",
+		"/Users/katerina/Library/Application Support/Sublime Text 2/Packages/Pep8Lint/Default (OSX).sublime-keymap",
+		"/Users/katerina/pypdflite/main.py",
+		"/Users/katerina/pypdflite/tests/pagetest.py",
+		"/Users/katerina/pypdflite/tests/fonttest.py",
+		"/Users/katerina/Downloads/mog/index.php",
+		"/Users/katerina/Documents/website/testsite/index.hml",
+		"/Users/katerina/Downloads/mog/style.css",
+		"/Users/katerina/Documents/website/testsite/stylesheet.css",
+		"/Users/katerina/Documents/website/testsite/jquery.js",
+		"/Users/katerina/Documents/website/index.html",
+		"/Users/katerina/Documents/website/script.js",
+		"/Users/katerina/Documents/website/style.css"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"soft_mask",
+			"cm",
+			"inital_data",
+			"data",
+			"self.data",
+			"color_space",
+			"data",
+			"pixels",
+			"ct",
+			"alpha",
+			"transparent",
+			"transparant",
+			"tansparant",
+			"sm",
+			"mask",
+			"transparant",
+			"type",
+			"FormatError",
+			"type",
+			"pal",
+			"data",
+			"print",
+			"PDFImage",
+			"print",
+			"Font is provided",
+			"/Length",
+			"_set_image_filter",
+			"zlib",
+			"self.font.index",
+			"myimage",
+			"image",
+			"tablecursor",
+			"print",
+			"text_font",
+			"cell_height",
+			"cell_width",
+			"x_reset",
+			"xreset",
+			"yplus",
+			"xplus",
+			"print",
+			"F",
+			"font_family",
+			"_normalize_text",
+			"_get_text_color_string",
+			"document",
+			"setInformation",
+			"setCompression",
+			"self.SS",
+			"rect",
+			"Rect",
+			"rect",
+			"drawHorizonalLine",
+			"drawRectangle",
+			"endcursor",
+			"colorscheme",
+			"addLine",
+			"addIndent",
+			"colorscheme",
+			"ColorScheme",
+			"colorscheme",
+			"ColorScheme",
+			"colorscheme",
+			"ColorScheme",
+			"colorscheme",
+			"_setNumber",
+			"_addObject",
+			"self.SS",
+			"ss",
+			"SS",
+			"ss",
+			"SS",
+			"ss",
+			"SS",
+			"addNewline",
+			"addPage",
+			"_setDefaultFont",
+			"_setDefaults",
+			"fontkey",
+			"fontsize",
+			"setFont",
+			"addPage",
+			"getFont",
+			"addIndent",
+			"setFont",
+			"addNewline",
+			"addText",
+			"getdocument",
+			"setInformation",
+			"Document",
+			"Writer",
+			"Document",
+			"addLine",
+			"Writer",
+			"addIndent",
+			"setFont",
+			"getFont",
+			"addPage",
+			"addText",
+			"addNewline",
+			"Document",
+			"Writer"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 4,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "ImageTest.pdf",
+					"settings":
+					{
+						"buffer_size": 2632,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								889,
+								889
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 9.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "imagetest.py",
+					"settings":
+					{
+						"buffer_size": 709,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								624,
+								624
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "pypdflite/pdfdocument.py",
+					"settings":
+					{
+						"buffer_size": 14102,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								8357,
+								8357
+							]
+						],
+						"settings":
+						{
+							"is_xml": false,
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 3165.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "pypdflite/session.py",
+					"settings":
+					{
+						"buffer_size": 3314,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2067,
+								2067
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "pypdflite/pdfobjects/pdfimage.py",
+					"settings":
+					{
+						"buffer_size": 9010,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								7616,
+								7616
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2730.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 0.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"replace":
+	{
+		"height": 0.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 248.0,
+	"status_bar_visible": true
+}

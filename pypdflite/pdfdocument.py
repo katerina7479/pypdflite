@@ -1,3 +1,4 @@
+from os.path import splitext
 from pdfobjects.pdffont import PDFFont
 from pdfobjects.pdfpage import PDFPage
 from pdfobjects.pdfcolorscheme import PDFColorScheme
@@ -6,6 +7,7 @@ from pdfobjects.pdfcursor import PDFCursor
 from pdfobjects.pdfline import PDFLine
 from pdfobjects.pdfrectangle import PDFRectangle
 from pdfobjects.pdftable import PDFTable
+from pdfobjects.pdfimage import PDFImage
 
 
 class PDFDocument(object):
@@ -32,6 +34,11 @@ class PDFDocument(object):
         self.pages = []
         self.fonts = []
         self.fontkeys = []               # array of used fonts
+
+        self.images = []
+        self.imagekeys = []
+        self.image_filter = None
+
         self._set_defaults()
 
     def _set_defaults(self):
@@ -93,13 +100,15 @@ class PDFDocument(object):
             instantiated PDFFont object.
 
         """
+        if font:
+            testfont = font
+        else:
+            # If size is not defined, keep the last size.
+            if size is None:
+                size = self.font.font_size
 
-        # If size is not defined, keep the last size.
-        if size is None:
-            size = self.font.font_size
-
-        # Create a font to test its key
-        testfont = PDFFont(family, style, size)
+            # Create a font from givens to test its key
+            testfont = PDFFont(family, style, size)
         testkey = testfont.font_key
 
         if testkey in self.fontkeys:
@@ -167,11 +176,11 @@ class PDFDocument(object):
                 # Page content
                 self.session._add_object()
                 if self.session.compression is True:
-                    textfilter = '/Filter /FlateDecode'
+                    textfilter = ' /Filter /FlateDecode '
                     page._compress()
                 else:
                     textfilter = ''
-                self.session._out('<< %s /Length %s >>' %
+                self.session._out('<<%s/Length %s >>' %
                                   (textfilter, len(page.buffer)))
                 self.session._put_stream(page.buffer)
                 self.session._out('endobj')
@@ -195,6 +204,59 @@ class PDFDocument(object):
     """ The following methods are the core ways to input content.
 
     """
+
+    def _output_images(self):
+        """ Creates reference images, that can be
+            drawn throughout the document.
+
+        """
+        for image in self.images:
+            obj = self.session._add_object()
+            image._set_number(obj.id)
+            self._put_image(image)
+
+    def _put_image(self, image):
+        """ Prompts the creating of image objects.
+
+        """
+        self.session._out('<</Type /XObject')
+        self.session._out('/Subtype /Image')
+        self.session._out('/Width %s' % image.width)
+        self.session._out('/Height %s' % image.height)
+        if image.colorspace is 'Indexed':
+            self.session._out('/ColorSpace [/Indexed /DeviceRGB %s %s 0 R' %
+                              (image.pal, image.number + 1))
+        else:
+            self.session._out('/ColorSpace /%s' % image.colorspace)
+            if image.colorspace is 'DeviceCMYK':
+                self.session._out('/Decode [1 0 1 0 1 0 1 0]')
+        self.session._out('/BitsPerComponent %s' % image.bits_per_component)
+        if image.filter:
+            self.session._out('/Filter /%s' % image.filter)
+        if image.decode:
+            self.session._out('/DecodeParms << %s >>' % image.decode)
+        if image.transparent:
+            self.session._out('/Mask [%s]' % image.transparent_string)
+        #if image.soft_mask:
+        #    self.session._out('/SMask %s 0 R' % (image.number + 1))
+        self.session._out('/Length %s >>' % image.size)
+        self.session._put_stream(image.image_data)
+        self.session._out('endobj')
+        """
+        if image.soft_mask:
+            obj = self.session._add_object()
+            image.soft_mask._set_number(obj.id)
+            print "Placing soft mask object"
+            self._put_image(image.soft_mask)
+        """
+        if image.colorspace is 'Indexed':
+            self._put_pallet(image)
+
+    def _put_palette(self, image):
+        self.session._out('<<%s /Length %s >>' % (image.palette_filter,
+                          image.palette_length))
+        self.session._put_stream(image.palette)
+        self.session._out('endobj')
 
     def add_text(self, text):
         """ Input text, short or long. Writes in order, within the
@@ -280,9 +342,9 @@ class PDFDocument(object):
 
         rectangle.draw()
 
-    def add_table(self, datalist, cursor=None, ):
+    def add_table(self, datalist, cursor=None):
         if cursor is None:
-            tablecursor = self.page.cursor.copy()
+            tablecursor = self.page.cursor
         else:
             tablecursor = cursor
 
@@ -290,3 +352,47 @@ class PDFDocument(object):
                          self.color_scheme, tablecursor)
 
         table.draw()
+        self.page.cursor = table.cursor
+
+    def _get_image(self, image_name):
+        if image_name in self.imagekeys:
+            index = self.imagekeys.index(image_name)
+            myimage = self.images[index]
+            return myimage
+        else:
+            return False
+
+    def _register_new_image(self, image):
+        image._set_index(len(self.images) + 1)
+        self.images.append(image)
+        self.imagekeys.append(image.name)
+
+    def add_image(self, image=None, name=None, cursor=None,):
+        if not cursor:
+            imagecursor = self.page.cursor
+        else:
+            imagecursor = cursor
+
+        if isinstance(image, PDFImage):  # It's an image object
+            myimage = self._get_image(image.name)
+            if not myimage:
+                self._register_new_image(image)
+            myimage = image
+
+        elif isinstance(image, str):  # Name or path
+            image_string = image
+            if image_string.find('.') == -1:  # Not a path, treat as name
+                myimage = self._get_image(image_string)
+                if not myimage:
+                    raise Exception('Not a proper image path')
+            else:  # Is a path
+                if not name:  # But it doesn't have a name specified.
+                    name = splitext(image_string)[0]  # Specify it
+                myimage = self._get_image(name)
+                if not myimage:  # New image
+                    myimage = PDFImage(self.session, image_string, name,
+                                       imagecursor)
+                    self._register_new_image(myimage)
+        myimage.draw(self.page)
+        self.page.cursor = myimage.cursor
+        return myimage
