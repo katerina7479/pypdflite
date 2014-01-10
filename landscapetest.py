@@ -1,7 +1,7 @@
 from pypdflite.pdflite import PDFLite
 
 
-def main():
+def LandscapeTest():
 
     """ Test landscape orentation & background images.
 
@@ -50,4 +50,4 @@ def main():
     writer.close()
 
 if __name__ == "__main__":
-    main()
+    LandscapeTest()

@@ -1,7 +1,7 @@
 from pypdflite.pdflite import PDFLite
 
 
-def main():
+def TrueTypeTest():
 
     """  Tests truetype fonts
 
@@ -93,4 +93,4 @@ def main():
     writer.close()
 
 if __name__ == "__main__":
-    main()
+    TrueTypeTest()

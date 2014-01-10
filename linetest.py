@@ -3,7 +3,7 @@ from pypdflite.pdfobjects.pdfcolorscheme import PDFColorScheme
 from pypdflite.pdfobjects.pdfcolor import PDFColor
 
 
-def main():
+def LinesTest():
 
     """ Functional tests for creating lines.
 
@@ -43,4 +43,4 @@ def main():
     writer.close()
 
 if __name__ == "__main__":
-    main()
+    LinesTest()

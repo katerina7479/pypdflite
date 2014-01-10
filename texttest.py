@@ -1,7 +1,7 @@
 from pypdflite.pdflite import PDFLite
 
 
-def main():
+def TextTest():
 
     """ Functional test for text, paragraph, and page
     splitting.
@@ -120,4 +120,4 @@ def main():
     writer.close()
 
 if __name__ == "__main__":
-    main()
+    TextTest()

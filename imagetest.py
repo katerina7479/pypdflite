@@ -1,7 +1,7 @@
 from pypdflite.pdflite import PDFLite
 
 
-def main():
+def ImageTest():
 
     """ Functional test for adding images.
 
@@ -27,14 +27,23 @@ def main():
     document.add_newline(1)
 
     document.add_text("This should be after")
-    
+
     document.add_newline(1)
     document.add_image(mylogo)
 
-    #document.add_newline(2)
-    #document.add_text("This should be later")
+    document.add_text("There it is without a newline")
+
+    document.add_page()
+    bgcursor = document.get_new_cursor()
+
+    document.add_image("background.png", cursor=bgcursor)
+    document.add_text("This text, ")
+    document.add_text("And this text")
+    document.add_newline(2)
+    document.add_text("Should be on the background.")
+
     # Close writer
     writer.close()
 
 if __name__ == "__main__":
-    main()
+    ImageTest()
