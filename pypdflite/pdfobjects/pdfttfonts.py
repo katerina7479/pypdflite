@@ -93,7 +93,7 @@ class PDFTTFont(object):
     def _set_font_key(self):
         if self.style is None:
             self.font_key = self.family
-            print "TT font ", self.font_key
+            #print "TT font ", self.font_key
         else:
             self.font_key = self.family + self.style
 
