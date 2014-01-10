@@ -1,7 +1,6 @@
 from os.path import splitext
 import struct, StringIO
 import urllib
-from pypng import PyPNG
 import zlib, re
 
 
@@ -48,6 +47,8 @@ class PDFImage(object):
                           (self.width, self.height, self.cursor.x,
                           (self.cursor.y_prime - self.height),
                           self.index), page)
+        self.cursor.x_plus(self.width)
+        self.cursor.y_plus(self.height)
 
     def run(self):
         self._open_file()

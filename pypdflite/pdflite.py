@@ -21,12 +21,14 @@ class PDFLite(object):
 
     """
 
-    def __init__(self, filepath):
+    def __init__(self, filepath, orientation="P", layout="letter"):
         self.filepath = filepath
-
+        self.destination = None
+        if self.filepath == 'string':
+            self.destination = 'string'
         # Create session and document objects
         self.session = _Session(self)
-        self.document = PDFDocument(self.session)
+        self.document = PDFDocument(self.session, orientation, layout)
 
         # Full width display mode default
         self.set_display_mode()
@@ -97,7 +99,12 @@ class PDFLite(object):
         self._put_cross_reference()
         # Trailer object
         self._put_trailer()
-        self._output_to_file()
+        if self.destination == 'string':
+            output = self._output_to_string()
+        else:
+            self._output_to_file()
+            output = None
+        return output
 
     def _put_header(self):
         " Standard first line in a PDF. "
@@ -264,6 +271,9 @@ class PDFLite(object):
             raise Exception('Unable to create output file: ', self.filepath)
         f.write(self.session.buffer)
         f.close()
+
+    def _output_to_string(self):
+        return self.session.buffer
 
     def _text_to_string(self, text):
         """ Provides for escape characters and converting to

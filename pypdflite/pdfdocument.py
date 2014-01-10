@@ -8,6 +8,7 @@ from pdfobjects.pdfline import PDFLine
 from pdfobjects.pdfrectangle import PDFRectangle
 from pdfobjects.pdftable import PDFTable
 from pdfobjects.pdfimage import PDFImage
+from pdfobjects.pdfttfonts import PDFTTFont
 
 
 class PDFDocument(object):
@@ -28,7 +29,7 @@ class PDFDocument(object):
 
     """
 
-    def __init__(self, session):
+    def __init__(self, session, orientation, layout):
         "Sets up a standard default document."
         self.session = session
         self.pages = []
@@ -38,6 +39,9 @@ class PDFDocument(object):
         self.images = []
         self.imagekeys = []
         self.image_filter = None
+
+        self.orientation_default = orientation
+        self.layout_default = layout
 
         self._set_defaults()
 
@@ -66,10 +70,10 @@ class PDFDocument(object):
             the font using set_font method.
 
         """
-        self.font = PDFFont()
+        self.font = PDFFont(self.session)
         self.font._set_index()
         self.fonts.append(self.font)
-        self.fontkeys = self.font.font_key
+        self.fontkeys.append(self.font.font_key)
 
     def add_page(self, page=None):
         """ May generate and add a PDFPage
@@ -78,7 +82,7 @@ class PDFDocument(object):
 
         """
         if page is None:
-            self.page = PDFPage()
+            self.page = PDFPage(self.orientation_default, self.layout_default)
         else:
             self.page = page
         self.page._set_index(len(self.pages))
@@ -90,7 +94,11 @@ class PDFDocument(object):
         "Returns reference to current page object."
         return self.page
 
-    def set_font(self, family=None, style=None, size=None, font=None):
+    def get_new_cursor(self):
+        " Returns a new default cursor "
+        return PDFCursor()
+
+    def set_font(self, family=None, style=None, size=None, font=None, tt=False):
         """ Set the document font object, size given in points.
             If family, style, and/or size is given, generates
             a new Font object, checks to see if it is already
@@ -108,7 +116,11 @@ class PDFDocument(object):
                 size = self.font.font_size
 
             # Create a font from givens to test its key
-            testfont = PDFFont(family, style, size)
+            if tt is False:
+                testfont = PDFFont(self.session, family, style, size)
+            else:
+                testfont = PDFTTFont(self.session, family, style, size)
+
         testkey = testfont.font_key
 
         if testkey in self.fontkeys:
@@ -119,6 +131,7 @@ class PDFDocument(object):
             self.font = testfont
             self.font._set_index(len(self.fonts) + 1)
             self.fonts.append(self.font)
+            self.fontkeys.append(self.font.font_key)
 
         if(self.page.index > 0):
             self.session._out('BT /F%d %.2f Tf ET' %
@@ -193,13 +206,7 @@ class PDFDocument(object):
         for font in self.fonts:
             obj = self.session._add_object()
             font._set_number(obj.id)
-            self.session._out('<</Type /Font')
-            self.session._out('/BaseFont /' + font.name)
-            self.session._out('/Subtype /Type1')
-            if(font.name != 'Symbol' and font.name != 'ZapfDingbats'):
-                self.session._out('/Encoding /WinAnsiEncoding')
-            self.session._out('>>')
-            self.session._out('endobj')
+            font.output()
 
     """ The following methods are the core ways to input content.
 
@@ -394,5 +401,8 @@ class PDFDocument(object):
                                        imagecursor)
                     self._register_new_image(myimage)
         myimage.draw(self.page)
-        self.page.cursor = myimage.cursor
+
+        # If a cursor was not specified, place at the end
+        if not cursor:
+            self.page.cursor = myimage.cursor
         return myimage

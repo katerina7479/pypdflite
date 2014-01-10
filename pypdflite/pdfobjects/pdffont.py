@@ -3,7 +3,8 @@ from fontref import pdf_character_widths
 
 class PDFFont(object):
 
-    def __init__(self, family='helvetica', style=None, size=20):
+    def __init__(self, session, family='helvetica', style=None, size=20):
+        self.session = session
         self.core_fonts = {
             'courier': 'Courier', 'courierB': 'Courier-Bold',
             'courierI': 'Courier-Oblique', 'courierBI': 'Courier-BoldOblique',
@@ -97,16 +98,18 @@ class PDFFont(object):
         """
         self.index = index
 
+    def output(self):
+            self.session._out('<</Type /Font')
+            self.session._out('/BaseFont /' + self.name)
+            self.session._out('/Subtype /Type1')
+            if(self.name != 'Symbol' and self.name != 'ZapfDingbats'):
+                self.session._out('/Encoding /WinAnsiEncoding')
+            self.session._out('>>')
+            self.session._out('endobj')
+
     def dict(self):
         return {'i': self.index, 'type': 'core', 'name': self.name, 'up': 100,
                 'ut': 50, 'character_width': self.character_width}
-
-    def _in_core_fonts(self, key):
-        test = key.lower()
-        if test in self.core_fonts:
-            return True
-        else:
-            return False
 
     def _equals(self, font):
         if (font.family == self.family) and\

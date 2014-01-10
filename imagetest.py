@@ -20,8 +20,19 @@ def main():
     document = writer.get_document()
 
     # Example for adding short and long text and whitespaces
-    applelogo = document.add_image("testing_colors.png")
+    document.add_text("This should be before the image.")
+    document.add_newline(1)
 
+    mylogo = document.add_image("testing_colors.png")
+    document.add_newline(1)
+
+    document.add_text("This should be after")
+    
+    document.add_newline(1)
+    document.add_image(mylogo)
+
+    #document.add_newline(2)
+    #document.add_text("This should be later")
     # Close writer
     writer.close()
 
