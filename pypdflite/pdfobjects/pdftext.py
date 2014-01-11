@@ -18,8 +18,8 @@ class PDFText(object):
         else:
             self._write()
 
-    #def _normalize_text(self):
-    #    self.text = self.text.encode('latin1')
+        if self.font.type == 'TTF':
+            self.font.cache_text(self.text)
 
     def _test_x_fit(self, value=None):
         if value is None:

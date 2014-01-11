@@ -28,7 +28,58 @@ class PDFImage(object):
         self.filter = None
         self.decode = None
 
-        self.run()
+        self._get_metrics()
+
+    def draw(self, page):
+        self.session._out('q %s 0 0 %s %s %s cm /I%d Do Q' %
+                          (self.width, self.height, self.cursor.x,
+                          (self.cursor.y_prime - self.height),
+                          self.index), page)
+        self.cursor.x_plus(self.width)
+        self.cursor.y_plus(self.height)
+
+    def output(self):
+        """ Prompts the creating of image objects.
+
+        """
+        self.session._out('<</Type /XObject')
+        self.session._out('/Subtype /Image')
+        self.session._out('/Width %s' % self.width)
+        self.session._out('/Height %s' % self.height)
+        if self.colorspace is 'Indexed':
+            self.session._out('/ColorSpace [/Indexed /DeviceRGB %s %s 0 R' %
+                              (self.pal, self.number + 1))
+        else:
+            self.session._out('/ColorSpace /%s' % self.colorspace)
+            if self.colorspace is 'DeviceCMYK':
+                self.session._out('/Decode [1 0 1 0 1 0 1 0]')
+        self.session._out('/BitsPerComponent %s' % self.bits_per_component)
+        if self.filter:
+            self.session._out('/Filter /%s' % self.filter)
+        if self.decode:
+            self.session._out('/DecodeParms << %s >>' % self.decode)
+        if self.transparent:
+            self.session._out('/Mask [%s]' % self.transparent_string)
+        #if self.soft_mask:
+        #    self.session._out('/SMask %s 0 R' % (self.number + 1))
+        self.session._out('/Length %s >>' % self.size)
+        self.session._put_stream(self.image_data)
+        self.session._out('endobj')
+        """
+        if image.soft_mask:
+            obj = self.session._add_object()
+            image.soft_mask._set_number(obj.id)
+            print "Placing soft mask object"
+            self._put_image(image.soft_mask)
+        """
+        if self.colorspace is 'Indexed':
+            self._put_pallet()
+
+    def _put_palette(self):
+        self.session._out('<<%s /Length %s >>' % (self.palette_filter,
+                          self.palette_length))
+        self.session._put_stream(self.palette)
+        self.session._out('endobj')
 
     def _set_number(self, number):
         """ Object number
@@ -42,15 +93,7 @@ class PDFImage(object):
         """
         self.index = index
 
-    def draw(self, page):
-        self.session._out('q %s 0 0 %s %s %s cm /I%d Do Q' %
-                          (self.width, self.height, self.cursor.x,
-                          (self.cursor.y_prime - self.height),
-                          self.index), page)
-        self.cursor.x_plus(self.width)
-        self.cursor.y_plus(self.height)
-
-    def run(self):
+    def _get_metrics(self):
         self._open_file()
         initial_data = ''
         initial_data = str(self.file.read())
@@ -237,6 +280,7 @@ class PDFImage(object):
             for i in xrange(0, len(self.transparent)):
                 self.transparent_string += '%s %s ' % (self.transparent[i], self.transparent[i])
         """
+
     def _open_file(self):
         if self.path.startswith("http://") or self.path.startswith("https://"):
             self.file = urllib.urlopen(self.path)

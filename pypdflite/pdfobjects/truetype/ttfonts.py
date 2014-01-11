@@ -555,7 +555,7 @@ class TTFontFile:
 
         # post - PostScript
         opost = self.get_table('post')
-        post = "\x00\x03\x00\x00" + opost[4, 16] + "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
+        post = "\x00\x03\x00\x00" + opost[4:16] + "\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00"
         self.add('post', post)
 
         # Sort CID2GID map into segments of contiguous codes
@@ -637,7 +637,7 @@ class TTFontFile:
                 try:
                     cmapstr += pack(">h", cm)
                 except:
-                    warnings.warn("cmap value too big/small: %s" % cm)
+                    print "cmap value too big/small: %s" % cm
                     cmapstr += pack(">H", -cm)
         self.add('cmap', cmapstr)
 
@@ -677,7 +677,7 @@ class TTFontFile:
                 glyphPos = self.glyphPos[originalGlyphIdx]
                 glyphLen = self.glyphPos[originalGlyphIdx + 1] - glyphPos
             except IndexError:
-                warnings.warn("missing glyph %s" % (originalGlyphIdx))
+                print "missing glyph %s" % (originalGlyphIdx)
                 glyphLen = 0
 
             if (glyfLength < self.maxStrLenRead):
@@ -705,7 +705,7 @@ class TTFontFile:
                         data = self._set_ushort(data, pos_in_glyph + 2, glyphSet[glyphIdx])
                     except KeyError:
                         data = 0
-                        warnings.warn("missing glyph data %s" % glyphIdx)
+                        print "missing glyph data %s" % glyphIdx
                     pos_in_glyph += 4
                     if (flags & GF_WORDS):
                         pos_in_glyph += 4
@@ -797,7 +797,8 @@ class TTFontFile:
             glyphPos = self.glyphPos[originalGlyphIdx]
             glyphLen = self.glyphPos[originalGlyphIdx + 1] - glyphPos
         except IndexError:
-            warnings.warn("missing glyph %s" % (originalGlyphIdx))
+            #raise Exception("missing glyph %s" % (originalGlyphIdx))
+            print "missing glyph %s" % (originalGlyphIdx)
             return
 
         if (not glyphLen):
@@ -999,7 +1000,7 @@ class TTFontFile:
         checksum = sub32((0xB1B0, 0xAFBA), checksum)
         chk = pack(">HH", checksum[0], checksum[1])
         stm = self.splice(stm, (head_start + 8), chk)
-        return st
+        return stm
 
 if __name__ == '__main__':
     ttf = TTFontFile()

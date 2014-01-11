@@ -43,6 +43,8 @@ class PDFDocument(object):
         self.orientation_default = orientation
         self.layout_default = layout
 
+        self.diffs = []
+
         self._set_defaults()
 
     def _set_defaults(self):
@@ -129,9 +131,7 @@ class PDFDocument(object):
             self.font = self.fonts[index]
         else:
             self.font = testfont
-            self.font._set_index(len(self.fonts) + 1)
-            self.fonts.append(self.font)
-            self.fontkeys.append(self.font.font_key)
+            self._register_new_font(self.font)
 
         if(self.page.index > 0):
             self.session._out('BT /F%d %.2f Tf ET' %
@@ -151,119 +151,6 @@ class PDFDocument(object):
             pass
         else:
             self.set_font(self.font.family, self.font.style, size)
-
-    def _get_orientation_changes(self):
-        """ Returns a list of the pages that have
-            orientation changes.
-
-        """
-        self.orientation_changes = []
-        for page in self.pages:
-            if page.orientation_change is True:
-                self.orientation_changes.append(page.index)
-            else:
-                pass
-        return self.orientation_changes
-
-    def _output_pages(self):
-        """ Called by the PDFLite object to prompt creating
-            the page objects.
-
-        """
-        if self.orientation_changes is None:
-            self._get_orientation_changes()
-        else:
-            # Page
-            for page in self.pages:
-                self.session._add_object()
-                self.session._out('<</Type /Page')
-                self.session._out('/Parent 1 0 R')
-                if page in self.orientation_changes:
-                    self.session._out(
-                        '/MediaBox [0 0 %.2f %.2f]' %
-                        (page.width, page.height))
-                self.session._out('/Resources 2 0 R')
-                self.session._out(
-                    '/Contents %s 0 R>>' % len(self.session.objects))
-                self.session._out('endobj')
-                # Page content
-                self.session._add_object()
-                if self.session.compression is True:
-                    textfilter = ' /Filter /FlateDecode '
-                    page._compress()
-                else:
-                    textfilter = ''
-                self.session._out('<<%s/Length %s >>' %
-                                  (textfilter, len(page.buffer)))
-                self.session._put_stream(page.buffer)
-                self.session._out('endobj')
-
-    def _output_fonts(self):
-        """ Called by the PDFLite object to prompt creating
-            the font objects.
-
-        """
-        for font in self.fonts:
-            obj = self.session._add_object()
-            font._set_number(obj.id)
-            font.output()
-
-    """ The following methods are the core ways to input content.
-
-    """
-
-    def _output_images(self):
-        """ Creates reference images, that can be
-            drawn throughout the document.
-
-        """
-        for image in self.images:
-            obj = self.session._add_object()
-            image._set_number(obj.id)
-            self._put_image(image)
-
-    def _put_image(self, image):
-        """ Prompts the creating of image objects.
-
-        """
-        self.session._out('<</Type /XObject')
-        self.session._out('/Subtype /Image')
-        self.session._out('/Width %s' % image.width)
-        self.session._out('/Height %s' % image.height)
-        if image.colorspace is 'Indexed':
-            self.session._out('/ColorSpace [/Indexed /DeviceRGB %s %s 0 R' %
-                              (image.pal, image.number + 1))
-        else:
-            self.session._out('/ColorSpace /%s' % image.colorspace)
-            if image.colorspace is 'DeviceCMYK':
-                self.session._out('/Decode [1 0 1 0 1 0 1 0]')
-        self.session._out('/BitsPerComponent %s' % image.bits_per_component)
-        if image.filter:
-            self.session._out('/Filter /%s' % image.filter)
-        if image.decode:
-            self.session._out('/DecodeParms << %s >>' % image.decode)
-        if image.transparent:
-            self.session._out('/Mask [%s]' % image.transparent_string)
-        #if image.soft_mask:
-        #    self.session._out('/SMask %s 0 R' % (image.number + 1))
-        self.session._out('/Length %s >>' % image.size)
-        self.session._put_stream(image.image_data)
-        self.session._out('endobj')
-        """
-        if image.soft_mask:
-            obj = self.session._add_object()
-            image.soft_mask._set_number(obj.id)
-            print "Placing soft mask object"
-            self._put_image(image.soft_mask)
-        """
-        if image.colorspace is 'Indexed':
-            self._put_pallet(image)
-
-    def _put_palette(self, image):
-        self.session._out('<<%s /Length %s >>' % (image.palette_filter,
-                          image.palette_length))
-        self.session._put_stream(image.palette)
-        self.session._out('endobj')
 
     def add_text(self, text):
         """ Input text, short or long. Writes in order, within the
@@ -361,19 +248,6 @@ class PDFDocument(object):
         table.draw()
         self.page.cursor = table.cursor
 
-    def _get_image(self, image_name):
-        if image_name in self.imagekeys:
-            index = self.imagekeys.index(image_name)
-            myimage = self.images[index]
-            return myimage
-        else:
-            return False
-
-    def _register_new_image(self, image):
-        image._set_index(len(self.images) + 1)
-        self.images.append(image)
-        self.imagekeys.append(image.name)
-
     def add_image(self, image=None, name=None, cursor=None,):
         if not cursor:
             imagecursor = self.page.cursor
@@ -406,3 +280,110 @@ class PDFDocument(object):
         if not cursor:
             self.page.cursor = myimage.cursor
         return myimage
+
+    def _get_image(self, image_name):
+        if image_name in self.imagekeys:
+            index = self.imagekeys.index(image_name)
+            myimage = self.images[index]
+            return myimage
+        else:
+            return False
+
+    def _output_pages(self):
+        """ Called by the PDFLite object to prompt creating
+            the page objects.
+
+        """
+        if self.orientation_changes is None:
+            self._get_orientation_changes()
+        else:
+            # Page
+            for page in self.pages:
+                obj = self.session._add_object()
+                self.session._out('<</Type /Page')
+                self.session._out('/Parent 1 0 R')
+                if page in self.orientation_changes:
+                    self.session._out(
+                        '/MediaBox [0 0 %.2f %.2f]' %
+                        (page.width, page.height))
+                self.session._out('/Resources 2 0 R')
+                self.session._out('/Group <</Type /Group /S /Transparency /CS /DeviceRGB>>')
+                self.session._out('/Contents %s 0 R>>' % (obj.id + 1))
+                self.session._out('endobj')
+
+                # Page content
+                self.session._add_object()
+                if self.session.compression is True:
+                    textfilter = ' /Filter /FlateDecode '
+                    page._compress()
+                else:
+                    textfilter = ''
+                self.session._out('<<%s/Length %s >>' % (textfilter, len(page.buffer)))
+                self.session._put_stream(page.buffer)
+                self.session._out('endobj')
+
+    def _get_orientation_changes(self):
+        """ Returns a list of the pages that have
+            orientation changes.
+
+        """
+        self.orientation_changes = []
+        for page in self.pages:
+            if page.orientation_change is True:
+                self.orientation_changes.append(page.index)
+            else:
+                pass
+        return self.orientation_changes
+
+    def _register_new_font(self, font):
+        font._set_index(len(self.fonts) + 1)
+        self.fonts.append(self.font)
+        self.fontkeys.append(self.font.font_key)
+        if hasattr(font, 'diffs') and font.diffs is not None:
+            try:
+                index_of_diff = self.diffs.index(font.diffs)
+            except:
+                index_of_diff = len(self.diffs) + 1
+                self.diffs.append(font.diffs)
+            font.diff_number = index_of_diff
+
+    def _output_fonts(self):
+        """ Called by the PDFLite object to prompt creating
+            the font objects.
+
+        """
+        self.session._save_object_number()
+        self._output_encoding_diffs()
+        self._output_font_files()
+
+        for font in self.fonts:
+            obj = self.session._add_object()
+            font._set_number(obj.id)
+            font.output()
+
+    def _output_font_files(self):
+        for font in self.fonts:
+            if hasattr(font, 'file'):
+                font.output_file()
+
+    def _output_encoding_diffs(self):
+        if self.diffs:
+            for diff in self.diffs:
+                obj = self.session._add_object()
+                self.session._out('<</Type /Encoding /BaseEncoding /WinAnsiEncoding /Differences [%s]>>')
+                self.session._out('endobj')
+
+    def _register_new_image(self, image):
+        image._set_index(len(self.images) + 1)
+        self.images.append(image)
+        self.imagekeys.append(image.name)
+
+    def _output_images(self):
+        """ Creates reference images, that can be
+            drawn throughout the document.
+
+        """
+        for image in self.images:
+            obj = self.session._add_object()
+            image._set_number(obj.id)
+            image.output()

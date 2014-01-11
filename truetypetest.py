@@ -19,16 +19,16 @@ def TrueTypeTest():
     # Use get_document method to get the generated document object.
     document = writer.get_document()
 
-    document.set_font('dejavusans', size=12, tt=True)
+    document.set_font('arial', size=12, tt=True)
     # Example for adding short and long text and whitespaces
     document.add_text("Testing")
     document.add_newline(4)
     document.add_text("Testing Again")
     document.add_newline()
     document.add_indent()
-    document.add_text(
-        "This should be enough text to test going over the edge of the \
-        page, and having to wrap back around. Let's see if it works!")
+    document.add_text("""This should be enough text to test going over the edge
+                      of the page, and having to wrap back around. Let's see
+                      if it works!""")
     document.add_page()
     document.add_newline(5)
     document.add_text("What")

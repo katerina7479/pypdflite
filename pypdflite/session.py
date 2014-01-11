@@ -92,6 +92,12 @@ class _Session(object):
         self._out(str(objnum) + ' 0 obj')
         return obj
 
+    def _save_object_number(self):
+        self.saved = len(self.objects)
+
+    def _get_saved_number(self):
+        return self.saved
+
     def _add_page(self, text):
         """ Helper function for PDFText, to have the document
             add a page, and retry adding a large block of
@@ -101,3 +107,13 @@ class _Session(object):
         """
         self.parent.document.add_page()
         self.parent.document.add_text(text)
+
+
+    def _UTF8toUTF16(self, utf8, setbom=True):
+        result = ''
+        if setbom:
+            result = '\xFE\xFF'
+        if not isinstance(utf8, unicode):
+            utf8 = utf8.decode('UTF-8')
+        result += utf8.encode('UTF-16BE')
+        return result

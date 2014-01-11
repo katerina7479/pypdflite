@@ -18,6 +18,7 @@ class PDFFont(object):
         self.families = [
             'courier', 'helvetica', 'arial', 'times', 'symbol', 'zapfdingbats']
         self.set_font(family, style, size)
+        self.type = 'Core'
 
     def _set_family(self, family):
         if family is not None:

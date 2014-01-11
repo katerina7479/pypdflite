@@ -129,7 +129,7 @@ class PDFLite(object):
         self.session._out(kids + ']')
         self.session._out('/Count %s' % len(self.document.pages))
 
-        # Overal size of the default PDF page
+        # Overall size of the default PDF page
         self.session._out('/MediaBox [0 0 %.2f %.2f]' %
                           (self.document.page.width,
                            self.document.page.height))
