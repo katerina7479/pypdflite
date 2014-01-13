@@ -14,9 +14,16 @@ class PDFColorScheme(object):
     """
 
     def __init__(self, draw_color=None, fill_color=None, text_color=None):
+        print "Draw Color", draw_color
+        print "Fill Color", fill_color
+        print "Text Color", text_color
+
         self.set_draw_color(draw_color)
         self.set_fill_color(fill_color)
         self.set_text_color(text_color)
+
+    def __repr__(self):
+        return 'DC: %s, FC: %s, TC: %s' % (self.draw_color, self.fill_color, self.text_color)
 
     def set_draw_color(self, draw_color):
         if draw_color is None:
@@ -66,6 +73,4 @@ class PDFColorScheme(object):
         return self.fill_color._get_color_string()
 
     def _get_text_color_string(self):
-        return self.fill_color._get_color_string()
-
-    
+        return self.text_color._get_color_string()

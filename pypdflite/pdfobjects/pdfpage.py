@@ -92,6 +92,9 @@ class PDFPage(object):
         self._set_dimensions()
         self._set_bounds()
 
+    def set_cursor(self, cursor):
+        self.cursor = cursor
+
     def _set_bounds(self):
         if self.margin is None:
             xmin = 0

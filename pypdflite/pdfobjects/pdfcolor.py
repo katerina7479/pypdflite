@@ -20,6 +20,9 @@ class PDFColor(object):
         else:
             self.set_color_by_number(r, g, b)
 
+    def __repr__(self):
+        return '%s, %s, %s' % (self.red, self.green, self.blue)
+
     def set_color_type(self, color_type):
         color_type = color_type[0].lower()  # Just get the first letter right.
 

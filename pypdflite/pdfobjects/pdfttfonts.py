@@ -1,17 +1,19 @@
+from pdffont import PDFFont
 from truetype.ttfonts import TTFontFile
 import re, zlib
 
 
 FONT_DIR = 'pypdflite/pdfobjects/truetype/'
-Families = ['arial', 'dejavusans']
 Filedict = {'arial': FONT_DIR + 'arial.ttf',
             'dejavusans': FONT_DIR + 'DejaVuSans.ttf'
             }
 
 
-class PDFTTFont(object):
+class PDFTTFont(PDFFont):
     def __init__(self, session, family='arial', style=None, size=20):
         self.session = session
+
+        self.families = ['arial', 'dejavusans']
 
         self.subset = []
 
@@ -22,7 +24,10 @@ class PDFTTFont(object):
         self.descriptors = {}
 
         self.set_font(family, style, size)
-        self.cache_text('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890-,.<>/?;:\'\"\\[]{}=+_!@#$%^&*()~`')
+        self.cache_text("""abcdefghijklmnopqrstuvwxyz
+                        ABCDEFGHIJKLMNOPQRSTUVWXYZ
+                        1234567890-,.<>/?;:\'\"\\[]{}
+                        =+_!@#$%^&*()~`""")
 
         self._set_metrics()
         self._get_diffs()
@@ -30,56 +35,19 @@ class PDFTTFont(object):
     def _set_family(self, family):
         if family is not None:
             family = family.lower()
-            assert family in Families, "%s not a valid font name" % family
+            assert family in self.families, "%s not a valid font name" % family
             self.family = family
         else:
             self.family = 'arial'
 
-    def _set_style(self, style=None):
-        """ Style should be a string, containing the letters 'B' for bold,
-        'U' for underline, or 'I' for italic, or should be None, for no style.
-        Symbol will not be underlined. The underline style can further be
-        modified by specifying the underline thickness and position.
+    def _set_underline_params(self):
+            self.underline_position = round(self.info_object.underlinePosition)
+            self.underline_thickness = round(self.info_object.underlineThickness)
 
-        """
-        if style is None:
-            self.style = None
-            self.underline = False
-        else:
-            self.style = style.upper()
-            # SetUnderline
-            if('U' in self.style):
-                self.underline = True
-
-                # Remove U from style string, in case there is a bold / italic
-                self.style = self.style.replace("U", "")
-
-                # Does a good job visually representing an underline
-                self.Underline_position = round(self.info_object.underlinePosition)
-                self.underline_thickness = round(self.info_object.underlineThickness)
-            else:
-                self.underline = False
-
-            # Correct order of bold-italic
-            if(self.style == 'IB'):
-                self.style = 'BI'
-
-    def _set_size(self, size=None):
-        if size is not None:
-            self.font_size = float(size)
-            self.line_size = self.font_size * 1.2
-
-    def _set_font_key(self):
-        if self.style is None:
-            self.font_key = self.family
-            #print "TT font ", self.font_key
-        else:
-            self.font_key = self.family + self.style
+    def _set_name(self):
+        self.name = self.font_key + self.style
 
     def _set_character_widths(self):
-        pass
-
-    def set_name(self):
         pass
 
     def set_font(self, family=None, style=None, size=None):
@@ -88,13 +56,6 @@ class PDFTTFont(object):
         self._set_size(size)
         self._set_style(style)
         self._set_font_key()
-
-    def _set_index(self, index=1):
-        """ Index is the number of the font, not the same as
-            object number, both are used and set in document.
-
-        """
-        self.index = index
 
     def _set_metrics(self):
         self.path = Filedict[self.family]
@@ -138,7 +99,15 @@ class PDFTTFont(object):
 
         self._output_character_widths()
         self._output_descriptors()
-        self.output_file()
+        self._output_file()
+
+    def string_width(self, s):
+        "Get width of a string in the current font"
+        w = 0
+        for char in s:
+            char = ord(char)
+            w += self.character_widths[char]
+        return w * self.font_size / 1000.0
 
     def _output_character_widths(self):
         #Widths
@@ -165,7 +134,7 @@ class PDFTTFont(object):
         self.session._out(s + '>>')
         self.session._out('endobj')
 
-    def output_file(self):
+    def _output_file(self):
         self.file = self.info_object.makeSubset(self.path, self.subset)
         self.length1 = len(self.file)
         self.file = zlib.compress(self.file)
@@ -178,35 +147,6 @@ class PDFTTFont(object):
         self.session._out('>>')
         self.session._put_stream(self.file)
         self.session._out('endobj')
-
-    def dict(self):
-        return {'i': self.index, 'type': self.type, 'name': self.name,
-                'character_widths': self.character_widths}
-
-    def _equals(self, font):
-        if (font.family == self.family) and\
-           (font.font_size == self.font_size) and\
-           (font.style == self.style):
-            ans = True
-        else:
-            ans = False
-        return ans
-
-    def string_width(self, s):
-        "Get width of a string in the current font"
-        w = 0
-        for char in s:
-            char = ord(char)
-            w += self.character_widths[char]
-        return w * self.font_size / 1000.0
-
-    def _set_number(self, value):
-        "This is the font pdf object number."
-        self.number = value
-
-    def set_line_size(self, value):
-        "Set line_size"
-        self.line_size = value
 
     def cache_text(self, text):
         txt_unicode = [ord(c) for c in text]

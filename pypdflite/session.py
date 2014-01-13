@@ -108,7 +108,6 @@ class _Session(object):
         self.parent.document.add_page()
         self.parent.document.add_text(text)
 
-
     def _UTF8toUTF16(self, utf8, setbom=True):
         result = ''
         if setbom:

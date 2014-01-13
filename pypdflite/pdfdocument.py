@@ -63,8 +63,12 @@ class PDFDocument(object):
         else:
             if isinstance(color_scheme, PDFColorScheme):
                 self.color_scheme = color_scheme
+                print self.color_scheme
             else:
                 raise Exception("Color scheme not a PDFColorScheme object")
+
+    def get_color_scheme(self):
+        return self.color_scheme
 
     def _set_default_font(self):
         """ Internal method to set the
@@ -99,6 +103,13 @@ class PDFDocument(object):
     def get_new_cursor(self):
         " Returns a new default cursor "
         return PDFCursor()
+
+    def set_cursor(self, cursor=None, x=None, y=None):
+        if cursor is not None:
+            self.page.set_cursor(cursor)
+        elif x is not None and y is not None:
+            self.page.set_cursor(PDFCursor(x, y))
+
 
     def set_font(self, family=None, style=None, size=None, font=None, tt=False):
         """ Set the document font object, size given in points.
@@ -152,7 +163,7 @@ class PDFDocument(object):
         else:
             self.set_font(self.font.family, self.font.style, size)
 
-    def add_text(self, text):
+    def add_text(self, text, cursor=None):
         """ Input text, short or long. Writes in order, within the
             pre-defined page boundaries. Use add_newline as a return
             character. Sequential add_text commands will print without
@@ -162,8 +173,8 @@ class PDFDocument(object):
             future version.
 
         """
-        text = PDFText(
-            self.session, self.page, self.font, self.color_scheme, text)
+        text = PDFText(self.session, self.page, self.font, self.color_scheme,
+                       text, cursor)
 
     def add_newline(self, number=1):
         """ Starts over again at the new line. If number is specified,

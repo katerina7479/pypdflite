@@ -1,22 +1,24 @@
 from fontref import pdf_character_widths
 
 
+CORE_FONTS = {
+    'courier': 'Courier', 'courierB': 'Courier-Bold',
+    'courierI': 'Courier-Oblique', 'courierBI': 'Courier-BoldOblique',
+    'helvetica': 'Helvetica', 'helveticaB': 'Helvetica-Bold',
+    'helveticaI': 'Helvetica-Oblique',
+    'helveticaBI': 'Helvetica-BoldOblique',
+    'times': 'Times-Roman', 'timesB': 'Times-Bold',
+    'timesI': 'Times-Italic', 'timesBI': 'Times-BoldItalic',
+    'symbol': 'Symbol', 'zapfdingbats': 'ZapfDingbats'}
+
+
 class PDFFont(object):
 
     def __init__(self, session, family='helvetica', style=None, size=20):
         self.session = session
-        self.core_fonts = {
-            'courier': 'Courier', 'courierB': 'Courier-Bold',
-            'courierI': 'Courier-Oblique', 'courierBI': 'Courier-BoldOblique',
-            'helvetica': 'Helvetica', 'helveticaB': 'Helvetica-Bold',
-            'helveticaI': 'Helvetica-Oblique',
-            'helveticaBI': 'Helvetica-BoldOblique',
-            'times': 'Times-Roman', 'timesB': 'Times-Bold',
-            'timesI': 'Times-Italic', 'timesBI': 'Times-BoldItalic',
-            'symbol': 'Symbol', 'zapfdingbats': 'ZapfDingbats'}
+        self.families = ['courier', 'helvetica', 'arial', 'times', 'symbol', 'zapfdingbats']
 
-        self.families = [
-            'courier', 'helvetica', 'arial', 'times', 'symbol', 'zapfdingbats']
+
         self.set_font(family, style, size)
         self.type = 'Core'
 
@@ -53,18 +55,21 @@ class PDFFont(object):
 
                 # Remove U from style string, in case there is a bold / italic
                 self.style = self.style.replace("U", "")
+                self._set_underline_params()
 
-                # Does a good job visually representing an underline
-                self.underline_thickness = int(1 * self.font_size / 8)
-                if self.underline_thickness < 1:
-                    self.underline_thickness = 1
-                self.underline_position = int(3 * self.font_size / 8)
             else:
                 self.underline = False
 
             # Correct order of bold-italic
             if(self.style == 'IB'):
                 self.style = 'BI'
+
+    def _set_underline_params(self):
+        # Does a good job visually representing an underline
+        self.underline_thickness = int(1 * self.font_size / 8)
+        if self.underline_thickness < 1:
+            self.underline_thickness = 1
+        self.underline_position = int(3 * self.font_size / 8)
 
     def _set_size(self, size=None):
         if size is not None:
@@ -78,10 +83,10 @@ class PDFFont(object):
             self.font_key = self.family + self.style
 
     def _set_name(self):
-        self.name = self.core_fonts[self.font_key]
+        self.name = CORE_FONTS[self.font_key]
 
     def _set_character_widths(self):
-        self.character_width = pdf_character_widths[self.font_key]
+        self.character_widths = pdf_character_widths[self.font_key]
 
     def set_font(self, family=None, style=None, size=None):
         "Select a font; size given in points"
@@ -99,18 +104,9 @@ class PDFFont(object):
         """
         self.index = index
 
-    def output(self):
-            self.session._out('<</Type /Font')
-            self.session._out('/BaseFont /' + self.name)
-            self.session._out('/Subtype /Type1')
-            if(self.name != 'Symbol' and self.name != 'ZapfDingbats'):
-                self.session._out('/Encoding /WinAnsiEncoding')
-            self.session._out('>>')
-            self.session._out('endobj')
-
-    def dict(self):
-        return {'i': self.index, 'type': 'core', 'name': self.name, 'up': 100,
-                'ut': 50, 'character_width': self.character_width}
+    def _set_number(self, value):
+        "This is the font pdf object number."
+        self.number = value
 
     def _equals(self, font):
         if (font.family == self.family) and\
@@ -121,17 +117,26 @@ class PDFFont(object):
             ans = False
         return ans
 
+    def dict(self):
+        return {'i': self.index, 'type': 'core', 'name': self.name, 'up': 100,
+                'ut': 50, 'character_width': self.character_width}
+
     def string_width(self, s):
         "Get width of a string in the current font"
         w = 0
         for i in s:
-            w += self.character_width[i]
+            w += self.character_widths[i]
         return w * self.font_size / 1000.0
-
-    def _set_number(self, value):
-        "This is the font pdf object number."
-        self.number = value
 
     def set_line_size(self, value):
         "Set line_size"
         self.line_size = value
+
+    def output(self):
+            self.session._out('<</Type /Font')
+            self.session._out('/BaseFont /' + self.name)
+            self.session._out('/Subtype /Type1')
+            if(self.name != 'Symbol' and self.name != 'ZapfDingbats'):
+                self.session._out('/Encoding /WinAnsiEncoding')
+            self.session._out('>>')
+            self.session._out('endobj')

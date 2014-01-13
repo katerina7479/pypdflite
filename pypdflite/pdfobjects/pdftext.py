@@ -50,16 +50,15 @@ class PDFText(object):
     def _text(self, value=None):
         if value is not None:
             self.text = value
-        #self._normalize_text()
         text_string = self._text_to_string(self.text)
         if self.text != '':
             s = 'BT %.2f %.2f Td %s Tj ET' % (
                 self.cursor.x, self.cursor.y_prime, text_string)
             if(self.font.underline):
                 s = '%s %s' % (s, self._underline())
-            # Only called if text != fill colors in current scheme
+            # Only called if text != text colors in current scheme
             if(self.color_scheme._get_color_flag()):
-                s = 'q %s %s Q' % (self.color._get_text_color_string(), s)
+                s = 'q %s %s Q' % (self.color_scheme._get_text_color_string(), s)
             # Set Font for text
             fs = 'BT /F%d %.2f Tf ET' % (self.font.index, self.font.font_size)
             self.session._out(fs, self.page)
