@@ -14,13 +14,10 @@ class PDFColorScheme(object):
     """
 
     def __init__(self, draw_color=None, fill_color=None, text_color=None):
-        print "Draw Color", draw_color
-        print "Fill Color", fill_color
-        print "Text Color", text_color
-
         self.set_draw_color(draw_color)
         self.set_fill_color(fill_color)
         self.set_text_color(text_color)
+        self._set_color_flag(False)
 
     def __repr__(self):
         return 'DC: %s, FC: %s, TC: %s' % (self.draw_color, self.fill_color, self.text_color)
@@ -42,7 +39,6 @@ class PDFColorScheme(object):
         else:
             fill_color.set_color_type("f")
         self.fill_color = fill_color
-        self._set_color_flag()
 
     def set_text_color(self, text_color):
         if text_color is None:
@@ -52,16 +48,9 @@ class PDFColorScheme(object):
         else:
             text_color.set_color_type("t")
         self.text_color = text_color
-        self._set_color_flag()
 
-    def _set_color_flag(self):
-        if hasattr(self, "text_color") and hasattr(self, "fill_color"):
-            if self.text_color.is_equal(self.fill_color):
-                self.color_flag = False
-            else:
-                self.color_flag = True
-        else:
-            pass
+    def _set_color_flag(self, value=True):
+        self.color_flag = value
 
     def _get_color_flag(self):
         return self.color_flag

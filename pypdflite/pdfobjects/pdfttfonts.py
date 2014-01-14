@@ -5,6 +5,7 @@ import re, zlib
 
 FONT_DIR = 'pypdflite/pdfobjects/truetype/'
 Filedict = {'arial': FONT_DIR + 'arial.ttf',
+            'arial_bold': FONT_DIR + 'arial_bold.ttf',
             'dejavusans': FONT_DIR + 'DejaVuSans.ttf'
             }
 
@@ -13,7 +14,7 @@ class PDFTTFont(PDFFont):
     def __init__(self, session, family='arial', style=None, size=20):
         self.session = session
 
-        self.families = ['arial', 'dejavusans']
+        self.families = ['arial', 'arial_bold', 'dejavusans']
 
         self.subset = []
 

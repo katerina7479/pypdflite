@@ -6,7 +6,7 @@ import zlib, re
 
 class PDFImage(object):
 
-    def __init__(self, session, path, name, cursor):
+    def __init__(self, session, path, name, cursor, dpi=72):
 
         self.session = session
         self.path = path
@@ -27,16 +27,17 @@ class PDFImage(object):
         self.soft_mask = None
         self.filter = None
         self.decode = None
+        self.scale = 72.0 / dpi
 
         self._get_metrics()
 
     def draw(self, page):
         self.session._out('q %s 0 0 %s %s %s cm /I%d Do Q' %
-                          (self.width, self.height, self.cursor.x,
-                          (self.cursor.y_prime - self.height),
+                          (self.scale_width, self.scale_height,
+                           self.cursor.x, (self.cursor.y_prime - self.scale_height),
                           self.index), page)
-        self.cursor.x_plus(self.width)
-        self.cursor.y_plus(self.height)
+        self.cursor.x_plus(self.scale_width)
+        self.cursor.y_plus(self.scale_height)
 
     def output(self):
         """ Prompts the creating of image objects.
@@ -143,6 +144,11 @@ class PDFImage(object):
                 pass
         else:
             raise Exception("Unknown file type")
+        self._set_scale()
+
+    def _set_scale(self):
+        self.scale_width = int(self.width * self.scale)
+        self.scale_height = int(self.height * self.scale)
 
     def _read_png(self):
 
@@ -168,6 +174,7 @@ class PDFImage(object):
         h = struct.unpack('>HH', f.read(4))[1]
         self.width = int(w)
         self.height = int(h)
+        self._set_scale()
         # Find bits per component
         self.bits_per_component = ord(f.read(1))
         if self.bits_per_component > 8:

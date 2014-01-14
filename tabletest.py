@@ -20,13 +20,15 @@ def TableTest():
     # Use get_document method to get the generated document object.
     document = writer.get_document()
 
+    document.set_cursor(100, 100)
     # Example for adding short and long text and whitespaces
-    document.add_table([["Heading1", "Heading 2", "Heading 3"],
-                        ["cell a2", "cell b2", "cell c2"],
-                        ["cell a3", "cell b3", "cell c3"],
-                        ["cell a4", "cell b4", "cell c4"]
-                        ])
+    mytable = document.add_table([["Heading1", "Heading 2", "Heading 3"],
+                                  ["cell a2", "cell b2", "cell c2"],
+                                  ["cell a3", "cell b3", "cell c3"],
+                                  ["cell a4", "cell b4", "cell c4"]
+                                  ])
 
+    document.draw_table(mytable)
     document.add_newline(4)
     document.add_text("Testing followup text")
 

@@ -9,6 +9,7 @@ from pdfobjects.pdfrectangle import PDFRectangle
 from pdfobjects.pdftable import PDFTable
 from pdfobjects.pdfimage import PDFImage
 from pdfobjects.pdfttfonts import PDFTTFont
+from pdfobjects.pdfmargin import PDFMargin
 
 
 class PDFDocument(object):
@@ -53,19 +54,19 @@ class PDFDocument(object):
         self._set_default_font()
         self.add_page()     # add first page
 
-    def set_color_scheme(self, color_scheme=None):
+    def set_color_scheme(self, color_scheme=None, draw_color=None, fill_color=None, text_color=None):
         """ Default color object is black letters
             & black lines.
 
         """
-        if color_scheme is None:
-            self.color_scheme = PDFColorScheme()
+        if isinstance(color_scheme, PDFColorScheme):
+            self.color_scheme = color_scheme
+        elif color_scheme is None:
+            self.color_scheme = PDFColorScheme(draw_color, fill_color, text_color)
         else:
-            if isinstance(color_scheme, PDFColorScheme):
-                self.color_scheme = color_scheme
-                print self.color_scheme
-            else:
-                raise Exception("Color scheme not a PDFColorScheme object")
+            raise Exception("Color scheme not a PDFColorScheme object")
+
+        self.color_scheme._set_color_flag(True)
 
     def get_color_scheme(self):
         return self.color_scheme
@@ -109,7 +110,6 @@ class PDFDocument(object):
             self.page.set_cursor(cursor)
         elif x is not None and y is not None:
             self.page.set_cursor(PDFCursor(x, y))
-
 
     def set_font(self, family=None, style=None, size=None, font=None, tt=False):
         """ Set the document font object, size given in points.
@@ -161,7 +161,7 @@ class PDFDocument(object):
         if(self.font.font_size == size):
             pass
         else:
-            self.set_font(self.font.family, self.font.style, size)
+            self.font._set_size(size)
 
     def add_text(self, text, cursor=None):
         """ Input text, short or long. Writes in order, within the
@@ -188,10 +188,10 @@ class PDFDocument(object):
         else:
             raise TypeError("Number of newlines must be an integer.")
 
-    def add_indent(self):
+    def add_indent(self, spaces=4):
         """ Adds a standard tab of 4 spaces.
         """
-        self.page.add_indent(self.font)
+        self.page.add_indent(self.font, spaces)
 
     def add_line(self, x1=None, y1=None, x2=None, y2=None,
                  cursor1=None, cursor2=None, style="solid"):
@@ -256,10 +256,16 @@ class PDFDocument(object):
         table = PDFTable(self.session, self.page, datalist, self.font,
                          self.color_scheme, tablecursor)
 
-        table.draw()
-        self.page.cursor = table.cursor
+        return table
 
-    def add_image(self, image=None, name=None, cursor=None,):
+    def draw_table(self, table):
+        if isinstance(table, PDFTable):
+            table.draw()
+            self.page.cursor = table.cursor
+        else:
+            raise Exception("Invalid Table")
+
+    def add_image(self, image=None, name=None, cursor=None, dpi=72):
         if not cursor:
             imagecursor = self.page.cursor
         else:
@@ -283,7 +289,7 @@ class PDFDocument(object):
                 myimage = self._get_image(name)
                 if not myimage:  # New image
                     myimage = PDFImage(self.session, image_string, name,
-                                       imagecursor)
+                                       imagecursor, dpi)
                     self._register_new_image(myimage)
         myimage.draw(self.page)
 
@@ -291,6 +297,20 @@ class PDFDocument(object):
         if not cursor:
             self.page.cursor = myimage.cursor
         return myimage
+
+    def set_background_image(self, image, dpi=72):
+        margins = PDFMargin(0, 0, None, None)
+        self.page.set_margins(margins)
+        background_cursor = PDFCursor(0, 0)
+        self.add_image(image, cursor=background_cursor, dpi=dpi)
+
+    def set_cursor(self, x=None, y=None):
+        if x is not None and isinstance(x, PDFCursor):
+            self.page.cursor = cursor
+        elif x is not None and y is not None:
+            self.page.cursor = PDFCursor(x, y, True)
+        else:
+            raise Exception("Invalid cursor input")
 
     def _get_image(self, image_name):
         if image_name in self.imagekeys:

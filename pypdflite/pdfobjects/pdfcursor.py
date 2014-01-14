@@ -2,7 +2,7 @@
 
 class PDFCursor(object):
 
-    def __init__(self, x=20, y=20):
+    def __init__(self, x=20, y=20, boundary_flag=False):
         """ Cursor object. Initialize with placement of cursor.
             This cursor places the origin (0,) at the upper left hand
             side of the page. X increases horizontally, and y increases
@@ -19,13 +19,16 @@ class PDFCursor(object):
         self._y = 0
 
         # Call to set default boundaries and increments.
-        self.set_bounds()
+        if boundary_flag is True:
+            self.set_bounds(xmin=x, ymin=y)
+        else:
+            self.set_bounds()
         self.set_deltas()
 
         self.x = x
         self.y = y
 
-    def set_bounds(self, xmin=0,  ymin=0, xmax=612, ymax=792):
+    def set_bounds(self, xmin=0, ymin=0, xmax=612, ymax=792):
         self.xmin = xmin
         self.ymin = ymin
         self.xmax = xmax
@@ -74,7 +77,7 @@ class PDFCursor(object):
 
     @property
     def y_prime(self):
-        return self.ymax-self.y
+        return self.ymax - self.y
 
     def x_fit(self, test_length):
         " Test to see if the line can has enough space for the given length. "
@@ -157,7 +160,7 @@ class PDFCursor(object):
     def copy(self):
         " Create a copy, and return it."
         new_cursor = self.__class__(self.x, self.y)
-        new_cursor.set_bounds(self.xmin,  self.ymin, self.xmax, self.ymax)
+        new_cursor.set_bounds(self.xmin, self.ymin, self.xmax, self.ymax)
         return new_cursor
 
     def add(self, add_ordinate):
@@ -198,20 +201,6 @@ class PDFCursor(object):
             self.y = self.y + self.dy
         else:
             self.y = self.y + dy
-
-    def x_minus(self, dx=None):
-        " Mutable x subtraction. Defaults to set delta value."
-        if dx is None:
-            self.x = self.x - self.dx
-        else:
-            self.x = self.x - dx
-
-    def y_minus(self, dy=None):
-        " Mutable y subtraction. Defualts to the set delta value."
-        if dy is None:
-            self.y = self.y - self.dy
-        else:
-            self.y = self.y - dy
 
     def x_reset(self):
         " Resets x to xmin."

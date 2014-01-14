@@ -1,4 +1,6 @@
 from pypdflite.pdflite import PDFLite
+from pypdflite.pdfobjects.pdfcolor import PDFColor
+from pypdflite.pdfobjects.pdfcolorscheme import PDFColorScheme
 
 
 def TrueTypeTest():
@@ -31,28 +33,10 @@ def TrueTypeTest():
                       if it works!""")
     document.add_page()
     document.add_newline(5)
-    document.add_text("What")
-    document.add_newline(5)
-    document.add_text("will")
-    document.add_newline(5)
-    document.add_text("happen")
-    document.add_newline(5)
-    document.add_text("when")
-    document.add_newline(5)
-    document.add_text("I")
-    document.add_newline(5)
-    document.add_text("go")
-    document.add_newline(5)
-    document.add_text("on")
-    document.add_newline(5)
-    document.add_text("to")
-    document.add_newline(5)
-    document.add_text("the")
-    document.add_newline(5)
-    document.add_text("next")
-    document.add_newline(5)
-    document.add_text("page?")
-    document.add_newline()
+
+    mtgrey = PDFColor(r=255, g=0, b=0)
+    new_scheme = PDFColorScheme(text_color=mtgrey)
+    document.set_color_scheme(new_scheme)
 
     # Test Page splitting with paragraphs
     document.add_text(

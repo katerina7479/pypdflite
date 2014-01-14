@@ -18,3 +18,4 @@ class PDFColumn(object):
                 self.max_width = cell.width
         for cell in self.cells:
             cell.max_width = self.max_width
+            cell.width_diff = self.max_width - cell.width
