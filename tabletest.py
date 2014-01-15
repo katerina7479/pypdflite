@@ -24,14 +24,17 @@ def TableTest():
     # Example for adding short and long text and whitespaces
     mytable = document.add_table(3, 3)
 
-    format = document.add_cell_format({'align': 'right'})
+    format = document.add_cell_format({'align': 'right', 'border': (0, 1)})
+    justleft = document.add_cell_format({'left': (0, 1)})
 
     mytable.set_column_width(1, 200)
     mytable.set_row_height(2, 200)
 
-    for row in range(3):
+    for row in range(2):
         for column in range(3):
             mytable.write(row, column, 'cell %s, %s' % (row, column), format)
+    for column in range(3):
+            mytable.write(2, column, 'look', justleft)
 
     document.draw_table(mytable)
     document.add_newline(4)

@@ -11,11 +11,11 @@ class PDFCellFormat(object):
                                'text_wrap': False,  # True
                                'fill': False,  # True
                                'fill_color': None,  # PDFColorScheme (type = f)
-                               'border': None,  # Style Index (type, weight)
-                               'bottom': None,  # index
-                               'top': None,  # index
-                               'left': None,  # index
-                               'right': None,  # index
+                               'border': (None, None),  # Style Index (type, weight)
+                               'bottom': (None, None),  # index
+                               'top': (None, None),  # index tuple
+                               'left': (None, None),  # index
+                               'right': (None, None),  # index
                                'border_color': None,  # PDFColorScheme (type =d)
                                'bottom_color': None,  # PDFColorScheme
                                'top_color': None,  # PDFColorScheme

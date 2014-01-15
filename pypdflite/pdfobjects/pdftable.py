@@ -56,8 +56,8 @@ class PDFTable(object):
 
     def draw(self):
         self._compile()
-        self._draw_text()
         self._draw_borders()
+        self._draw_text()
         self._set_final_cursor()
 
     def _draw_text(self):
@@ -72,9 +72,7 @@ class PDFTable(object):
             self.rows[i].draw_borders()
             self.border_cursor.x_reset()
             if (i + 1) < len(self.rows):
-                print "Advancing border for row", i + 1
                 self.border_cursor.y_plus(self.rows[i].max_height)
-                #pass
 
     def _set_final_cursor(self):
         if self.text_cursor.is_greater_than(self.border_cursor):
@@ -87,5 +85,4 @@ class PDFTable(object):
         self.columns[column].set_max_width(value)
 
     def set_row_height(self, row, value):
-        print "Setting row height", row, value
         self.rows[row].set_max_height(value)

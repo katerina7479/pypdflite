@@ -29,7 +29,7 @@ class PDFLine(object):
             self.set_color(None)
 
     def set_style(self, style=None):
-        if style == "dashed":
+        if style == "dashed" or style == 1:
             self.style = "dashed"
         else:
             self.style = "solid"

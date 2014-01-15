@@ -47,11 +47,14 @@ class PDFCell(object):
         pass
 
     def draw_text(self):
-        self.text_cursor.y_plus(-(self.padding_bottom + self.width_diff_bottom))
-        self.text_cursor.x_plus(self.padding_left + self.width_diff_left)
-        self.text_object = PDFText(self.table.session, self.table.page, self.text, self.font, None, self.text_cursor)
-        self.text_cursor.x_plus(self.padding_right + self.width_diff_right)
-        self.text_cursor.y_plus(self.padding_bottom + self.width_diff_bottom)
+        if self.text == '' or self.text is None:
+            self.text_cursor.x_plus(self.max_width)
+        else:
+            self.text_cursor.y_plus(-(self.padding_bottom + self.width_diff_bottom))
+            self.text_cursor.x_plus(self.padding_left + self.width_diff_left)
+            self.text_object = PDFText(self.table.session, self.table.page, self.text, self.font, None, self.text_cursor)
+            self.text_cursor.x_plus(self.padding_right + self.width_diff_right)
+            self.text_cursor.y_plus(self.padding_bottom + self.width_diff_bottom)
 
     def _get_points(self):
         self.point_nw = self.border_cursor.copy()
@@ -66,23 +69,47 @@ class PDFCell(object):
         self.point_se.x_plus(self.max_width)
         self.point_se.y_plus(self.max_height)
 
-        print self.max_height
-        print "Points, sw, se, nw, ne", self.point_sw, self.point_se, self.point_nw, self.point_ne
+        self.border_cursor = self.point_ne
+
+        # print "Points, sw, se, nw, ne", self.point_sw, self.point_se, self.point_nw, self.point_ne
+
+    def _get_border_formats(self):
+        self.style = {}
+        self.size = {}
+        if self.format['border'][0] is not None:
+            style, size = self.format['border']
+            self.style['left'] = self.style['right'] = self.style['top'] = self.style['bottom'] = style
+            self.size['left'] = self.size['right'] = self.size['top'] = self.size['bottom'] = size
+        else:
+            self.style['right'], self.size['right'] = self.format['right']
+            self.style['left'], self.size['left'] = self.format['left']
+            self.style['top'], self.size['top'] = self.format['top']
+            self.style['bottom'], self.size['bottom'] = self.format['bottom']
 
     def draw_borders(self):
         self._get_points()
-        print "printing border for", self
-        self.bottom_line = PDFLine(self.table.session, self.table.page, self.point_sw, self.point_se, self.format['bottom_color'], style=None, size=1)
-        self.right_line = PDFLine(self.table.session, self.table.page, self.point_se, self.point_ne, self.format['right_color'], style=None, size=1)
-        self.left_line = PDFLine(self.table.session, self.table.page, self.point_sw, self.point_nw, self.format['left_color'], style=None, size=1)
-        self.top_line = PDFLine(self.table.session, self.table.page, self.point_ne, self.point_nw, self.format['top_color'], style=None, size=1)
+        self._get_border_formats()
 
-        self.bottom_line.draw()
-        self.right_line.draw()
-        self.left_line.draw()
-        self.top_line.draw()
-
-        self.border_cursor = self.point_ne
+        if self.style['bottom'] is not None:
+            self.bottom_line = PDFLine(self.table.session, self.table.page,
+                                       self.point_sw, self.point_se, self.format['bottom_color'],
+                                       self.style['bottom'], self.size['bottom'])
+            self.bottom_line.draw()
+        if self.style['right'] is not None:
+            self.right_line = PDFLine(self.table.session, self.table.page,
+                                      self.point_se, self.point_ne, self.format['right_color'],
+                                      self.style['right'], self.size['right'])
+            self.right_line.draw()
+        if self.style['left'] is not None:
+            self.left_line = PDFLine(self.table.session, self.table.page,
+                                     self.point_sw, self.point_nw, self.format['left_color'],
+                                     self.style['left'], self.size['left'])
+            self.left_line.draw()
+        if self.style['top'] is not None:
+            self.top_line = PDFLine(self.table.session, self.table.page,
+                                    self.point_ne, self.point_nw, self.format['top_color'],
+                                    self.style['top'], self.size['top'])
+            self.top_line.draw()
 
     def _set_text_padding(self):
         if self.format['padding'] is not False:
@@ -127,4 +154,3 @@ class PDFCell(object):
         else:
             self.width_diff_bottom = int(width_diff / 2.0)
             self.width_diff_top = width_diff - self.width_diff_bottom
-        print self.width_diff_bottom
