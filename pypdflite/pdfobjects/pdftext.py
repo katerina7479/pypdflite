@@ -2,16 +2,22 @@
 
 class PDFText(object):
 
-    def __init__(self, session, page, font, color_scheme, text, cursor=None):
+    def __init__(self, session, page, text, font=None, color_scheme=None, cursor=None):
         self.session = session
         self.page = page
-        self.font = font
-        self.color_scheme = color_scheme
+        self.text = text
+        if font is None:
+            self.font = self.session.parent.document.font
+        else:
+            self.font = font
+        if color_scheme is None:
+            self.color_scheme = self.session.parent.document.color_scheme
+        else:
+            self.color_scheme = color_scheme
         if cursor is None:
             self.cursor = page.cursor
         else:
             self.cursor = cursor
-        self.text = text
 
         if self._test_x_fit() is True:
             self._text()
@@ -23,7 +29,10 @@ class PDFText(object):
 
     def _test_x_fit(self, value=None):
         if value is None:
-            test = self.cursor.x_fit(self.font.string_width(self.text))
+            if self.text != '' and self.text is not None:
+                test = self.cursor.x_fit(self.font.string_width(self.text))
+            else:
+                test = True
         else:
             test = self.cursor.x_fit(self.font.string_width(value))
         return test
@@ -50,18 +59,29 @@ class PDFText(object):
     def _text(self, value=None):
         if value is not None:
             self.text = value
-        text_string = self._text_to_string(self.text)
-        if self.text != '':
+        if self.text != '' and self.text is not None:
+            text_string = self._text_to_string(self.text)
             s = 'BT %.2f %.2f Td %s Tj ET' % (
                 self.cursor.x, self.cursor.y_prime, text_string)
-            if(self.font.underline):
-                s = '%s %s' % (s, self._underline())
+            try:
+                if(self.font.underline):
+                    s = '%s %s' % (s, self._underline())
+            except:
+                pass
             # Only called if text != text colors in current scheme
-            if(self.color_scheme._get_color_flag()):
-                s = 'q %s %s Q' % (self.color_scheme._get_text_color_string(), s)
+            try:
+                if(self.color_scheme._get_color_flag()):
+                    s = 'q %s %s Q' % (self.color_scheme._get_text_color_string(), s)
+            except:
+                pass
             # Set Font for text
-            fs = 'BT /F%d %.2f Tf ET' % (self.font.index, self.font.font_size)
-            self.session._out(fs, self.page)
+            try:
+                if self.font.is_set is False:
+                    fs = 'BT /F%d %.2f Tf ET' % (self.font.index, self.font.font_size)
+                    self.font.is_set = True
+                    self.session._out(fs, self.page)
+            except:
+                pass
             self.session._out(s, self.page)
             try:
                 self.cursor.x_plus(self.font.string_width(self.text))
@@ -100,5 +120,8 @@ class PDFText(object):
         return s
 
     def _newline(self):
-        self.cursor.y_plus(self.font.line_size)
+        try:
+            self.cursor.y_plus(self.font.line_size)
+        except:
+            self.cursor.y_plus(12)
         self.cursor.x_reset()

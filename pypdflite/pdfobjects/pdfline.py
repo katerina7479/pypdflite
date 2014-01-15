@@ -2,15 +2,17 @@
 
 class PDFLine(object):
 
-    def __init__(self, session, page, color_scheme,
-                 cursor_start, cursor_end, style=None, size=1):
+    def __init__(self, session, page, cursor_start, cursor_end, color_scheme=None, style=None, size=1):
         self.session = session
         self.start = cursor_start
         self.end = cursor_end
 
         self.page = page
 
-        self.color_scheme = color_scheme
+        if color_scheme is None:
+            self.color_scheme = self.session.parent.document.color_scheme
+        else:
+            self.color_scheme = color_scheme
         self.set_size(size)
         self.set_color()
         self.set_style(style)

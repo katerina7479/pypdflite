@@ -25,31 +25,21 @@ __pycache__
 # Installer logs
 pip-log.txt
 
-# Unit test / coverage reports
-.coverage
-.tox
-nosetests.xml
-
 # Translations
 *.mo
 
-# Mr Developer
-.mr.developer.cfg
-.project
-.pydevproject
-
 # Rope
-.ropeproject
+*.ropeproject
 
 # PyCharm
-.idea
+*.idea
 
 # Sublime
-.sublime-project
-.sublime-workspace
+*.sublime-project
+*.sublime-workspace
 
 # Adobe
-.pdf
+*.pdf
 
 # Images
-.png
+*.png

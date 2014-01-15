@@ -22,11 +22,16 @@ def TableTest():
 
     document.set_cursor(100, 100)
     # Example for adding short and long text and whitespaces
-    mytable = document.add_table([["Heading1", "Heading 2", "Heading 3"],
-                                  ["cell a2", "cell b2", "cell c2"],
-                                  ["cell a3", "cell b3", "cell c3"],
-                                  ["cell a4", "cell b4", "cell c4"]
-                                  ])
+    mytable = document.add_table(3, 3)
+
+    format = document.add_cell_format({'align': 'right'})
+
+    mytable.set_column_width(1, 200)
+    mytable.set_row_height(2, 200)
+
+    for row in range(3):
+        for column in range(3):
+            mytable.write(row, column, 'cell %s, %s' % (row, column), format)
 
     document.draw_table(mytable)
     document.add_newline(4)

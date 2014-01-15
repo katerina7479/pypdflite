@@ -10,6 +10,7 @@ from pdfobjects.pdftable import PDFTable
 from pdfobjects.pdfimage import PDFImage
 from pdfobjects.pdfttfonts import PDFTTFont
 from pdfobjects.pdfmargin import PDFMargin
+from pdfobjects.pdfcellformat import PDFCellFormat
 
 
 class PDFDocument(object):
@@ -173,8 +174,10 @@ class PDFDocument(object):
             future version.
 
         """
-        text = PDFText(self.session, self.page, self.font, self.color_scheme,
-                       text, cursor)
+        if cursor is None:
+            cursor = self.page.cursor
+
+        text = PDFText(self.session, self.page, text, self.font, self.color_scheme, cursor)
 
     def add_newline(self, number=1):
         """ Starts over again at the new line. If number is specified,
@@ -202,17 +205,14 @@ class PDFDocument(object):
             cursor1 = PDFCursor(x1, y1)
             cursor2 = PDFCursor(x2, y2)
 
-        myline = PDFLine(
-            self.session, self.page, self.color_scheme,
-            cursor1, cursor2, style)
+        myline = PDFLine(self.session, self.page, cursor1, cursor2, self.color_scheme, style)
         myline.draw()
 
     def draw_horizonal_line(self):
         end_cursor = self.page.cursor.copy()
         end_cursor.x = end_cursor.xmax
 
-        myline = PDFLine(self.session, self.page,
-                         self.color_scheme, self.page.cursor, end_cursor, None)
+        myline = PDFLine(self.session, self.page, self.page.cursor, end_cursor, self.color_scheme, None)
         myline.draw()
 
     def draw_rectangle(self, x1=None, y1=None, x2=None, y2=None,
@@ -247,14 +247,11 @@ class PDFDocument(object):
 
         rectangle.draw()
 
-    def add_table(self, datalist, cursor=None):
+    def add_table(self, rows, columns, cursor=None):
         if cursor is None:
-            tablecursor = self.page.cursor
-        else:
-            tablecursor = cursor
+            cursor = self.page.cursor
 
-        table = PDFTable(self.session, self.page, datalist, self.font,
-                         self.color_scheme, tablecursor)
+        table = PDFTable(self.session, self.page, rows, columns, cursor)
 
         return table
 
@@ -264,6 +261,13 @@ class PDFDocument(object):
             self.page.cursor = table.cursor
         else:
             raise Exception("Invalid Table")
+
+    def add_cell_format(self, data=None, font=None):
+        if font is None:
+            font = self.font
+
+        format = PDFCellFormat(data, font=font)
+        return format
 
     def add_image(self, image=None, name=None, cursor=None, dpi=72):
         if not cursor:

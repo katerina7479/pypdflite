@@ -21,6 +21,10 @@ class PDFFont(object):
 
         self.set_font(family, style, size)
         self.type = 'Core'
+        self.is_set = False
+
+    def __repr__(self):
+        return self.family
 
     def _set_family(self, family):
         if family is not None:

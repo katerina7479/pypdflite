@@ -1,52 +1,60 @@
 from pdftext import PDFText
 from pdfline import PDFLine
+from pdfcellformat import PDFCellFormat
+
 
 
 class PDFCell(object):
-    def __init__(self, parent, text, font, color_scheme,
-                 row_index, column_index, text_cursor, border_cursor):
-        self.parent = parent
+    def __init__(self, table, row_index, column_index, text_cursor, border_cursor):
+        self.table = table
         self.row_index = row_index
         self.column_index = column_index
-
-        self.text = text
-        self.set_font(font)
 
         self.text_cursor = text_cursor
         self.border_cursor = border_cursor
 
-        self.set_text_padding()
-        self.set_color_scheme()
-        self.max_width = None
-        self.width_diff = None
+        self.height = 0
+        self.width = 0
+        self.max_width = 0
+        self.width_diff = 0
 
     def __repr__(self):
         return '(%s, %s)' % (self.row_index, self.column_index)
 
-    def set_font(self, font=None):
-        if font is None:
-            self.font = self.parent.font
-        else:
-            self.font = font
-        self.text_width = self.font.string_width(self.text)
+    def set_text(self, text):
+        self.text = text
 
-    def set_color_scheme(self, color_scheme=None):
-        if color_scheme is None:
-            self.color_scheme = self.parent.color_scheme
+    def set_format(self, format):
+        self.format = format
+        self.font = self.format['font']
+        self.text_width = self.font.string_width(self.text)
+        self.line_size = self.font.line_size
+        self.text_wrap = self.format['text_wrap']
+        self._set_text_padding()
+
+    def _compile(self):
+        if hasattr(self, 'format'):
+            pass
         else:
-            self.color_scheme = color_scheme
+            self.text = ''
+            self.format = PDFCellFormat()
+            self.font = self.format['font']
+            self.text_width = 1
+            self.line_size = 12
+            self._set_text_padding()
+
+    def _finish(self):
+        pass
 
     def draw_text(self):
-        self.text_cursor.y_plus(-self.padding_bottom)
-        self.text_cursor.x_plus(self.padding_left)
-        self.text_object = PDFText(self.parent.session, self.parent.page,
-                                   self.font, self.color_scheme, self.text,
-                                   self.text_cursor)
-        self.text_cursor.x_plus(self.padding_right + self.width_diff)
-        self.text_cursor.y_plus(self.padding_bottom)
+        self.text_cursor.y_plus(-(self.padding_bottom + self.width_diff_bottom))
+        self.text_cursor.x_plus(self.padding_left + self.width_diff_left)
+        self.text_object = PDFText(self.table.session, self.table.page, self.text, self.font, None, self.text_cursor)
+        self.text_cursor.x_plus(self.padding_right + self.width_diff_right)
+        self.text_cursor.y_plus(self.padding_bottom + self.width_diff_bottom)
 
     def _get_points(self):
-        self.point_nw = self.border_cursor
+        self.point_nw = self.border_cursor.copy()
         self.point_sw = self.border_cursor.copy()
         self.point_se = self.border_cursor.copy()
         self.point_ne = self.border_cursor.copy()
@@ -58,18 +66,16 @@ class PDFCell(object):
         self.point_se.x_plus(self.max_width)
         self.point_se.y_plus(self.max_height)
 
-        # print "Points, sw, se, nw, ne", self.point_sw, self.point_se, self.point_nw, self.point_ne
+        print self.max_height
+        print "Points, sw, se, nw, ne", self.point_sw, self.point_se, self.point_nw, self.point_ne
 
     def draw_borders(self):
         self._get_points()
-        self.bottom_line = PDFLine(self.parent.session, self.parent.page,
-                                   self.color_scheme, self.point_sw, self.point_se, style=None, size=1)
-        self.right_line = PDFLine(self.parent.session, self.parent.page,
-                                  self.color_scheme, self.point_se, self.point_ne, style=None, size=1)
-        self.left_line = PDFLine(self.parent.session, self.parent.page,
-                                 self.color_scheme, self.point_sw, self.point_nw, style=None, size=1)
-        self.top_line = PDFLine(self.parent.session, self.parent.page,
-                                self.color_scheme, self.point_ne, self.point_nw, style=None, size=1)
+        print "printing border for", self
+        self.bottom_line = PDFLine(self.table.session, self.table.page, self.point_sw, self.point_se, self.format['bottom_color'], style=None, size=1)
+        self.right_line = PDFLine(self.table.session, self.table.page, self.point_se, self.point_ne, self.format['right_color'], style=None, size=1)
+        self.left_line = PDFLine(self.table.session, self.table.page, self.point_sw, self.point_nw, self.format['left_color'], style=None, size=1)
+        self.top_line = PDFLine(self.table.session, self.table.page, self.point_ne, self.point_nw, self.format['top_color'], style=None, size=1)
 
         self.bottom_line.draw()
         self.right_line.draw()
@@ -78,17 +84,47 @@ class PDFCell(object):
 
         self.border_cursor = self.point_ne
 
-    def set_text_padding(self, top=10, right=10, bottom=8, left=10):
-        self.padding_top = top
-        self.padding_right = right
-        self.padding_left = left
-        self.padding_bottom = bottom
+    def _set_text_padding(self):
+        if self.format['padding'] is not False:
+            self.padding_top = self.padding_right = self.padding_left = self.padding_bottom = self.format['padding']
+        else:
+            self.padding_top = self.format['padding_top']
+            self.padding_right = self.format['padding_right']
+            self.padding_left = self.format['padding_left']
+            self.padding_bottom = self.format['padding_bottom']
 
-        self.width = (self.font.string_width(self.text) +
+        self.width = (self.text_width +
                       self.padding_right + self.padding_left)
 
-        self.height = (self.font.line_size + self.padding_top +
+        self.height = (self.line_size + self.padding_top +
                        self.padding_bottom)
 
     def _advance_initial(self):
         self.text_cursor.y_plus(self.height - self.padding_bottom)
+
+    def set_max_width(self, value):
+        self.max_width = value
+        width_diff = self.max_width - self.width
+        if self.format['align'] == 'left':
+            self.width_diff_left = 0
+            self.width_diff_right = width_diff
+        elif self.format['align'] == 'right':
+            self.width_diff_right = 0
+            self.width_diff_left = width_diff
+        else:
+            self.width_diff_left = int(width_diff / 2.0)
+            self.width_diff_right = width_diff - self.width_diff_left
+
+    def set_max_height(self, value):
+        self.max_height = value
+        width_diff = self.max_height - self.height
+        if self.format['valign'] == 'bottom':
+            self.width_diff_bottom = 0
+            self.width_diff_top = width_diff
+        elif self.format['valign'] == 'top':
+            self.width_diff_top = 0
+            self.width_diff_bottom = width_diff
+        else:
+            self.width_diff_bottom = int(width_diff / 2.0)
+            self.width_diff_top = width_diff - self.width_diff_bottom
+        print self.width_diff_bottom

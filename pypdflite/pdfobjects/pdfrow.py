@@ -1,23 +1,24 @@
+from pdfcell import PDFCell
 
 
 class PDFRow(object):
-    def __init__(self, parent, font, color_scheme, number, textcursor, bordercursor):
+    def __init__(self, parent, row_index, num_cols, textcursor, bordercursor):
         self.parent = parent
-        self.font = font
-        self.color_scheme = color_scheme
-        self.number = number
-        self.textcursor = textcursor
-        self.bordercursor = bordercursor
+        self.row_index = row_index
+        self.num_cols = num_cols
+        self.text_cursor = textcursor
+        self.border_cursor = bordercursor
         self.cells = []
+        self._make_cells()
+        self.max_height = 0
 
-    def __repr__(self):
-        mystring = ''
-        for cell in self.cells:
-            mystring += cell.text + ' '
-        return mystring
+    def __getitem__(self, key):
+        return self.cells[key]
 
-    def add_cell(self, cell):
-        self.cells.append(cell)
+    def _make_cells(self):
+        for x in range(0, self.num_cols):
+            cell = PDFCell(self.parent, self.row_index, x, self.text_cursor, self.border_cursor)
+            self.cells.append(cell)
 
     def draw_text(self):
         for cell in self.cells:
@@ -26,16 +27,18 @@ class PDFRow(object):
     def draw_borders(self):
         for cell in self.cells:
             cell.draw_borders()
-            self.bordercursor.x_plus(cell.max_width)
+            self.border_cursor.x_plus(cell.max_width)
 
     def _finish(self):
-        self.max_height = 0
         for cell in self.cells:
             if cell.height > self.max_height:
                 self.max_height = cell.height
 
         for cell in self.cells:
-            cell.max_height = self.max_height
+            cell.set_max_height(self.max_height)
 
     def _advance_first_row(self):
         self.cells[0]._advance_initial()
+
+    def set_max_height(self, value):
+        self.max_height = value
