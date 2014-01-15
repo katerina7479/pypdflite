@@ -32,6 +32,7 @@ class _Session(object):
         # Creates the placeholders in the object list to maintain proper count.
         self._create_placeholder_objects()
         self.compression = False
+        self.text_color = None
 
     def _create_placeholder_objects(self):
         """ PDF objects #1 through #3 are typically saved for the
@@ -116,3 +117,4 @@ class _Session(object):
             utf8 = utf8.decode('UTF-8')
         result += utf8.encode('UTF-16BE')
         return result
+

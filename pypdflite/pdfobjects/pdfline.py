@@ -2,31 +2,24 @@
 
 class PDFLine(object):
 
-    def __init__(self, session, page, cursor_start, cursor_end, color_scheme=None, style=None, size=1):
+    def __init__(self, session, page, cursor_start, cursor_end, color=None, style=None, size=1):
         self.session = session
         self.start = cursor_start
         self.end = cursor_end
 
         self.page = page
 
-        if color_scheme is None:
-            self.color_scheme = self.session.parent.document.color_scheme
-        else:
-            self.color_scheme = color_scheme
+        self.color = color
         self.set_size(size)
-        self.set_color()
         self.set_style(style)
 
     def set_size(self, line_size=1):
         self.line_size = line_size
 
-    def set_color(self, color_scheme=None):
-        if color_scheme is None:
-            self.session._out(
-                self.color_scheme._get_draw_color_string(), self.page)
-        else:
-            self.color_scheme = color_scheme
-            self.set_color(None)
+    def draw_color(self):
+        if self.color is not None:
+            self.color.set_type('d')
+            self.session._out(self.color._get_color_string(), self.page)
 
     def set_style(self, style=None):
         if style == "dashed" or style == 1:
@@ -44,6 +37,8 @@ class PDFLine(object):
         self.session._out('%.2f w' % self.line_size, self.page)
 
     def draw(self):
+        self.draw_color()
+
         if self.style is not None:
             self.draw_style()
         self.draw_line_size()

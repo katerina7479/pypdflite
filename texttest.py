@@ -1,6 +1,5 @@
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcolor import PDFColor
-from pypdflite.pdfobjects.pdfcolorscheme import PDFColorScheme
 
 
 def TextTest():
@@ -68,11 +67,10 @@ def TextTest():
     document.add_newline(5)
 
     # Create color Object, apply to fill color
-    lightblue = PDFColor(name='lightblue')
-    new_scheme = PDFColorScheme(text_color=lightblue)
-    document.set_color_scheme(new_scheme)
     document.add_text("when")
     document.add_newline(5)
+    lightblue = PDFColor(name='lightblue')
+    document.set_text_color(lightblue)
     document.add_text("I")
     document.add_newline(5)
     document.add_text("go")

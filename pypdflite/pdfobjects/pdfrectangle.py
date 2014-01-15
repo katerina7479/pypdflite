@@ -2,19 +2,19 @@
 
 class PDFRectangle(object):
 
-    def __init__(self, session, page, color_scheme,
-                 cursor_start, cursor_end, size=1, style='S'):
+    def __init__(self, session, page, cursor_start, cursor_end, border_color=None, fill_color=None,
+                 style='S', size=1):
         self.session = session
         self.page = page
-        self.color_scheme = color_scheme
+        self.border_color = border_color
+        self.fill_color = fill_color
 
         # S is plain, B is filled with border, F is filled no border.
         self.style_list = ['S', 'B', 'F']
 
         self._set_dimensions(cursor_start, cursor_end)
         self._set_style(style)
-        self.set_size(size)
-        self.set_color()
+        self._set_size(size)
 
     def _set_dimensions(self, cursor_start, cursor_end):
         self.corner = cursor_start
@@ -30,21 +30,20 @@ class PDFRectangle(object):
         else:
             self.style = 'S'
 
-    def set_size(self, line_size=1):
+    def _set_size(self, line_size=1):
         self.line_size = line_size
         self.session._out('%.2f w' % self.line_size)
 
-    def set_color(self, color_scheme=None):
-        if color_scheme is None:
-            self.session._out(
-                self.color_scheme._get_draw_color_string(), self.page)
-            self.session._out(
-                self.color_scheme._get_fill_color_string(), self.page)
-        else:
-            self.color_scheme = color_scheme
-            self.set_color(None)
+    def _set_colors(self):
+        if self.border_color is not None:
+            self.border_color.set_type('d')
+            self.session._out(self.border_color._get_color_string(), self.page)
+        if self.fill_color is not None:
+            self.fill_color.set_type('f')
+            self.session._out(self.fill_color._get_color_string(), self.page)
 
     def draw(self):
+        self._set_colors()
         s = '%.2f %.2f %.2f %.2f re %s' % (
             self.corner.x, self.corner.y_prime,
             self.width, self.height, self.style)

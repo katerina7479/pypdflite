@@ -1,10 +1,10 @@
 from os.path import splitext
 from pdfobjects.pdffont import PDFFont
 from pdfobjects.pdfpage import PDFPage
-from pdfobjects.pdfcolorscheme import PDFColorScheme
 from pdfobjects.pdftext import PDFText
 from pdfobjects.pdfcursor import PDFCursor
 from pdfobjects.pdfline import PDFLine
+from pdfobjects.pdfcolor import PDFColor
 from pdfobjects.pdfrectangle import PDFRectangle
 from pdfobjects.pdftable import PDFTable
 from pdfobjects.pdfimage import PDFImage
@@ -51,26 +51,34 @@ class PDFDocument(object):
 
     def _set_defaults(self):
         "Set color scheme & font to defaults."
-        self.set_color_scheme()
+        self._set_color_scheme()
         self._set_default_font()
         self.add_page()     # add first page
 
-    def set_color_scheme(self, color_scheme=None, draw_color=None, fill_color=None, text_color=None):
+    def _set_color_scheme(self, draw_color=None, fill_color=None, text_color=None):
         """ Default color object is black letters
             & black lines.
 
         """
-        if isinstance(color_scheme, PDFColorScheme):
-            self.color_scheme = color_scheme
-        elif color_scheme is None:
-            self.color_scheme = PDFColorScheme(draw_color, fill_color, text_color)
-        else:
-            raise Exception("Color scheme not a PDFColorScheme object")
+        if draw_color is None:
+            draw_color = PDFColor('d')
+        if fill_color is None:
+            fill_color = PDFColor('f')
+        if text_color is None:
+            text_color = PDFColor('t')
 
-        self.color_scheme._set_color_flag(True)
+        self.draw_color = draw_color
+        self.fill_color = fill_color
+        self.text_color = text_color
 
-    def get_color_scheme(self):
-        return self.color_scheme
+    def set_text_color(self, color):
+        self.text_color = color
+
+    def set_fill_color(self, color):
+        self.fill_color = color
+
+    def set_draw_color(self, color):
+        self.draw_color = color
 
     def _set_default_font(self):
         """ Internal method to set the
@@ -177,7 +185,7 @@ class PDFDocument(object):
         if cursor is None:
             cursor = self.page.cursor
 
-        text = PDFText(self.session, self.page, text, self.font, self.color_scheme, cursor)
+        text = PDFText(self.session, self.page, text, self.font, self.text_color, cursor)
 
     def add_newline(self, number=1):
         """ Starts over again at the new line. If number is specified,
@@ -205,19 +213,19 @@ class PDFDocument(object):
             cursor1 = PDFCursor(x1, y1)
             cursor2 = PDFCursor(x2, y2)
 
-        myline = PDFLine(self.session, self.page, cursor1, cursor2, self.color_scheme, style)
+        myline = PDFLine(self.session, self.page, cursor1, cursor2, self.draw_color, style)
         myline.draw()
 
     def draw_horizonal_line(self):
         end_cursor = self.page.cursor.copy()
         end_cursor.x = end_cursor.xmax
 
-        myline = PDFLine(self.session, self.page, self.page.cursor, end_cursor, self.color_scheme, None)
+        myline = PDFLine(self.session, self.page, self.page.cursor, end_cursor, self.draw_color, None)
         myline.draw()
 
     def draw_rectangle(self, x1=None, y1=None, x2=None, y2=None,
                        width=None, height=None, cursor1=None, cursor2=None,
-                       style='S'):
+                       style='S', size=1):
         if cursor1 is not None:
             if cursor2 is not None:
                 pass
@@ -241,9 +249,10 @@ class PDFDocument(object):
             else:
                 raise Exception("Rectangle not defined")
 
-        rectangle = PDFRectangle(
-            self.session, self.page, self.color_scheme, cursor1, cursor2,
-            size=1, style=style)
+        rectangle = PDFRectangle(self.session, self.page,
+                                 cursor1, cursor2,
+                                 self.draw_color, self.fill_color,
+                                 style, size)
 
         rectangle.draw()
 

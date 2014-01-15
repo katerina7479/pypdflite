@@ -1,6 +1,5 @@
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcolor import PDFColor
-from pypdflite.pdfobjects.pdfcolorscheme import PDFColorScheme
 
 
 def TrueTypeTest():
@@ -35,8 +34,7 @@ def TrueTypeTest():
     document.add_newline(5)
 
     mtgrey = PDFColor(r=255, g=0, b=0)
-    new_scheme = PDFColorScheme(text_color=mtgrey)
-    document.set_color_scheme(new_scheme)
+    document.set_text_color(mtgrey)
 
     # Test Page splitting with paragraphs
     document.add_text(

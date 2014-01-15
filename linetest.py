@@ -1,5 +1,4 @@
 from pypdflite.pdflite import PDFLite
-from pypdflite.pdfobjects.pdfcolorscheme import PDFColorScheme
 from pypdflite.pdfobjects.pdfcolor import PDFColor
 
 
@@ -30,10 +29,9 @@ def LinesTest():
 
     # Create color Object, apply to fill color
     lightblue = PDFColor(name='lightblue')
-    new_scheme = PDFColorScheme(fill_color=lightblue)
 
     # Draw styled rectangle.
-    document.set_color_scheme(new_scheme)
+    document.set_fill_color(lightblue)
     document.draw_rectangle(150, 500, 300, 600, style='B')
 
     # Draw Dashed Line

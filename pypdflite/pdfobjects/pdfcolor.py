@@ -13,17 +13,19 @@ class PDFColor(object):
 
         # Type may be "draw", "fill", or "text"
         self.type_list = ["d", "f", "t"]
-        self.set_color_type(color_type)
+        self.set_type(color_type)
 
         if name is not None:
             self.set_color_by_name(name, r, g, b)
         else:
             self.set_color_by_number(r, g, b)
 
+        self.black = self.is_black()
+
     def __repr__(self):
         return '%s, %s, %s' % (self.red, self.green, self.blue)
 
-    def set_color_type(self, color_type):
+    def set_type(self, color_type):
         color_type = color_type[0].lower()  # Just get the first letter right.
 
         # Check to see if it's in the allowed types
@@ -65,7 +67,9 @@ class PDFColor(object):
 
     def is_equal(self, test_color):
         "Equality test"
-        if self.name == test_color.name:
+        if test_color is None:
+            ans = False
+        elif self.name == test_color.name:
             ans = True
         elif (self.red == test_color.red and
               self.blue == test_color.blue and
@@ -74,6 +78,14 @@ class PDFColor(object):
         else:
             ans = False
         return ans
+
+    def is_black(self):
+        if self.name == 'black':
+            return True
+        elif self.red == 0 and self.green == 0 and self.blue == 0:
+            return True
+        else:
+            return False
 
     def _get_color_string(self):
         "Adobe output string for defining colors"

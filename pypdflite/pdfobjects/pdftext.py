@@ -2,7 +2,7 @@
 
 class PDFText(object):
 
-    def __init__(self, session, page, text, font=None, color_scheme=None, cursor=None):
+    def __init__(self, session, page, text, font=None, color=None, cursor=None):
         self.session = session
         self.page = page
         self.text = text
@@ -10,10 +10,7 @@ class PDFText(object):
             self.font = self.session.parent.document.font
         else:
             self.font = font
-        if color_scheme is None:
-            self.color_scheme = self.session.parent.document.color_scheme
-        else:
-            self.color_scheme = color_scheme
+        self.color = color
         if cursor is None:
             self.cursor = page.cursor
         else:
@@ -68,12 +65,11 @@ class PDFText(object):
                     s = '%s %s' % (s, self._underline())
             except:
                 pass
-            # Only called if text != text colors in current scheme
-            try:
-                if(self.color_scheme._get_color_flag()):
-                    s = 'q %s %s Q' % (self.color_scheme._get_text_color_string(), s)
-            except:
-                pass
+            # See if the text color is the same as the written
+            if self.color is not None:
+                self.color.set_type('t')
+                if not self.color.black:
+                    s = 'q %s %s Q' % (self.color._get_color_string(), s)
             # Set Font for text
             try:
                 if self.font.is_set is False:

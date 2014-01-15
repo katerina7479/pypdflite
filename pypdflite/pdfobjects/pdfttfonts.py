@@ -15,6 +15,7 @@ class PDFTTFont(PDFFont):
         self.session = session
 
         self.families = ['arial', 'arial_bold', 'dejavusans']
+        self.is_set = False
 
         self.subset = []
 
