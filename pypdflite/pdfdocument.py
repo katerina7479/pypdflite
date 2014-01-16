@@ -146,17 +146,21 @@ class PDFDocument(object):
         testkey = testfont.font_key
 
         if testkey in self.fontkeys:
-            # It's already there.
             index = self.fontkeys.index(testkey)
             self.font = self.fonts[index]
+            if size != self.font.font_size:
+                self.font._set_size(size)
         else:
             self.font = testfont
             self._register_new_font(self.font)
 
+        self.font.is_set = False
+
         if(self.page.index > 0):
-            self.session._out('BT /F%d %.2f Tf ET' %
-                              (self.font.index, self.font.font_size),
-                              self.page)
+                self.session._out('BT /F%d %.2f Tf ET' %
+                                  (self.font.index, self.font.font_size),
+                                  self.page)
+                self.font.is_set = True
 
     def get_font(self):
         """ Get the current font object. Useful for storing

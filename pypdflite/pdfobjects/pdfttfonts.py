@@ -6,6 +6,8 @@ import re, zlib
 FONT_DIR = 'pypdflite/pdfobjects/truetype/'
 Filedict = {'arial': FONT_DIR + 'arial.ttf',
             'arial_bold': FONT_DIR + 'arial_bold.ttf',
+            'arial_bold_italic': FONT_DIR + 'arial_bold_italic.ttf',
+            'arial_italic': FONT_DIR + 'arial_italic.ttf',
             'dejavusans': FONT_DIR + 'DejaVuSans.ttf'
             }
 
@@ -14,9 +16,9 @@ class PDFTTFont(PDFFont):
     def __init__(self, session, family='arial', style=None, size=20):
         self.session = session
 
-        self.families = ['arial', 'arial_bold', 'dejavusans']
+        self.families = ['arial', 'arial_bold', 'arial_bold_italic', 'arial_italic', 'dejavusans']
         self.is_set = False
-
+        self.font_size = None
         self.subset = []
 
         self.path = None
@@ -33,6 +35,8 @@ class PDFTTFont(PDFFont):
 
         self._set_metrics()
         self._get_diffs()
+        self._set_style(style)
+        self._set_font_key()
 
     def _set_family(self, family):
         if family is not None:
@@ -43,8 +47,8 @@ class PDFTTFont(PDFFont):
             self.family = 'arial'
 
     def _set_underline_params(self):
-            self.underline_position = round(self.info_object.underlinePosition)
-            self.underline_thickness = round(self.info_object.underlineThickness)
+            self.underline_position = -round(self.info_object.underlinePosition / 100)
+            self.underline_thickness = round(self.info_object.underlineThickness / 100)
 
     def _set_name(self):
         self.name = self.font_key + self.style
@@ -54,10 +58,14 @@ class PDFTTFont(PDFFont):
 
     def set_font(self, family=None, style=None, size=None):
         "Select a font; size given in points"
+        if style is not None:
+            if 'B' in style:
+                family += '_bold'
+            if 'I' in style:
+                family += '_italic'
+
         self._set_family(family)
         self._set_size(size)
-        self._set_style(style)
-        self._set_font_key()
 
     def _set_metrics(self):
         self.path = Filedict[self.family]

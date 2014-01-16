@@ -10,17 +10,17 @@ class PDFCellFormat(object):
                                'valign': 'center',  # Top, center, bottom
                                'text_wrap': False,  # True
                                'fill': False,  # True
-                               'fill_color': None,  # PDFColorScheme (type = f)
+                               'fill_color': None,  # PDFColor (type = f)
                                'border': (None, None),  # Style Index (type, weight)
                                'bottom': (None, None),  # index
                                'top': (None, None),  # index tuple
                                'left': (None, None),  # index
                                'right': (None, None),  # index
-                               'border_color': None,  # PDFColorScheme (type =d)
-                               'bottom_color': None,  # PDFColorScheme
-                               'top_color': None,  # PDFColorScheme
-                               'left_color': None,  # PDFColorScheme
-                               'right_color': None,  # PDFColorScheme
+                               'border_color': None,  # PDFColor (type =d)
+                               'bottom_color': None,  # PDFColor
+                               'top_color': None,  # PDFColor
+                               'left_color': None,  # PDFColor
+                               'right_color': None,  # PDFColor
                                'padding': False,  # Integer, applies to all text_padding
                                'padding_top': 5,
                                'padding_bottom': 5,

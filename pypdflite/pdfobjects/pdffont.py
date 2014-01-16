@@ -18,10 +18,11 @@ class PDFFont(object):
         self.session = session
         self.families = ['courier', 'helvetica', 'arial', 'times', 'symbol', 'zapfdingbats']
 
-
+        self.is_set = False
+        self.font_size = None
         self.set_font(family, style, size)
         self.type = 'Core'
-        self.is_set = False
+
 
     def __repr__(self):
         return self.family
@@ -77,8 +78,11 @@ class PDFFont(object):
 
     def _set_size(self, size=None):
         if size is not None:
-            self.font_size = float(size)
-            self.line_size = self.font_size * 1.2
+            if self.font_size != size:
+                self.font_size = float(size)
+                self.line_size = self.font_size * 1.2
+                self.is_set = False
+
 
     def _set_font_key(self):
         if self.style is None:

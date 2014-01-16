@@ -20,7 +20,9 @@ def TrueTypeTest():
     # Use get_document method to get the generated document object.
     document = writer.get_document()
 
+    '''
     document.set_font('arial', size=12, tt=True)
+    default_font = document.get_font()
     # Example for adding short and long text and whitespaces
     document.add_text("Testing")
     document.add_newline(4)
@@ -32,10 +34,22 @@ def TrueTypeTest():
                       if it works!""")
     document.add_page()
     document.add_newline(5)
+    '''
+        # Test decoration, and size changes
+    document.set_font('arial', style='BUI', size=20, tt=True)
+    document.add_text("Testing Bold Underline Italic Style")
+    document.add_newline(2)
+    document.set_font("arial", style="BUI", size=24, tt=True)
+    document.add_text("Testing Bold Underline Italic Style Bigger")
+    document.add_newline(2)
+    document.set_font("arial", style="BUI", size=8, tt=True)
+    document.add_text("Testing Bold Underline Italic Style Smaller")
+    document.add_newline(3)
 
+    '''
     mtgrey = PDFColor(r=255, g=0, b=0)
     document.set_text_color(mtgrey)
-
+    document.set_font(font=default_font)
     # Test Page splitting with paragraphs
     document.add_text(
         """Lorem Ipsum is simply dummy text of the printing and
@@ -70,7 +84,7 @@ def TrueTypeTest():
         accumsan, gravida nunc vitae, luctus quam. Vestibulum quis gravida
         quam. Proin feugiat urna ut rutrum facilisis. Vivamus gravida iaculis
         nibh at feugiat.""")
-
+    '''
     # Close writer
     writer.close()
 
