@@ -105,6 +105,7 @@ class PDFDocument(object):
         self.pages.append(self.page)
         currentfont = self.font
         self.set_font(font=currentfont)
+        self.session._reset_colors()
 
     def get_page(self):
         "Returns reference to current page object."

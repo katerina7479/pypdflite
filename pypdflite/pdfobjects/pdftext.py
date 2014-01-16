@@ -68,7 +68,9 @@ class PDFText(object):
             # See if the text color is the same as the written
             if self.color is not None:
                 self.color.set_type('t')
-                s = 'q %s %s Q' % (self.color._get_color_string(), s)
+                if not self.session._compare_color(self.color):
+                    self.session._out(self.color._get_color_string(), self.page)
+                    self.session._save_color(self.color.copy())
             else:
                 print "Color is None, ", self.text
             # Set Font for text

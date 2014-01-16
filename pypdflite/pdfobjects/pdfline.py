@@ -19,7 +19,9 @@ class PDFLine(object):
     def draw_color(self):
         if self.color is not None:
             self.color.set_type('d')
-            self.session._out(self.color._get_color_string(), self.page)
+            if not self.session._compare_color(self.color):
+                self.session._out(self.color._get_color_string(), self.page)
+                self.session._save_color(self.color.copy())
 
     def set_style(self, style=None):
         if style == "dashed" or style == 1:

@@ -20,8 +20,6 @@ class PDFColor(object):
         else:
             self.set_color_by_number(r, g, b)
 
-        self.black = self.is_black()
-
     def __repr__(self):
         return '%s, %s, %s' % (self.red, self.green, self.blue)
 
@@ -69,6 +67,8 @@ class PDFColor(object):
         "Equality test"
         if test_color is None:
             ans = False
+        elif test_color.color_type != self.color_type:
+            ans = False
         elif self.name == test_color.name:
             ans = True
         elif (self.red == test_color.red and
@@ -78,14 +78,6 @@ class PDFColor(object):
         else:
             ans = False
         return ans
-
-    def is_black(self):
-        if self.name == 'black':
-            return True
-        elif self.red == 0 and self.green == 0 and self.blue == 0:
-            return True
-        else:
-            return False
 
     def _get_color_string(self):
         "Adobe output string for defining colors"
@@ -102,3 +94,8 @@ class PDFColor(object):
                 s = '%.3f %.3f %.3f rg' % (
                     self.red / 255.0, self.green / 255.0, self.blue / 255.0)
         return s
+
+
+    def copy(self):
+        new_color = PDFColor(self.color_type, self.red, self.green, self.blue, self.name)
+        return new_color

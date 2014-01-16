@@ -32,7 +32,8 @@ class _Session(object):
         # Creates the placeholders in the object list to maintain proper count.
         self._create_placeholder_objects()
         self.compression = False
-        self.text_color = None
+        self.drawn_color = None
+        self.color = None
 
     def _create_placeholder_objects(self):
         """ PDF objects #1 through #3 are typically saved for the
@@ -118,3 +119,21 @@ class _Session(object):
         result += utf8.encode('UTF-16BE')
         return result
 
+    def _save_color(self, color):
+        if color.color_type == 'd':
+            self.drawn_color = color
+        else:
+            self.color = color
+
+    def _compare_color(self, newcolor):
+        if newcolor.is_equal(self.drawn_color):
+            return True
+        elif newcolor.is_equal(self.color):
+            return True
+        else:
+            return False
+
+
+    def _reset_colors(self):
+        self.drawn_color = None
+        self.color = None
