@@ -106,6 +106,7 @@ class PDFLite(object):
             output = None
         return output
 
+    # Private Methods for building the PDF
     def _put_header(self):
         " Standard first line in a PDF. "
         self.session._out('%%PDF-%s' % self.pdf_version)

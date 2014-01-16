@@ -4,12 +4,13 @@ from pypdflite.pdfobjects.pdfcolor import PDFColor
 
 def TrueTypeTest():
 
-    """  Tests truetype fonts
+    """ Functional test for text, paragraph, and page
+    splitting.
 
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("TTtest.pdf")
+    writer = PDFLite("TrueTypeTest.pdf")
 
     # If desired (in production code), set compression
     # writer.setCompression(True)
@@ -20,36 +21,71 @@ def TrueTypeTest():
     # Use get_document method to get the generated document object.
     document = writer.get_document()
 
-    '''
-    document.set_font('arial', size=12, tt=True)
-    default_font = document.get_font()
     # Example for adding short and long text and whitespaces
     document.add_text("Testing")
     document.add_newline(4)
     document.add_text("Testing Again")
     document.add_newline()
     document.add_indent()
-    document.add_text("""This should be enough text to test going over the edge
-                      of the page, and having to wrap back around. Let's see
-                      if it works!""")
+    document.add_text(
+        "This should be enough text to test going over the edge of the \
+        page, and having to wrap back around. Let's see if it works!")
     document.add_page()
-    document.add_newline(5)
-    '''
-        # Test decoration, and size changes
-    document.set_font('arial', style='BUI', size=20, tt=True)
+
+    # Save existing font, define a new font, use it for a header
+    normal_font = document.get_font()
+    document.set_font('arial', style='B', size=24)
+    header_font = document.get_font()
+    document.add_newline(2)
+    document.add_text("1.0 Testing a Header")
+
+    # Change font back
+    document.set_font(font=normal_font)
+    document.add_newline(2)
+    document.add_indent()
+    document.add_text("And we're back to normal after the header.")
+    document.add_newline(2)
+
+    # Test decoration, and size changes
+    document.set_font('arial', style='BUI', size=12)
     document.add_text("Testing Bold Underline Italic Style")
     document.add_newline(2)
-    document.set_font("arial", style="BUI", size=24, tt=True)
+    document.set_font("arial", style="BUI", size=24)
     document.add_text("Testing Bold Underline Italic Style Bigger")
     document.add_newline(2)
-    document.set_font("arial", style="BUI", size=8, tt=True)
+    document.set_font("arial", style="BUI", size=8)
     document.add_text("Testing Bold Underline Italic Style Smaller")
-    document.add_newline(3)
 
-    '''
-    mtgrey = PDFColor(r=255, g=0, b=0)
-    document.set_text_color(mtgrey)
-    document.set_font(font=default_font)
+    # Test automatic page split
+    document.set_font(font=normal_font)
+    document.add_newline(5)
+    document.add_text("What")
+    document.add_newline(5)
+    document.add_text("will")
+    document.add_newline(5)
+    document.add_text("happen")
+    document.add_newline(5)
+
+    # Create color Object, apply to fill color
+    document.add_text("when")
+    document.add_newline(5)
+    lightblue = PDFColor(name='lightblue')
+    document.set_text_color(lightblue)
+    document.add_text("I")
+    document.add_newline(5)
+    document.add_text("go")
+    document.add_newline(5)
+    document.add_text("on")
+    document.add_newline(5)
+    document.add_text("to")
+    document.add_newline(5)
+    document.add_text("the")
+    document.add_newline(5)
+    document.add_text("next")
+    document.add_newline(5)
+    document.add_text("page?")
+    document.add_newline()
+
     # Test Page splitting with paragraphs
     document.add_text(
         """Lorem Ipsum is simply dummy text of the printing and
@@ -84,7 +120,7 @@ def TrueTypeTest():
         accumsan, gravida nunc vitae, luctus quam. Vestibulum quis gravida
         quam. Proin feugiat urna ut rutrum facilisis. Vivamus gravida iaculis
         nibh at feugiat.""")
-    '''
+
     # Close writer
     writer.close()
 

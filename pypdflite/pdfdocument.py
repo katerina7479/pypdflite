@@ -1,5 +1,5 @@
 from os.path import splitext
-from pdfobjects.pdffont import PDFFont
+from pdfobjects.pdffont import PDFFont, CORE_FONTS
 from pdfobjects.pdfpage import PDFPage
 from pdfobjects.pdftext import PDFText
 from pdfobjects.pdfcursor import PDFCursor
@@ -49,6 +49,7 @@ class PDFDocument(object):
 
         self._set_defaults()
 
+    # Set Defaults
     def _set_defaults(self):
         "Set color scheme & font to defaults."
         self._set_color_scheme()
@@ -91,6 +92,8 @@ class PDFDocument(object):
         self.fonts.append(self.font)
         self.fontkeys.append(self.font.font_key)
 
+    # Public methods, main interface
+    # Pages
     def add_page(self, page=None):
         """ May generate and add a PDFPage
             separately, or use this to generate
@@ -111,17 +114,21 @@ class PDFDocument(object):
         "Returns reference to current page object."
         return self.page
 
+    # Cursor
     def get_new_cursor(self):
         " Returns a new default cursor "
         return PDFCursor()
 
-    def set_cursor(self, cursor=None, x=None, y=None):
-        if cursor is not None:
-            self.page.set_cursor(cursor)
+    def set_cursor(self, x=None, y=None):
+        if x is not None and isinstance(x, PDFCursor):
+            self.page.cursor = cursor
         elif x is not None and y is not None:
-            self.page.set_cursor(PDFCursor(x, y))
+            self.page.cursor = PDFCursor(x, y, True)
+        else:
+            raise Exception("Invalid cursor input")
 
-    def set_font(self, family=None, style=None, size=None, font=None, tt=False):
+    # Font
+    def set_font(self, family=None, style='', size=None, font=None):
         """ Set the document font object, size given in points.
             If family, style, and/or size is given, generates
             a new Font object, checks to see if it is already
@@ -139,7 +146,7 @@ class PDFDocument(object):
                 size = self.font.font_size
 
             # Create a font from givens to test its key
-            if tt is False:
+            if family in CORE_FONTS:
                 testfont = PDFFont(self.session, family, style, size)
             else:
                 testfont = PDFTTFont(self.session, family, style, size)
@@ -151,6 +158,8 @@ class PDFDocument(object):
             self.font = self.fonts[index]
             if size != self.font.font_size:
                 self.font._set_size(size)
+            if style != self.font.style:
+                self.font._set_style(style)
         else:
             self.font = testfont
             self._register_new_font(self.font)
@@ -177,6 +186,7 @@ class PDFDocument(object):
         else:
             self.font._set_size(size)
 
+    # Writing
     def add_text(self, text, cursor=None):
         """ Input text, short or long. Writes in order, within the
             pre-defined page boundaries. Use add_newline as a return
@@ -198,7 +208,7 @@ class PDFDocument(object):
         """
         if isinstance(number, int):
             try:
-                self.page.add_newline(self.font, number)
+                self.page._add_newline(self.font, number)
             except ValueError:
                 self.add_page()
         else:
@@ -207,7 +217,7 @@ class PDFDocument(object):
     def add_indent(self, spaces=4):
         """ Adds a standard tab of 4 spaces.
         """
-        self.page.add_indent(self.font, spaces)
+        self.page._add_indent(self.font, spaces)
 
     def add_line(self, x1=None, y1=None, x2=None, y2=None,
                  cursor1=None, cursor2=None, style="solid"):
@@ -219,14 +229,14 @@ class PDFDocument(object):
             cursor2 = PDFCursor(x2, y2)
 
         myline = PDFLine(self.session, self.page, cursor1, cursor2, self.draw_color, style)
-        myline.draw()
+        myline._draw()
 
     def draw_horizonal_line(self):
         end_cursor = self.page.cursor.copy()
         end_cursor.x = end_cursor.xmax
 
         myline = PDFLine(self.session, self.page, self.page.cursor, end_cursor, self.draw_color, None)
-        myline.draw()
+        myline._draw()
 
     def draw_rectangle(self, x1=None, y1=None, x2=None, y2=None,
                        width=None, height=None, cursor1=None, cursor2=None,
@@ -259,7 +269,7 @@ class PDFDocument(object):
                                  self.draw_color, self.fill_color,
                                  style, size)
 
-        rectangle.draw()
+        rectangle._draw()
 
     def add_table(self, rows, columns, cursor=None):
         if cursor is None:
@@ -271,7 +281,7 @@ class PDFDocument(object):
 
     def draw_table(self, table):
         if isinstance(table, PDFTable):
-            table.draw()
+            table._draw()
             self.page.cursor = table.cursor
         else:
             raise Exception("Invalid Table")
@@ -309,7 +319,7 @@ class PDFDocument(object):
                     myimage = PDFImage(self.session, image_string, name,
                                        imagecursor, dpi)
                     self._register_new_image(myimage)
-        myimage.draw(self.page)
+        myimage._draw(self.page)
 
         # If a cursor was not specified, place at the end
         if not cursor:
@@ -322,14 +332,7 @@ class PDFDocument(object):
         background_cursor = PDFCursor(0, 0)
         self.add_image(image, cursor=background_cursor, dpi=dpi)
 
-    def set_cursor(self, x=None, y=None):
-        if x is not None and isinstance(x, PDFCursor):
-            self.page.cursor = cursor
-        elif x is not None and y is not None:
-            self.page.cursor = PDFCursor(x, y, True)
-        else:
-            raise Exception("Invalid cursor input")
-
+    # Private methods for outputting document
     def _get_image(self, image_name):
         if image_name in self.imagekeys:
             index = self.imagekeys.index(image_name)
@@ -408,7 +411,7 @@ class PDFDocument(object):
         for font in self.fonts:
             obj = self.session._add_object()
             font._set_number(obj.id)
-            font.output()
+            font._output()
 
     def _output_font_files(self):
         for font in self.fonts:
@@ -435,4 +438,4 @@ class PDFDocument(object):
         for image in self.images:
             obj = self.session._add_object()
             image._set_number(obj.id)
-            image.output()
+            image._output()

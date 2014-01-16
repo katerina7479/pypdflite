@@ -4,19 +4,17 @@ import re, zlib
 
 
 FONT_DIR = 'pypdflite/pdfobjects/truetype/'
-Filedict = {'arial': FONT_DIR + 'arial.ttf',
-            'arial_bold': FONT_DIR + 'arial_bold.ttf',
-            'arial_bold_italic': FONT_DIR + 'arial_bold_italic.ttf',
-            'arial_italic': FONT_DIR + 'arial_italic.ttf',
-            'dejavusans': FONT_DIR + 'DejaVuSans.ttf'
-            }
+TTFONTS = {'arial': FONT_DIR + 'arial.ttf',
+           'arial_bold': FONT_DIR + 'arial_bold.ttf',
+           'arial_bold_italic': FONT_DIR + 'arial_bold_italic.ttf',
+           'arial_italic': FONT_DIR + 'arial_italic.ttf',
+           'dejavusans': FONT_DIR + 'DejaVuSans.ttf'
+           }
 
 
 class PDFTTFont(PDFFont):
     def __init__(self, session, family='arial', style=None, size=20):
         self.session = session
-
-        self.families = ['arial', 'arial_bold', 'arial_bold_italic', 'arial_italic', 'dejavusans']
         self.is_set = False
         self.font_size = None
         self.subset = []
@@ -27,28 +25,20 @@ class PDFTTFont(PDFFont):
         self.encoded = None
         self.descriptors = {}
 
-        self.set_font(family, style, size)
-        self.cache_text("""abcdefghijklmnopqrstuvwxyz
+        self._set_font(family, style, size)
+        self._cache_text("""abcdefghijklmnopqrstuvwxyz
                         ABCDEFGHIJKLMNOPQRSTUVWXYZ
                         1234567890-,.<>/?;:\'\"\\[]{}
                         =+_!@#$%^&*()~`""")
 
-        self._set_metrics()
-        self._get_diffs()
-        self._set_style(style)
-        self._set_font_key()
-
     def _set_family(self, family):
         if family is not None:
             family = family.lower()
-            assert family in self.families, "%s not a valid font name" % family
+            if family not in TTFONTS:
+                raise Exception("%s not a valid font name" % family)
             self.family = family
         else:
             self.family = 'arial'
-
-    def _set_underline_params(self):
-            self.underline_position = -round(self.info_object.underlinePosition / 100)
-            self.underline_thickness = round(self.info_object.underlineThickness / 100)
 
     def _set_name(self):
         self.name = self.font_key + self.style
@@ -56,7 +46,7 @@ class PDFTTFont(PDFFont):
     def _set_character_widths(self):
         pass
 
-    def set_font(self, family=None, style=None, size=None):
+    def _set_font(self, family=None, style=None, size=None):
         "Select a font; size given in points"
         if style is not None:
             if 'B' in style:
@@ -65,10 +55,14 @@ class PDFTTFont(PDFFont):
                 family += '_italic'
 
         self._set_family(family)
+        self._get_diffs()
+        self._set_style(style)
+        self._set_metrics()
         self._set_size(size)
+        self._set_font_key()
 
     def _set_metrics(self):
-        self.path = Filedict[self.family]
+        self.path = TTFONTS[self.family]
 
         self.info_object = TTFontFile()
         ttf = self.info_object
@@ -92,7 +86,15 @@ class PDFTTFont(PDFFont):
     def _get_diffs(self):
         pass
 
-    def output(self):
+    def _string_width(self, s):
+        "Get width of a string in the current font"
+        w = 0
+        for char in s:
+            char = ord(char)
+            w += self.character_widths[char]
+        return w * self.font_size / 1000.0
+
+    def _output(self):
         self.session._out('<</Type /Font')
         self.session._out('/BaseFont /' + self.name)
         self.session._out('/Subtype /TrueType')
@@ -110,14 +112,6 @@ class PDFTTFont(PDFFont):
         self._output_character_widths()
         self._output_descriptors()
         self._output_file()
-
-    def string_width(self, s):
-        "Get width of a string in the current font"
-        w = 0
-        for char in s:
-            char = ord(char)
-            w += self.character_widths[char]
-        return w * self.font_size / 1000.0
 
     def _output_character_widths(self):
         #Widths
@@ -158,7 +152,7 @@ class PDFTTFont(PDFFont):
         self.session._put_stream(self.file)
         self.session._out('endobj')
 
-    def cache_text(self, text):
+    def _cache_text(self, text):
         txt_unicode = [ord(c) for c in text]
         for uni in txt_unicode:
             if uni not in self.subset:

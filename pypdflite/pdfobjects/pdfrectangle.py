@@ -36,18 +36,18 @@ class PDFRectangle(object):
 
     def _set_colors(self):
         if self.border_color is not None:
-            self.border_color.set_type('d')
+            self.border_color._set_type('d')
             if not self.session._compare_color(self.border_color):
                 self.session._out(self.border_color._get_color_string(), self.page)
                 self.session._save_color(self.border_color.copy())
 
         if self.fill_color is not None:
-            self.fill_color.set_type('f')
+            self.fill_color._set_type('f')
             if not self.session._compare_color(self.fill_color):
                 self.session._out(self.fill_color._get_color_string(), self.page)
                 self.session._save_color(self.fill_color.copy())
 
-    def draw(self):
+    def _draw(self):
         self._set_colors()
         s = '%.2f %.2f %.2f %.2f re %s' % (
             self.corner.x, self.corner.y_prime,

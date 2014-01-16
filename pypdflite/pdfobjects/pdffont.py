@@ -2,27 +2,30 @@ from fontref import pdf_character_widths
 
 
 CORE_FONTS = {
-    'courier': 'Courier', 'courierB': 'Courier-Bold',
-    'courierI': 'Courier-Oblique', 'courierBI': 'Courier-BoldOblique',
-    'helvetica': 'Helvetica', 'helveticaB': 'Helvetica-Bold',
-    'helveticaI': 'Helvetica-Oblique',
-    'helveticaBI': 'Helvetica-BoldOblique',
-    'times': 'Times-Roman', 'timesB': 'Times-Bold',
-    'timesI': 'Times-Italic', 'timesBI': 'Times-BoldItalic',
+    'courier': 'Courier',
+    'courier_bold': 'Courier-Bold',
+    'courier_italic': 'Courier-Oblique',
+    'courier_bold_italic': 'Courier-BoldOblique',
+    'helvetica': 'Helvetica',
+    'helvetica_bold': 'Helvetica-Bold',
+    'helvetica_italic': 'Helvetica-Oblique',
+    'helvetica_bold_italic': 'Helvetica-BoldOblique',
+    'times': 'Times-Roman',
+    'times_bold': 'Times-Bold',
+    'times_italic': 'Times-Italic',
+    'times_bold_italic': 'Times-BoldItalic',
     'symbol': 'Symbol', 'zapfdingbats': 'ZapfDingbats'}
 
 
 class PDFFont(object):
 
-    def __init__(self, session, family='helvetica', style=None, size=20):
+    def __init__(self, session, family='helvetica', style='', size=20):
         self.session = session
-        self.families = ['courier', 'helvetica', 'arial', 'times', 'symbol', 'zapfdingbats']
 
         self.is_set = False
         self.font_size = None
-        self.set_font(family, style, size)
+        self._set_font(family, style, size)
         self.type = 'Core'
-
 
     def __repr__(self):
         return self.family
@@ -30,65 +33,60 @@ class PDFFont(object):
     def _set_family(self, family):
         if family is not None:
             family = family.lower()
-            assert family in self.families, "%s not a valid font name" % family
-            if(family == 'arial'):
-                family = 'helvetica'
-            else:
-                self.family = family
+            if family not in CORE_FONTS:
+                raise Exception("%s is not a valid core font" % family)
+            self.family = family
         else:
             self.family = "helvetica"
 
     def _set_style(self, style=None):
         """ Style should be a string, containing the letters 'B' for bold,
-        'U' for underline, or 'I' for italic, or should be None, for no style.
+        'U' for underline, or 'I' for italic, or should be '', for no style.
         Symbol will not be underlined. The underline style can further be
         modified by specifying the underline thickness and position.
 
         """
         if style is None:
-            self.style = None
+            self.style = ''
             self.underline = False
         # No syling for symbol
         elif self.family == ('symbol' or 'zapfdingbats'):
-            self.style = None
+            self.style = ''
             self.underline = False
-        else:
-            self.style = style.upper()
+
+        self.style = style.upper()
             # SetUnderline
-            if('U' in self.style):
-                self.underline = True
 
-                # Remove U from style string, in case there is a bold / italic
-                self.style = self.style.replace("U", "")
-                self._set_underline_params()
-
-            else:
-                self.underline = False
-
-            # Correct order of bold-italic
-            if(self.style == 'IB'):
-                self.style = 'BI'
+        if 'U' in self.style or self.style == 'U':
+            self.underline = True
+        else:
+            self.underline = False
 
     def _set_underline_params(self):
-        # Does a good job visually representing an underline
-        self.underline_thickness = int(1 * self.font_size / 8)
+        # Does a pretty good job visually representing an underline
+        if 'B' in self.style:
+                multiplier = 1.5
+        multiplier = 1
+
+        self.underline_thickness = int(multiplier * self.font_size / 12.0)
         if self.underline_thickness < 1:
             self.underline_thickness = 1
-        self.underline_position = int(3 * self.font_size / 8)
+        self.underline_position = int(multiplier * self.font_size / 7.0)
 
     def _set_size(self, size=None):
         if size is not None:
             if self.font_size != size:
                 self.font_size = float(size)
                 self.line_size = self.font_size * 1.2
+                self._set_underline_params()
                 self.is_set = False
 
-
     def _set_font_key(self):
-        if self.style is None:
-            self.font_key = self.family
-        else:
-            self.font_key = self.family + self.style
+        self.font_key = self.family
+        if 'B' in self.style:
+            self.font_key += '_bold'
+        if 'I' in self.style:
+            self.font_key += '_italic'
 
     def _set_name(self):
         self.name = CORE_FONTS[self.font_key]
@@ -96,11 +94,11 @@ class PDFFont(object):
     def _set_character_widths(self):
         self.character_widths = pdf_character_widths[self.font_key]
 
-    def set_font(self, family=None, style=None, size=None):
+    def _set_font(self, family=None, style=None, size=None):
         "Select a font; size given in points"
         self._set_family(family)
-        self._set_size(size)
         self._set_style(style)
+        self._set_size(size)
         self._set_font_key()
         self._set_name()
         self._set_character_widths()
@@ -125,22 +123,14 @@ class PDFFont(object):
             ans = False
         return ans
 
-    def dict(self):
-        return {'i': self.index, 'type': 'core', 'name': self.name, 'up': 100,
-                'ut': 50, 'character_width': self.character_width}
-
-    def string_width(self, s):
+    def _string_width(self, s):
         "Get width of a string in the current font"
         w = 0
         for i in s:
             w += self.character_widths[i]
         return w * self.font_size / 1000.0
 
-    def set_line_size(self, value):
-        "Set line_size"
-        self.line_size = value
-
-    def output(self):
+    def _output(self):
             self.session._out('<</Type /Font')
             self.session._out('/BaseFont /' + self.name)
             self.session._out('/Subtype /Type1')

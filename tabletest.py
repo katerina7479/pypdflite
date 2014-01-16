@@ -27,10 +27,10 @@ def TableTest():
 
     document.set_cursor(100, 100)
 
-    document.set_font(family='arial', style='UB', size=12, tt=True)
+    document.set_font(family='arial', style='UB', size=12)
     underline = document.get_font()
 
-    document.set_font(family='arial', size=12, tt=True)
+    document.set_font(family='arial', size=12)
     default_font = document.get_font()
     # Example for adding short and long text and whitespaces
     mytable = document.add_table(3, 3)

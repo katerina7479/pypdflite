@@ -21,34 +21,11 @@ class PDFCell(object):
     def __repr__(self):
         return '(%s, %s)' % (self.row_index, self.column_index)
 
-    def set_text(self, text):
+    # Text
+    def _set_text(self, text):
         self.text = text
 
-    def set_format(self, format):
-        self.format = format
-        self.font = self.format['font']
-        self.text_width = self.font.string_width(self.text)
-        self.line_size = self.font.line_size
-        self.text_wrap = self.format['text_wrap']
-        self.text_color = self.format['text_color']
-        self._set_text_padding()
-
-    def _compile(self):
-        if hasattr(self, 'format'):
-            pass
-        else:
-            self.text = ''
-            self.format = PDFCellFormat()
-            self.font = self.format['font']
-            self.text_width = 1
-            self.line_size = 12
-            self._set_text_padding()
-            self.text_color = self.format['text_color']
-
-    def _finish(self):
-        pass
-
-    def draw_text(self):
+    def _draw_text(self):
         if self.text == '' or self.text is None:
             self.text_cursor.x_plus(self.max_width)
         else:
@@ -58,6 +35,32 @@ class PDFCell(object):
             self.text_cursor.x_plus(self.padding_right + self.width_diff_right)
             self.text_cursor.y_plus(self.padding_bottom + self.width_diff_bottom)
 
+    def _set_text_padding(self):
+        if self.format['padding'] is not False:
+            self.padding_top = self.padding_right = self.padding_left = self.padding_bottom = self.format['padding']
+        else:
+            self.padding_top = self.format['padding_top']
+            self.padding_right = self.format['padding_right']
+            self.padding_left = self.format['padding_left']
+            self.padding_bottom = self.format['padding_bottom']
+
+        self.width = (self.text_width +
+                      self.padding_right + self.padding_left)
+
+        self.height = (self.line_size + self.padding_top +
+                       self.padding_bottom)
+
+    # Format
+    def _set_format(self, format):
+        self.format = format
+        self.font = self.format['font']
+        self.text_width = self.font._string_width(self.text)
+        self.line_size = self.font.line_size
+        self.text_wrap = self.format['text_wrap']
+        self.text_color = self.format['text_color']
+        self._set_text_padding()
+
+    # Borders
     def _get_points(self):
         self.point_nw = self.border_cursor.copy()
         self.point_sw = self.border_cursor.copy()
@@ -109,42 +112,41 @@ class PDFCell(object):
                                     self.point_ne, self.point_nw, self.format['top_color'],
                                     self.style['top'], self.size['top'])
 
-    def draw_fill(self):
+    def _draw_borders(self):
+        if self.style['bottom'] is not None:
+            self.bottom_line._draw()
+        if self.style['right'] is not None:
+            self.right_line._draw()
+        if self.style['left'] is not None:
+            self.left_line._draw()
+        if self.style['top'] is not None:
+            self.top_line._draw()
+
+    # Fill
+    def _draw_fill(self):
         if self.format['fill_color'] is not None:
             rect = PDFRectangle(self.table.session, self.table.page,
                                 self.point_nw, self.point_se, None,
                                 self.format['fill_color'], 'F', 1)
-            rect.draw()
+            rect._draw()
 
-    def draw_borders(self):
-        if self.style['bottom'] is not None:
-            self.bottom_line.draw()
-        if self.style['right'] is not None:
-            self.right_line.draw()
-        if self.style['left'] is not None:
-            self.left_line.draw()
-        if self.style['top'] is not None:
-            self.top_line.draw()
-
-    def _set_text_padding(self):
-        if self.format['padding'] is not False:
-            self.padding_top = self.padding_right = self.padding_left = self.padding_bottom = self.format['padding']
+    # Finishing
+    def _compile(self):
+        if hasattr(self, 'format'):
+            pass
         else:
-            self.padding_top = self.format['padding_top']
-            self.padding_right = self.format['padding_right']
-            self.padding_left = self.format['padding_left']
-            self.padding_bottom = self.format['padding_bottom']
-
-        self.width = (self.text_width +
-                      self.padding_right + self.padding_left)
-
-        self.height = (self.line_size + self.padding_top +
-                       self.padding_bottom)
+            self.text = ''
+            self.format = PDFCellFormat()
+            self.font = self.format['font']
+            self.text_width = 1
+            self.line_size = 12
+            self._set_text_padding()
+            self.text_color = self.format['text_color']
 
     def _advance_initial(self):
         self.text_cursor.y_plus(self.height - self.padding_bottom)
 
-    def set_max_width(self, value):
+    def _set_max_width(self, value):
         self.max_width = value
         width_diff = self.max_width - self.width
         if self.format['align'] == 'left':
@@ -157,7 +159,7 @@ class PDFCell(object):
             self.width_diff_left = int(width_diff / 2.0)
             self.width_diff_right = width_diff - self.width_diff_left
 
-    def set_max_height(self, value):
+    def _set_max_height(self, value):
         self.max_height = value
         width_diff = self.max_height - self.height
         if self.format['valign'] == 'bottom':

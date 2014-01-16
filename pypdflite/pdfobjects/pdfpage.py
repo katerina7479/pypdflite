@@ -23,7 +23,7 @@ class PDFPage(object):
                             '11x17': (792, 1224)
                             }
 
-        self._set_page_size(layout)
+        self.set_page_size(layout)
 
         # "P" or "L"
         self.orientation = orientation
@@ -40,28 +40,7 @@ class PDFPage(object):
         self.orientation_change = False
         self.buffer = ""
 
-    def _compress(self):
-        """ Uses zlib to compress page buffers. Compression
-            option is enabled through PDFLite object's
-            setCompression method.
-
-        """
-        self.buffer = compress(self.buffer)
-
-    def _set_index(self, value):
-        self.index = value
-
-    def _set_page_size(self, layout):
-        self.layout = layout.lower()
-        if self.layout in self.layout_dict:
-            self.page_size = self.layout_dict[self.layout]
-        else:
-            raise Exception('Unknown page layout: ', self.layout)
-
-    def _set_dimensions(self):
-        self.width = self.size[0]
-        self.height = self.size[1]
-
+    # Page may be retrieved and manipulated using these:
     def set_orientation(self, orientation="P"):
         self.orientation = orientation.lower()
         if(self.orientation == 'p' or self.orientation == 'portrait'):
@@ -73,14 +52,15 @@ class PDFPage(object):
         self._set_dimensions()
         self._set_bounds()
 
-    def change_orientation(self):
-        if self.orientation_change is False:
-            self.size = (self.size[1], self.size[0])
-            self.orientation_change = True
-            self._set_dimensions()
-            self._set_bounds()
+    def set_page_size(self, layout):
+        """ Valid choices: 'a3, 'a4', 'a5', 'letter', 'legal', '11x17'.
+
+        """
+        self.layout = layout.lower()
+        if self.layout in self.layout_dict:
+            self.page_size = self.layout_dict[self.layout]
         else:
-            pass
+            raise Exception('Unknown page layout: ', self.layout)
 
     def set_margins(self, margin=None):
         if margin is None:
@@ -92,7 +72,35 @@ class PDFPage(object):
         self._set_dimensions()
         self._set_bounds()
 
-    def set_cursor(self, cursor):
+    def get_margins(self):
+        return self.margin
+
+    # Private methods for building pages
+    def _compress(self):
+        """ Uses zlib to compress page buffers. Compression
+            option is enabled through PDFLite object's
+            setCompression method.
+
+        """
+        self.buffer = compress(self.buffer)
+
+    def _set_index(self, value):
+        self.index = value
+
+    def _set_dimensions(self):
+        self.width = self.size[0]
+        self.height = self.size[1]
+
+    def _change_orientation(self):
+        if self.orientation_change is False:
+            self.size = (self.size[1], self.size[0])
+            self.orientation_change = True
+            self._set_dimensions()
+            self._set_bounds()
+        else:
+            pass
+
+    def _set_cursor(self, cursor):
         self.cursor = cursor
 
     def _set_bounds(self):
@@ -104,13 +112,14 @@ class PDFPage(object):
         else:
             xmin = 0 + self.margin.left
             xmax = self.size[0] - self.margin.right
-            ymin = 0 + self.margin.bottom
-            ymax = self.size[1] - self.margin.top
+            ymin = 0 + self.margin.top
+            ymax = self.size[1] - self.margin.bottom
+
         self.cursor.set_bounds(xmin, ymin, xmax, ymax)
 
-    def add_newline(self, font, number=1):
+    def _add_newline(self, font, number=1):
         self.cursor.y_plus((font.line_size * number))
         self.cursor.x_reset()
 
-    def add_indent(self, font, number=4):
-        self.cursor.x_plus(number * font.string_width(' '))
+    def _add_indent(self, font, number=4):
+        self.cursor.x_plus(number * font._string_width(' '))

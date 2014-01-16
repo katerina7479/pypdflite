@@ -28,6 +28,10 @@ class PDFCursor(object):
         self.x = x
         self.y = y
 
+    def __repr__(self):
+        return "(%s, %s)" % (self.x, self.y)
+
+    # May be used to change boundaries, and small offsets.
     def set_bounds(self, xmin=0, ymin=0, xmax=612, ymax=792):
         self.xmin = xmin
         self.ymin = ymin
@@ -42,9 +46,6 @@ class PDFCursor(object):
     def set_deltas(self, dx=2, dy=2):
         self.dx = dx
         self.dy = dy
-
-    def __repr__(self):
-        return "(%s, %s)" % (self.x, self.y)
 
     # Setters / getters for x & y
     @property
@@ -103,6 +104,7 @@ class PDFCursor(object):
         " Space remaining on page. "
         return self.ymax - self.y
 
+    # Equality methods
     def _is_coordinate(self, test_ordinate):
         " Test to see if object is a proper PDFCursor. "
         if isinstance(test_ordinate, PDFCursor):
@@ -157,10 +159,12 @@ class PDFCursor(object):
         else:
             return False
 
+    # Returns a new cursor
     def copy(self):
         " Create a copy, and return it."
         new_cursor = self.__class__(self.x, self.y)
         new_cursor.set_bounds(self.xmin, self.ymin, self.xmax, self.ymax)
+        new_cursor.set_deltas(self.dx, self.dy)
         return new_cursor
 
     def add(self, add_ordinate):
@@ -188,6 +192,7 @@ class PDFCursor(object):
         " Return inverse coordinate. "
         return self.__class__(self.y, self.x)
 
+    # Changes this cursor
     def x_plus(self, dx=None):
         " Mutable x addition. Defaults to set delta value. "
         if dx is None:

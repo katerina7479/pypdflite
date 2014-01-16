@@ -31,7 +31,7 @@ class PDFImage(object):
 
         self._get_metrics()
 
-    def draw(self, page):
+    def _draw(self, page):
         self.session._out('q %s 0 0 %s %s %s cm /I%d Do Q' %
                           (self.scale_width, self.scale_height,
                            self.cursor.x, (self.cursor.y_prime - self.scale_height),
@@ -39,7 +39,7 @@ class PDFImage(object):
         self.cursor.x_plus(self.scale_width)
         self.cursor.y_plus(self.scale_height)
 
-    def output(self):
+    def _output(self):
         """ Prompts the creating of image objects.
 
         """

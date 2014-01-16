@@ -7,11 +7,11 @@ pdf_character_widths = {}
 pdf_character_widths['courier'] = {}
 
 # Courier is all 600.
-for i in xrange(0,  256):
+for i in xrange(0, 256):
     pdf_character_widths['courier'][chr(i)] = 600
-    pdf_character_widths['courierB'] = pdf_character_widths['courier']
-    pdf_character_widths['courierI'] = pdf_character_widths['courier']
-    pdf_character_widths['courierBI'] = pdf_character_widths['courier']
+    pdf_character_widths['courier_bold'] = pdf_character_widths['courier']
+    pdf_character_widths['courier_italic'] = pdf_character_widths['courier']
+    pdf_character_widths['courier_bold_italic'] = pdf_character_widths['courier']
 
 
 pdf_character_widths['helvetica'] = {
@@ -62,7 +62,7 @@ pdf_character_widths['helvetica'] = {
     '\xf7': 584, '\xf8': 611, '\xf9': 556, '\xfa': 556, '\xfb': 556,
     '\xfc': 556, '\xfd': 500, '\xfe': 556, '\xff': 500}
 
-pdf_character_widths['helveticaB'] = {
+pdf_character_widths['helvetica_bold'] = {
     '\x00': 278, '\x01': 278, '\x02': 278, '\x03': 278, '\x04': 278,
     '\x05': 278, '\x06': 278, '\x07': 278, '\x08': 278, '\t': 278,
     '\n': 278, '\x0b': 278, '\x0c': 278, '\r': 278, '\x0e': 278, '\x0f': 278,
@@ -110,7 +110,7 @@ pdf_character_widths['helveticaB'] = {
     '\xf8': 611, '\xf9': 611, '\xfa': 611, '\xfb': 611, '\xfc': 611,
     '\xfd': 556, '\xfe': 611, '\xff': 556}
 
-pdf_character_widths['helveticaBI'] = {
+pdf_character_widths['helvetica_bold_italic'] = {
     '\x00': 278, '\x01': 278, '\x02': 278, '\x03': 278, '\x04': 278,
     '\x05': 278, '\x06': 278, '\x07': 278, '\x08': 278, '\t': 278,
     '\n': 278, '\x0b': 278, '\x0c': 278, '\r': 278, '\x0e': 278,
@@ -158,7 +158,7 @@ pdf_character_widths['helveticaBI'] = {
     '\xf7': 584, '\xf8': 611, '\xf9': 611, '\xfa': 611, '\xfb': 611,
     '\xfc': 611, '\xfd': 556, '\xfe': 611, '\xff': 556}
 
-pdf_character_widths['helveticaI'] = {
+pdf_character_widths['helvetica_italic'] = {
     '\x00': 278, '\x01': 278, '\x02': 278, '\x03': 278, '\x04': 278,
     '\x05': 278, '\x06': 278, '\x07': 278, '\x08': 278, '\t': 278, '\n': 278,
     '\x0b': 278, '\x0c': 278, '\r': 278, '\x0e': 278, '\x0f': 278, '\x10': 278,
@@ -300,7 +300,7 @@ pdf_character_widths['times'] = {
     '\xfa': 500, '\xfb': 500, '\xfc': 500, '\xfd': 500, '\xfe': 500,
     '\xff': 500}
 
-pdf_character_widths['timesB'] = {
+pdf_character_widths['times_bold'] = {
     '\x00': 250, '\x01': 250, '\x02': 250, '\x03': 250, '\x04': 250,
     '\x05': 250, '\x06': 250, '\x07': 250, '\x08': 250, '\t': 250, '\n': 250,
     '\x0b': 250, '\x0c': 250, '\r': 250, '\x0e': 250, '\x0f': 250, '\x10': 250,
@@ -348,7 +348,7 @@ pdf_character_widths['timesB'] = {
     '\xfa': 556, '\xfb': 556, '\xfc': 556, '\xfd': 500, '\xfe': 556,
     '\xff': 500}
 
-pdf_character_widths['timesBI'] = {
+pdf_character_widths['times_bold_italic'] = {
     '\x00': 250, '\x01': 250, '\x02': 250, '\x03': 250, '\x04': 250,
     '\x05': 250, '\x06': 250, '\x07': 250, '\x08': 250, '\t': 250, '\n': 250,
     '\x0b': 250, '\x0c': 250, '\r': 250, '\x0e': 250, '\x0f': 250, '\x10': 250,
@@ -396,7 +396,7 @@ pdf_character_widths['timesBI'] = {
     '\xfa': 556, '\xfb': 556, '\xfc': 556, '\xfd': 444, '\xfe': 500,
     '\xff': 444}
 
-pdf_character_widths['timesI'] = {
+pdf_character_widths['times_italic'] = {
     '\x00': 250, '\x01': 250, '\x02': 250, '\x03': 250, '\x04': 250,
     '\x05': 250, '\x06': 250, '\x07': 250, '\x08': 250, '\t': 250, '\n': 250,
     '\x0b': 250, '\x0c': 250, '\r': 250, '\x0e': 250, '\x0f': 250, '\x10': 250,

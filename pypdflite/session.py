@@ -35,17 +35,7 @@ class _Session(object):
         self.drawn_color = None
         self.color = None
 
-    def _create_placeholder_objects(self):
-        """ PDF objects #1 through #3 are typically saved for the
-            Zeroth, Catalog, and Pages Objects. This program will save
-            the numbers, but outputs the individual Page and Content objects
-            first. The actual Catalog and Pages objects are calculated after.
-
-        """
-        self.objects.append("Zeroth")
-        self.objects.append("Catalog")
-        self.objects.append("Pages")
-
+    # Compression
     def _set_compression(self, value):
         """ May be used to compress PDF files. Code is more readable
             for testing and inspection if not compressed. Requires a
@@ -58,23 +48,17 @@ class _Session(object):
             raise Exception(
                 TypeError, "%s is not a valid option for compression" % value)
 
-    def _out(self, stream, page=None):
-        """ Stores the pdf code in a buffer. If it is page related,
-            provide the page object.
+    # Objects
+    def _create_placeholder_objects(self):
+        """ PDF objects #1 through #3 are typically saved for the
+            Zeroth, Catalog, and Pages Objects. This program will save
+            the numbers, but outputs the individual Page and Content objects
+            first. The actual Catalog and Pages objects are calculated after.
 
         """
-        if page is not None:
-            page.buffer += str(stream) + "\n"
-        else:
-            self.buffer += str(stream) + "\n"
-
-    def _put_stream(self, stream):
-        """ Creates a PDF text stream sandwich.
-
-        """
-        self._out('stream')
-        self._out(stream)
-        self._out('endstream')
+        self.objects.append("Zeroth")
+        self.objects.append("Catalog")
+        self.objects.append("Pages")
 
     def _add_object(self, flag=None):
         """ The flag is a simple integer to force the placement
@@ -100,6 +84,25 @@ class _Session(object):
     def _get_saved_number(self):
         return self.saved
 
+    # Inputs
+    def _out(self, stream, page=None):
+        """ Stores the pdf code in a buffer. If it is page related,
+            provide the page object.
+
+        """
+        if page is not None:
+            page.buffer += str(stream) + "\n"
+        else:
+            self.buffer += str(stream) + "\n"
+
+    def _put_stream(self, stream):
+        """ Creates a PDF text stream sandwich.
+
+        """
+        self._out('stream')
+        self._out(stream)
+        self._out('endstream')
+
     def _add_page(self, text):
         """ Helper function for PDFText, to have the document
             add a page, and retry adding a large block of
@@ -110,6 +113,7 @@ class _Session(object):
         self.parent.document.add_page()
         self.parent.document.add_text(text)
 
+    # Strings
     def _UTF8toUTF16(self, utf8, setbom=True):
         result = ''
         if setbom:
@@ -119,6 +123,7 @@ class _Session(object):
         result += utf8.encode('UTF-16BE')
         return result
 
+    # Colors
     def _save_color(self, color):
         if color.color_type == 'd':
             self.drawn_color = color
@@ -126,13 +131,12 @@ class _Session(object):
             self.color = color
 
     def _compare_color(self, newcolor):
-        if newcolor.is_equal(self.drawn_color):
+        if newcolor._is_equal(self.drawn_color):
             return True
-        elif newcolor.is_equal(self.color):
+        elif newcolor._is_equal(self.color):
             return True
         else:
             return False
-
 
     def _reset_colors(self):
         self.drawn_color = None
