@@ -1,4 +1,5 @@
 from pypdflite.pdflite import PDFLite
+from pypdflite.pdfobjects.pdfcolor import PDFColor
 
 
 def TableTest():
@@ -33,20 +34,19 @@ def TableTest():
     default_font = document.get_font()
     # Example for adding short and long text and whitespaces
     mytable = document.add_table(3, 3)
+    green = PDFColor(name='green')
 
     default = document.add_cell_format({'font': default_font, 'align': 'left', 'border': (0, 1)})
     justleft = document.add_cell_format({'left': (0, 1)})
-    uformat = document.add_cell_format({'font': underline, 'align': 'right', 'border': (0, 1)})
+    header_format = document.add_cell_format({'font': underline, 'align': 'right', 'border': (0, 1)})
+    green_format = document.add_cell_format({'font': default_font, 'border': (0, 1), 'fill_color': green})
 
-    mytable.set_column_width(1, 200)
-    mytable.set_row_height(2, 200)
+    #mytable.set_column_width(1, 200)
+    #mytable.set_row_height(2, 200)
 
-    for r in range(1):
-        for c in range(3):
-            mytable.write(r, c, data[r][c], uformat)
-    for r in range(1, 3):
-        for c in range(3):
-            mytable.write(r, c, data[r][c], default)
+    mytable.write_row(0, 0, data[0], header_format)
+    mytable.write_row(1, 0, data[1], justleft)
+    mytable.write_row(2, 0, data[2], green_format)
 
 
     document.draw_table(mytable)

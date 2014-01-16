@@ -1,7 +1,7 @@
 from pdftext import PDFText
 from pdfline import PDFLine
 from pdfcellformat import PDFCellFormat
-
+from pdfrectangle import PDFRectangle
 
 
 class PDFCell(object):
@@ -30,6 +30,7 @@ class PDFCell(object):
         self.text_width = self.font.string_width(self.text)
         self.line_size = self.font.line_size
         self.text_wrap = self.format['text_wrap']
+        self.text_color = self.format['text_color']
         self._set_text_padding()
 
     def _compile(self):
@@ -42,6 +43,7 @@ class PDFCell(object):
             self.text_width = 1
             self.line_size = 12
             self._set_text_padding()
+            self.text_color = self.format['text_color']
 
     def _finish(self):
         pass
@@ -52,7 +54,7 @@ class PDFCell(object):
         else:
             self.text_cursor.y_plus(-(self.padding_bottom + self.width_diff_bottom))
             self.text_cursor.x_plus(self.padding_left + self.width_diff_left)
-            self.text_object = PDFText(self.table.session, self.table.page, self.text, self.font, None, self.text_cursor)
+            self.text_object = PDFText(self.table.session, self.table.page, self.text, self.font, self.text_color, self.text_cursor)
             self.text_cursor.x_plus(self.padding_right + self.width_diff_right)
             self.text_cursor.y_plus(self.padding_bottom + self.width_diff_bottom)
 
@@ -86,7 +88,7 @@ class PDFCell(object):
             self.style['top'], self.size['top'] = self.format['top']
             self.style['bottom'], self.size['bottom'] = self.format['bottom']
 
-    def draw_borders(self):
+    def _set_borders(self):
         self._get_points()
         self._get_border_formats()
 
@@ -94,21 +96,34 @@ class PDFCell(object):
             self.bottom_line = PDFLine(self.table.session, self.table.page,
                                        self.point_sw, self.point_se, self.format['bottom_color'],
                                        self.style['bottom'], self.size['bottom'])
-            self.bottom_line.draw()
         if self.style['right'] is not None:
             self.right_line = PDFLine(self.table.session, self.table.page,
                                       self.point_se, self.point_ne, self.format['right_color'],
                                       self.style['right'], self.size['right'])
-            self.right_line.draw()
         if self.style['left'] is not None:
             self.left_line = PDFLine(self.table.session, self.table.page,
                                      self.point_sw, self.point_nw, self.format['left_color'],
                                      self.style['left'], self.size['left'])
-            self.left_line.draw()
         if self.style['top'] is not None:
             self.top_line = PDFLine(self.table.session, self.table.page,
                                     self.point_ne, self.point_nw, self.format['top_color'],
                                     self.style['top'], self.size['top'])
+
+    def draw_fill(self):
+        if self.format['fill_color'] is not None:
+            rect = PDFRectangle(self.table.session, self.table.page,
+                                self.point_nw, self.point_se, None,
+                                self.format['fill_color'], 'F', 1)
+            rect.draw()
+
+    def draw_borders(self):
+        if self.style['bottom'] is not None:
+            self.bottom_line.draw()
+        if self.style['right'] is not None:
+            self.right_line.draw()
+        if self.style['left'] is not None:
+            self.left_line.draw()
+        if self.style['top'] is not None:
             self.top_line.draw()
 
     def _set_text_padding(self):

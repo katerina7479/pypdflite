@@ -68,8 +68,9 @@ class PDFText(object):
             # See if the text color is the same as the written
             if self.color is not None:
                 self.color.set_type('t')
-                if not self.color.black:
-                    s = 'q %s %s Q' % (self.color._get_color_string(), s)
+                s = 'q %s %s Q' % (self.color._get_color_string(), s)
+            else:
+                print "Color is None, ", self.text
             # Set Font for text
             try:
                 if self.font.is_set is False:

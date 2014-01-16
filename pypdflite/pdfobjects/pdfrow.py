@@ -27,7 +27,15 @@ class PDFRow(object):
     def draw_borders(self):
         for cell in self.cells:
             cell.draw_borders()
+
+    def _set_borders(self):
+        for cell in self.cells:
+            cell._set_borders()
             self.border_cursor.x_plus(cell.max_width)
+
+    def draw_fill(self):
+        for cell in self.cells:
+            cell.draw_fill()
 
     def _finish(self):
         for cell in self.cells:

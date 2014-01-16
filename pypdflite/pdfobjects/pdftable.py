@@ -39,6 +39,14 @@ class PDFTable(object):
         cell.set_text(text)
         cell.set_format(format)
 
+    def write_row(self, row, col_start, data, format):
+        for c in range(col_start, len(data)):
+            self.write(row, c, data[c], format)
+
+    def write_column(self, row_start, col, data, format):
+        for r in range(row_start, len(data)):
+            self.write(r, col, data, format)
+
     def _compile(self):
         for row in self.rows:
             for cell in row:
@@ -56,6 +64,8 @@ class PDFTable(object):
 
     def draw(self):
         self._compile()
+        self._set_borders()
+        self._draw_fill()
         self._draw_borders()
         self._draw_text()
         self._set_final_cursor()
@@ -67,12 +77,20 @@ class PDFTable(object):
             if (i + 1) < len(self.rows):
                 self.text_cursor.y_plus(self.rows[i + 1].max_height)
 
-    def _draw_borders(self):
+    def _set_borders(self):
         for i in range(len(self.rows)):
-            self.rows[i].draw_borders()
+            self.rows[i]._set_borders()
             self.border_cursor.x_reset()
             if (i + 1) < len(self.rows):
                 self.border_cursor.y_plus(self.rows[i].max_height)
+
+    def _draw_borders(self):
+        for i in range(len(self.rows)):
+            self.rows[i].draw_borders()
+
+    def _draw_fill(self):
+        for i in range(len(self.rows)):
+            self.rows[i].draw_fill()
 
     def _set_final_cursor(self):
         if self.text_cursor.is_greater_than(self.border_cursor):

@@ -1,4 +1,4 @@
-
+from pdfcolor import PDFColor
 
 
 class PDFCellFormat(object):
@@ -9,8 +9,8 @@ class PDFCellFormat(object):
                                'align': "left",  # Left, right, center
                                'valign': 'center',  # Top, center, bottom
                                'text_wrap': False,  # True
-                               'fill': False,  # True
                                'fill_color': None,  # PDFColor (type = f)
+                               'text_color': PDFColor(),
                                'border': (None, None),  # Style Index (type, weight)
                                'bottom': (None, None),  # index
                                'top': (None, None),  # index tuple
