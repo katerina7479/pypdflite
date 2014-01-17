@@ -8,6 +8,8 @@ from pdfobjects.pdfcolor import PDFColor
 from pdfobjects.pdfrectangle import PDFRectangle
 from pdfobjects.pdftable import PDFTable
 from pdfobjects.pdfimage import PDFImage
+from pdfobjects.pdfpng import PDFPNG
+from pdfobjects.pdfjpg import PDFJPG
 from pdfobjects.pdfttfonts import PDFTTFont
 from pdfobjects.pdfmargin import PDFMargin
 from pdfobjects.pdfcellformat import PDFCellFormat
@@ -316,8 +318,15 @@ class PDFDocument(object):
                     name = splitext(image_string)[0]  # Specify it
                 myimage = self._get_image(name)
                 if not myimage:  # New image
-                    myimage = PDFImage(self.session, image_string, name,
-                                       imagecursor, dpi)
+                    extension = splitext(image_string)[1]
+                    if extension == '.png':
+                        myimage = PDFPNG(self.session, image_string, name,
+                                         imagecursor, dpi)
+                    elif extension == '.jpg':
+                        myimage = PDFJPG(self.session, image_string, name,
+                                         imagecursor)
+                    else:
+                        raise Exception("Image format %s not supported" % extension)
                     self._register_new_image(myimage)
         myimage._draw(self.page)
 

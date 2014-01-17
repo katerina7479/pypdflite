@@ -1,20 +1,20 @@
 from pypdflite.pdflite import PDFLite
 
 
-def ImageTest():
+def PNGTest():
 
     """ Functional test for adding images.
 
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("ImageTest.pdf")
+    writer = PDFLite("PNGTest.pdf")
 
     # If desired (in production code), set compression
     # writer.setCompression(True)
 
     # Set general information metadata
-    writer.set_information(title="Image Testing")  # set optional information
+    writer.set_information(title="PNG Testing")  # set optional information
 
     # Use get_document method to get the generated document object.
     document = writer.get_document()
@@ -33,6 +33,9 @@ def ImageTest():
 
     document.add_text("There it is without a newline")
 
+    document.add_newline(3)
+    document.add_image('apple_logo.png')
+
     document.add_page()
     bgcursor = document.get_new_cursor()
 
@@ -46,4 +49,4 @@ def ImageTest():
     writer.close()
 
 if __name__ == "__main__":
-    ImageTest()
+    PNGTest()

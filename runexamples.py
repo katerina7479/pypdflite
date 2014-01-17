@@ -4,7 +4,7 @@ from underlinetest import UnderlineTest
 from landscapetest import LandscapeTest
 from linetest import LinesTest
 from tabletest import TableTest
-from imagetest import ImageTest
+from pngtest import PNGTest
 
 
 
@@ -21,8 +21,8 @@ def main():
     LinesTest()
     print "Running TableTest"
     TableTest()
-    print "Running ImageTest"
-    ImageTest()
+    print "Running PNGTest"
+    PNGTest()
 
 
 if __name__ == '__main__':
