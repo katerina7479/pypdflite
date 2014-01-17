@@ -221,6 +221,13 @@ class PDFDocument(object):
         """
         self.page._add_indent(self.font, spaces)
 
+    def add_list(self, *args):
+        for arg in args:
+            print arg
+
+        char = chr(149)
+        self.add_text(char)
+
     def add_line(self, x1=None, y1=None, x2=None, y2=None,
                  cursor1=None, cursor2=None, style="solid"):
         if cursor1 is not None:
