@@ -1,5 +1,5 @@
-from ..pdflite import PDFLite
-from ..pdfobjects.pdfcolor import PDFColor
+from pypdflite.pdflite import PDFLite
+from pypdflite.pdfobjects.pdfcolor import PDFColor
 
 
 def TrueTypeTest():
@@ -10,7 +10,7 @@ def TrueTypeTest():
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("generated/TrueTypeTest.pdf")
+    writer = PDFLite("TrueTypeTest.pdf")
 
     # If desired (in production code), set compression
     # writer.setCompression(True)
@@ -22,6 +22,7 @@ def TrueTypeTest():
     document = writer.get_document()
 
     # Example for adding short and long text and whitespaces
+    document.set_font('comic sans ms', size=16)
     document.add_text("Testing")
     document.add_newline(4)
     document.add_text("Testing Again")

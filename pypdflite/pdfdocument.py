@@ -142,6 +142,8 @@ class PDFDocument(object):
         """
         if font:
             testfont = font
+        elif isinstance(family, PDFFont):
+            testfont = family
         else:
             # If size is not defined, keep the last size.
             if size is None:
@@ -173,6 +175,7 @@ class PDFDocument(object):
                                   (self.font.index, self.font.font_size),
                                   self.page)
                 self.font.is_set = True
+        return self.font
 
     def get_font(self):
         """ Get the current font object. Useful for storing
@@ -187,6 +190,12 @@ class PDFDocument(object):
             pass
         else:
             self.font._set_size(size)
+
+    def get_available_tt(self):
+        ttfont = PDFTTFont()
+        famlies = ttfont._get_available_font_families()
+        print famlies
+        return famlies
 
     # Writing
     def add_text(self, text, cursor=None):
@@ -221,12 +230,39 @@ class PDFDocument(object):
         """
         self.page._add_indent(self.font, spaces)
 
-    def add_list(self, *args):
-        for arg in args:
-            print arg
+    def start_block_indent(self, px=20):
+        self.px = px
+        self.set_cursor(self.page.cursor.x + self.px, self.page.cursor.y)
 
-        char = chr(149)
-        self.add_text(char)
+    def end_block_indent(self):
+        self.set_cursor(self.page.cursor.x - self.px, self.page.cursor.y)
+
+    def add_list(self, *args, **kwargs):
+        if 'bullet' in kwargs:
+            if kwargs['bullet'] == 1:
+                bullet_code = 149
+            elif kwargs['bullet'] == 2:
+                bullet_code = 186
+            elif kwargs['bullet'] == 3:
+                bullet_code = 150
+        else:
+            bullet_code = 149
+
+        char = chr(bullet_code)
+
+        if 'force' in kwargs and kwargs['force'] is True:
+            saved_font = self.get_font()
+            for arg in args:
+                helvetica = self.set_font(family='helvetica', size=saved_font.font_size)
+                self.add_text(char)
+                self.set_font(saved_font)
+                self.add_text(' %s' % arg)
+                self.add_newline(2)
+        else:
+            for arg in args:
+                self.add_text(char)
+                self.add_text(' %s' % arg)
+                self.add_newline(2)
 
     def add_line(self, x1=None, y1=None, x2=None, y2=None,
                  cursor1=None, cursor2=None, style="solid"):

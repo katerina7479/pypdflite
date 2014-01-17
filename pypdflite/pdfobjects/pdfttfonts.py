@@ -1,15 +1,13 @@
 from pdffont import PDFFont
 from ttfonts import TTFontFile
 import re, zlib
+import pickle
+import os
+from ..session import FONT_DIR
 
-
-FONT_DIR = 'pypdflite/pdfobjects/truetype/'
-TTFONTS = {'arial': FONT_DIR + 'arial.ttf',
-           'arial_bold': FONT_DIR + 'arial_bold.ttf',
-           'arial_bold_italic': FONT_DIR + 'arial_bold_italic.ttf',
-           'arial_italic': FONT_DIR + 'arial_italic.ttf',
-           'dejavusans': FONT_DIR + 'DejaVuSans.ttf'
-           }
+TTFONTS = pickle.load(open(os.path.join(FONT_DIR, 'font_dict.p'), 'rb'))
+FAMILIES = TTFONTS['font_families']
+TTFONTS['font_families'] = None
 
 
 class PDFTTFont(PDFFont):
@@ -30,6 +28,9 @@ class PDFTTFont(PDFFont):
                         ABCDEFGHIJKLMNOPQRSTUVWXYZ
                         1234567890-,.<>/?;:\'\"\\[]{}
                         =+_!@#$%^&*()~`""")
+
+    def _get_available_font_families(self):
+        return FAMILIES
 
     def _set_family(self, family):
         if family is not None:

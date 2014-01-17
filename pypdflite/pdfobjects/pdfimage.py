@@ -54,7 +54,7 @@ class PDFImage(object):
                 self.file = open(self.path, 'rb')
             except IOError:
                 try:
-                    path = os.path.join(self.session.project_dir, 'tests', self.path)
+                    path = os.path.join(self.session.project_dir, 'bin', self.path)
                     self.file = open(path, 'rb')
                     self.path = path
                 except:

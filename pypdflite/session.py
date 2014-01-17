@@ -3,6 +3,7 @@ import sys, os
 
 
 PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
+FONT_DIR = os.path.join(PROJECT_DIR, 'fonts')
 
 
 class _Session(object):
