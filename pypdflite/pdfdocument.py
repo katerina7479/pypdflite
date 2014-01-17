@@ -1,4 +1,4 @@
-from os.path import splitext
+import os, sys
 from pdfobjects.pdffont import PDFFont, CORE_FONTS
 from pdfobjects.pdfpage import PDFPage
 from pdfobjects.pdftext import PDFText
@@ -315,10 +315,10 @@ class PDFDocument(object):
                     raise Exception('Not a proper image path')
             else:  # Is a path
                 if not name:  # But it doesn't have a name specified.
-                    name = splitext(image_string)[0]  # Specify it
+                    name = os.path.splitext(image_string)[0]  # Specify it
                 myimage = self._get_image(name)
                 if not myimage:  # New image
-                    extension = splitext(image_string)[1]
+                    extension = os.path.splitext(image_string)[1]
                     if extension == '.png':
                         myimage = PDFPNG(self.session, image_string, name,
                                          imagecursor, dpi)

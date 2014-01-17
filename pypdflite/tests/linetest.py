@@ -1,5 +1,5 @@
-from pypdflite.pdflite import PDFLite
-from pypdflite.pdfobjects.pdfcolor import PDFColor
+from ..pdflite import PDFLite
+from ..pdfobjects.pdfcolor import PDFColor
 
 
 def LinesTest():
@@ -8,7 +8,7 @@ def LinesTest():
 
     """
     # Create PDFLite object
-    writer = PDFLite("LinesTest.pdf")
+    writer = PDFLite("generated/LinesTest.pdf")
 
     # Set compression defaults to False
     # writer.setCompression(True)

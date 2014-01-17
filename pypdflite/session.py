@@ -1,4 +1,8 @@
 from pdfobjects.pdfobject import _PDFObject
+import sys, os
+
+
+PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
 class _Session(object):
@@ -34,6 +38,7 @@ class _Session(object):
         self.compression = False
         self.drawn_color = None
         self.color = None
+        self.project_dir = PROJECT_DIR
 
     # Compression
     def _set_compression(self, value):

@@ -5,7 +5,7 @@ from landscapetest import LandscapeTest
 from linetest import LinesTest
 from tabletest import TableTest
 from pngtest import PNGTest
-
+from jpgtest import JPGTest
 
 
 def main():
@@ -23,6 +23,8 @@ def main():
     TableTest()
     print "Running PNGTest"
     PNGTest()
+    print "Running JPGTest"
+    JPGTest()
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
-from pypdflite.pdflite import PDFLite
-from pypdflite.pdfobjects.pdfcolor import PDFColor
+from ..pdflite import PDFLite
+from ..pdfobjects.pdfcolor import PDFColor
 
 
 def TableTest():
@@ -14,7 +14,7 @@ def TableTest():
             ["Cell a3", "Cell b3", "Cell c3"]]
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("TableTest.pdf")
+    writer = PDFLite("generated/TableTest.pdf")
 
     # If desired (in production code), set compression
     # writer.setCompression(True)

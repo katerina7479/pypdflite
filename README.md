@@ -31,14 +31,8 @@ the alpha channel is currenly discarded.
 
 
 Plans:
-Bulleted Lists
+Lists with bullets
 
-Future:
-True-text Fonts, More image types
+To run tests from the command line, from this dir, use:
 
-
-Known issues:
-PNG image alpha channel not implemented.
-Table borders not printing header borders.
-Unittest coverage not complete.
-Comments not complete.
+> python -m pypdflite.tests.runexamples

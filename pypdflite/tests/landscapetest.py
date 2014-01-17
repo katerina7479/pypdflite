@@ -1,4 +1,4 @@
-from pypdflite.pdflite import PDFLite
+from ..pdflite import PDFLite
 
 
 def LandscapeTest():
@@ -8,7 +8,7 @@ def LandscapeTest():
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("Landscape.pdf", orientation="L")
+    writer = PDFLite("generated/Landscape.pdf", orientation="L")
 
     # If desired (in production code), set compression
     # writer.setCompression(True)

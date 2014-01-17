@@ -1,5 +1,4 @@
-from pypdflite.pdflite import PDFLite
-from pypdflite.pdfobjects.pdfcolor import PDFColor
+from ..pdflite import PDFLite
 
 
 def UnderlineTest():
@@ -10,7 +9,7 @@ def UnderlineTest():
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("UnderlineTest.pdf")
+    writer = PDFLite("generated/UnderlineTest.pdf")
 
     # If desired (in production code), set compression
     # writer.setCompression(True)

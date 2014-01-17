@@ -1,4 +1,4 @@
-from os.path import splitext
+import os
 import struct, StringIO
 import urllib
 import zlib, re
@@ -50,10 +50,19 @@ class PDFImage(object):
         if self.path.startswith("http://") or self.path.startswith("https://"):
             self.file = urllib.urlopen(self.path)
         else:
-            self.file = open(self.path, 'rb')
+            try:
+                self.file = open(self.path, 'rb')
+            except IOError:
+                try:
+                    path = os.path.join(self.session.project_dir, 'tests', self.path)
+                    self.file = open(path, 'rb')
+                    self.path = path
+                except:
+                    raise Exception("Use absolute paths for images")
 
     def _initialize(self):
         self._open_file()
+
         self.initial_data = str(self.file.read())
         self.file.close()
         if not self.initial_data:

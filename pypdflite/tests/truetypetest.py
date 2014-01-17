@@ -1,5 +1,5 @@
-from pypdflite.pdflite import PDFLite
-from pypdflite.pdfobjects.pdfcolor import PDFColor
+from ..pdflite import PDFLite
+from ..pdfobjects.pdfcolor import PDFColor
 
 
 def TrueTypeTest():
@@ -10,7 +10,7 @@ def TrueTypeTest():
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("TrueTypeTest.pdf")
+    writer = PDFLite("generated/TrueTypeTest.pdf")
 
     # If desired (in production code), set compression
     # writer.setCompression(True)

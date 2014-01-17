@@ -1,5 +1,5 @@
 from pdffont import PDFFont
-from truetype.ttfonts import TTFontFile
+from ttfonts import TTFontFile
 import re, zlib
 
 
