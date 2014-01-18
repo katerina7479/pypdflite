@@ -123,7 +123,7 @@ class PDFDocument(object):
 
     def set_cursor(self, x=None, y=None):
         if x is not None and isinstance(x, PDFCursor):
-            self.page.cursor = cursor
+            self.page.cursor = x
         elif x is not None and y is not None:
             self.page.cursor = PDFCursor(x, y, True)
         else:

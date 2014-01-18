@@ -46,7 +46,7 @@ class PDFTable(object):
 
     def write_column(self, row_start, col, data, format):
         for r in range(row_start, len(data)):
-            self.write(r, col, data, format)
+            self.write(r, col, data[r], format)
 
     def set_format(self, row, col, format):
         cell = self.rows[row][col]
