@@ -7,7 +7,6 @@ setup(
     author_email='katerina.hanson@gmail.com',
     packages=['pypdflite', 'pypdflite.pdfobjects'],
     scripts=['bin/runexamples.py'],
-    url='http://pypi.python.org/pypi/PyPDFLite/',
     license='LICENSE.txt',
     description='Simple PDF Writer.',
     long_description=open('README.txt').read(),
