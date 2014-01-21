@@ -109,7 +109,9 @@ class PDFText(object):
         return str(txt)
 
     def _escape(self, text):
-        for i, j in {"\\": "\\\\", ")": "\\)", "(": "\\("}.iteritems():
+        for i, j in {'\\': '\\\\'}.iteritems():
+            text = text.replace(i, j)
+        for i, j in {')': '\)', '(': '\('}.iteritems():
             text = text.replace(i, j)
         return text
 
