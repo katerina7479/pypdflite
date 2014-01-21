@@ -44,24 +44,22 @@ def get_ttf():
                     else:
                         families.append(name)
                     font_dict[name] = source
+
     return font_dict, families
 
 
-def main():
+def load_fonts():
     # Check for system, guess path of fonts
-    mypath = raw_input("Type font path, or [enter] to use system fonts > ")
     global SEARCH_PATH
-    if mypath == '':
-        if _platform == "linux" or _platform == "linux2":
-            SEARCH_PATH = LINUX_SEACH_PATH
-        elif _platform == "darwin":
-            SEARCH_PATH = MAC_SEARCH_PATH
-        elif _platform == "win32":
-            SEARCH_PATH = WINDOWS_SEARCH_PATH
-        else:
-            print "platform not recognised"
+
+    if _platform == "linux" or _platform == "linux2":
+        SEARCH_PATH = LINUX_SEACH_PATH
+    elif _platform == "darwin":
+        SEARCH_PATH = MAC_SEARCH_PATH
+    elif _platform == "win32":
+        SEARCH_PATH = WINDOWS_SEARCH_PATH
     else:
-        SEARCH_PATH = mypath
+        SEARCH_PATH = raw_input("Type path to fonts, then enter. > ")
 
     font_dict, families = get_ttf()
 
@@ -70,5 +68,11 @@ def main():
     pickle.dump(font_dict, open(os.path.join(FONT_DIR, 'font_dict.p'), 'wb'))
 
 
+def check_fonts_loaded():
+    if os.path.exists(os.path.join(FONT_DIR, 'font_dict.p')):
+        pass
+    else:
+        load_fonts()
+
 if __name__ == '__main__':
-    main()
+    check_fonts_loaded()

@@ -1,4 +1,5 @@
 from pdfcolor import PDFColor
+from pdffont import PDFFont
 
 
 class PDFCellFormat(object):
@@ -8,14 +9,14 @@ class PDFCellFormat(object):
     """
     def __init__(self, data=None, font=None, **kwargs):
         self.dict = {}
-        self.available_keys = {'font': None,  # PDFFont
+        self.available_keys = {'font': font,  # PDFFont
                                'num_format': None,  # 'float', 'int', 'percent', 'decimal_#', 'money' # Not implemented
                                'align': "left",  # Left, right, center
                                'valign': 'center',  # Top, center, bottom
                                'text_wrap': False,  # True  # Not implemented
                                'fill_color': None,  # PDFColor (type = f)
                                'text_color': PDFColor(),  # Functionality not confirmed.
-                               'border': (None, None),  # Style Index (type, weight)
+                               'border': (0, 1),  # Style Index (type, weight)
                                'bottom': (None, None),  # index
                                'top': (None, None),  # index tuple
                                'left': (None, None),  # index
@@ -26,10 +27,10 @@ class PDFCellFormat(object):
                                'left_color': None,  # PDFColor
                                'right_color': None,  # PDFColor
                                'padding': False,  # Integer, applies to all text_padding
-                               'padding_top': 5,
-                               'padding_bottom': 5,
-                               'padding_left': 10,
-                               'padding_right': 10
+                               'padding_top': 1,
+                               'padding_bottom': 1,
+                               'padding_left': 2,
+                               'padding_right': 2
                                }
         if font is not None:
             self.dict['font'] = font

@@ -4,10 +4,10 @@ from pdfcell import PDFCell
 
 
 class PDFTable(object):
-    def __init__(self, session, page, rows, cols, cursor):
+    def __init__(self, session, page, rows, cols, cursor, def_font):
         self.session = session
         self.page = page
-
+        self.font = def_font
         self.number_of_rows = rows
         self.number_of_columns = cols
 
@@ -41,12 +41,16 @@ class PDFTable(object):
             cell._set_format(format)
 
     def write_row(self, row, col_start, data, format):
-        for c in range(col_start, len(data)):
-            self.write(row, c, data[c], format)
+        i = 0
+        for c in range(col_start, col_start + len(data)):
+            self.write(row, c, data[i], format)
+            i += 1
 
     def write_column(self, row_start, col, data, format):
-        for r in range(row_start, len(data)):
-            self.write(r, col, data[r], format)
+        i = 0
+        for r in range(row_start, row_start + len(data)):
+            self.write(r, col, data[i], format)
+            i += 1
 
     def set_format(self, row, col, format):
         cell = self.rows[row][col]
@@ -70,6 +74,7 @@ class PDFTable(object):
     def _draw(self):
         """ Don't use this, use document.draw_table """
         self._compile()
+        self.rows[0]._advance_first_row()
         self._set_borders()
         self._draw_fill()
         self._draw_borders()
@@ -114,5 +119,5 @@ class PDFTable(object):
 
         for row in self.rows:
             row._finish()
-
-        self.rows[0]._advance_first_row()
+            for cell in row:
+                cell._finish()

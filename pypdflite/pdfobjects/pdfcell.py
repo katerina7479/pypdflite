@@ -7,6 +7,7 @@ from pdfrectangle import PDFRectangle
 class PDFCell(object):
     def __init__(self, table, row_index, column_index, text_cursor, border_cursor):
         self.table = table
+        self.default_font = self.table.font
         self.row_index = row_index
         self.column_index = column_index
 
@@ -28,6 +29,16 @@ class PDFCell(object):
     def _draw_text(self):
         if self.text == '' or self.text is None:
             self.text_cursor.x_plus(self.max_width)
+        elif hasattr(self, 'text_list'):
+            self.text_cursor.y_plus(-(len(self.text_list) * (self.line_size + self.padding_bottom
+                                    + self.padding_top)) + self.width_diff_bottom + self.width_diff_top)
+            self.text_cursor.x_plus(self.padding_left + self.width_diff_left / 2)
+            for item in self.text_list:
+                self.text_object = PDFText(self.table.session, self.table.page, item, self.font, self.text_color, self.text_cursor)
+                self.text_cursor.x_plus(-self.font._string_width(item))
+                self.text_cursor.y_plus(self.line_size + self.padding_bottom + self.padding_top)
+            self.text_cursor.x_plus(self.font._string_width(self.text_list[-1]) + self.padding_right + self.width_diff_right)
+            self.text_cursor.y_plus(self.padding_bottom + self.width_diff_bottom)
         else:
             self.text_cursor.y_plus(-(self.padding_bottom + self.width_diff_bottom))
             self.text_cursor.x_plus(self.padding_left + self.width_diff_left)
@@ -54,10 +65,16 @@ class PDFCell(object):
     def _set_format(self, format):
         self.format = format
         self.font = self.format['font']
-        self.text_width = self.font._string_width(self.text)
-        self.line_size = self.font.line_size
         self.text_wrap = self.format['text_wrap']
         self.text_color = self.format['text_color']
+        if self.text != '' and self.text is not None:
+            self.text_width = self.font._string_width(self.text)
+        else:
+            self.text_width = 0
+        if self.font is not None:
+            self.line_size = self.font.line_size
+        else:
+            self.line_size = 0
         self._set_text_padding()
 
     # Borders
@@ -76,7 +93,7 @@ class PDFCell(object):
 
         self.border_cursor = self.point_ne
 
-        # print "Points, sw, se, nw, ne", self.point_sw, self.point_se, self.point_nw, self.point_ne
+        #print "Points, sw, se, nw, ne", self.point_sw, self.point_se, self.point_nw, self.point_ne
 
     def _get_border_formats(self):
         self.style = {}
@@ -94,7 +111,6 @@ class PDFCell(object):
     def _set_borders(self):
         self._get_points()
         self._get_border_formats()
-
         if self.style['bottom'] is not None:
             self.bottom_line = PDFLine(self.table.session, self.table.page,
                                        self.point_sw, self.point_se, self.format['bottom_color'],
@@ -133,18 +149,30 @@ class PDFCell(object):
     # Finishing
     def _compile(self):
         if hasattr(self, 'format'):
-            pass
+            if self.text_wrap is not False:
+                self.text_wrap = self.format['text_wrap']
         else:
             self.text = ''
-            self.format = PDFCellFormat()
-            self.font = self.format['font']
             self.text_width = 1
-            self.line_size = 12
+            self.line_size = 1
+            self.format = PDFCellFormat()
+            self.text_wrap = False
             self._set_text_padding()
-            self.text_color = self.format['text_color']
+
+    def _finish(self):
+        if self.text_wrap is True and self.width > self.max_width:
+            self.text_list = self.text.split('\n')
+            self.height = len(self.text_list) * (self.line_size + self.padding_bottom + self.padding_top) + self.width_diff_bottom + self.width_diff_top
+            for item in self.text_list:
+                w = self.font._string_width(item)
+                self.width = 0
+                if w > self.width:
+                    self.width = w
+            self.text_wrap = False
+            self.table._compile()
 
     def _advance_initial(self):
-        self.text_cursor.y_plus(self.height - self.padding_bottom)
+        self.text_cursor.y_plus(self.max_height - self.padding_bottom)
 
     def _set_max_width(self, value):
         self.max_width = value

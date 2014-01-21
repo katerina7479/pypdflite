@@ -44,6 +44,7 @@ class PDFDocument(object):
         self.imagekeys = []
         self.image_filter = None
 
+        self.margins = None
         self.orientation_default = orientation
         self.layout_default = layout
 
@@ -103,7 +104,7 @@ class PDFDocument(object):
 
         """
         if page is None:
-            self.page = PDFPage(self.orientation_default, self.layout_default)
+            self.page = PDFPage(self.orientation_default, self.layout_default, self.margins)
         else:
             self.page = page
         self.page._set_index(len(self.pages))
@@ -115,6 +116,12 @@ class PDFDocument(object):
     def get_page(self):
         "Returns reference to current page object."
         return self.page
+
+    def set_margins(self, left, top=None, right=None, bottom=None):
+        if isinstance(left, PDFMargin):
+            self.margins = left
+        else:
+            self.margins = PDFMargin(left, top, right, bottom)
 
     # Cursor
     def get_new_cursor(self):
@@ -320,7 +327,7 @@ class PDFDocument(object):
         if cursor is None:
             cursor = self.page.cursor
 
-        table = PDFTable(self.session, self.page, rows, columns, cursor)
+        table = PDFTable(self.session, self.page, rows, columns, cursor, self.font)
 
         return table
 

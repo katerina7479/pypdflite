@@ -59,7 +59,8 @@ class PDFCursor(object):
             self._x = self.xmin
         elif value > self.xmax:
             # Consider resetting to minimum as well?
-            raise ValueError("%s is > bounds %s" % (value, self.xmax))
+            #print "X ord %s is > bounds %s" % (value, self.xmax)
+            self._x = value
         else:
             self._x = value
 
@@ -72,7 +73,8 @@ class PDFCursor(object):
         if value <= self.ymin:
             self._y = self.ymin
         elif value > self.ymax:
-            raise ValueError("%s is > bounds %s" % (value, self.ymax))
+            #print "Y ord %s is > bounds %s" % (value, self.ymax)
+            self._y = value
         else:
             self._y = value
 

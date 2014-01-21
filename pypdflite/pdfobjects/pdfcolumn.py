@@ -16,6 +16,7 @@ class PDFColumn(object):
         for cell in self.cells:
             if cell.width > self.max_width and cell.text_wrap is False:
                 self.max_width = cell.width
+
         for cell in self.cells:
             cell._set_max_width(self.max_width)
 

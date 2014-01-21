@@ -32,7 +32,7 @@ class PDFRectangle(object):
 
     def _set_size(self, line_size=1):
         self.line_size = line_size
-        self.session._out('%.2f w' % self.line_size)
+        self.session._out('%.2f w' % self.line_size, self.page)
 
     def _set_colors(self):
         if self.border_color is not None:

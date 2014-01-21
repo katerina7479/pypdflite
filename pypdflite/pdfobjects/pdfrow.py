@@ -41,7 +41,6 @@ class PDFRow(object):
         for cell in self.cells:
             if cell.height > self.max_height:
                 self.max_height = cell.height
-
         for cell in self.cells:
             cell._set_max_height(self.max_height)
 

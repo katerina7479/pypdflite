@@ -2,7 +2,7 @@
 
 class PDFMargin(object):
 
-    def __init__(self, left=30, top=None, right=None, bottom=None):
+    def __init__(self, left=20, top=None, right=None, bottom=None):
         self.set(left, top, right, bottom)
 
     def set(self, left, top=None, right=None, bottom=None):

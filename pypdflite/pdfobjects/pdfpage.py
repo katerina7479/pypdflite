@@ -12,7 +12,7 @@ class PDFPage(object):
 
     """
 
-    def __init__(self, orientation="P", layout="letter"):
+    def __init__(self, orientation="P", layout="letter", margin=None):
         # Additional layout sizes may be added to this dictionary.
         # Width then height, in pixels, in portrait orientation.
         self.layout_dict = {'a3': (841.89, 1190.55),
@@ -32,8 +32,7 @@ class PDFPage(object):
         self.cursor = PDFCursor()
 
         # Initialize the Page Margin.
-        self.margin = None
-
+        self.margin = margin
         self.set_orientation(orientation)
         self.set_margins()
 
@@ -102,6 +101,7 @@ class PDFPage(object):
 
     def _set_cursor(self, cursor):
         self.cursor = cursor
+        self._set_bounds()
 
     def _set_bounds(self):
         if self.margin is None:
