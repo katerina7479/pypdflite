@@ -6,12 +6,12 @@ import zlib, re
 
 class PDFImage(object):
 
-    def __init__(self, session, path, name, cursor, dpi=72):
+    def __init__(self, session, path, name):
 
         self.session = session
         self.path = path
         self.name = name
-        self.cursor = cursor
+        self.cursor = None
         self.width = -1
         self.height = -1
         self.size = None  # in bits
@@ -26,7 +26,6 @@ class PDFImage(object):
         self.soft_mask = None
         self.filter = None
         self.decode = None
-        self.scale = 72.0 / dpi
 
         self._get_metrics()
 
@@ -41,6 +40,25 @@ class PDFImage(object):
 
         """
         self.index = index
+
+    def _set_cursor(self, cursor):
+        self.cursor = cursor
+
+    def _set_size(self, width=None, height=None):
+        print "Setting size", self.width, self.height
+        if width is not None and height is None:
+            self.scale = width / float(self.width)
+            self._set_scale()
+        elif height is not None and width is None:
+            self.scale = height / float(self.height)
+            self._set_scale()
+        elif width is None and height is None:
+            self.scale = 1
+            self._set_scale()
+        else:
+            self.scale_width = int(width)
+            self.scale_height = int(height)
+        print self.scale_width, self.scale_height
 
     def _set_scale(self):
         self.scale_width = int(self.width * self.scale)
@@ -74,7 +92,7 @@ class PDFImage(object):
     def _get_metrics(self):
         self._initialize()
         self._read()
-        self._set_scale()
+        #self._set_scale()
 
     def _parse_image(self):
         self.transparent = None
@@ -92,7 +110,7 @@ class PDFImage(object):
         h = struct.unpack('>HH', f.read(4))[1]
         self.width = int(w)
         self.height = int(h)
-        self._set_scale()
+        #self._set_scale()
         # Find bits per component
         self.bits_per_component = ord(f.read(1))
         if self.bits_per_component > 8:

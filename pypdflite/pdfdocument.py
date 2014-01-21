@@ -345,12 +345,7 @@ class PDFDocument(object):
         format = PDFCellFormat(data, font=font)
         return format
 
-    def add_image(self, image=None, name=None, cursor=None, dpi=72):
-        if not cursor:
-            imagecursor = self.page.cursor
-        else:
-            imagecursor = cursor
-
+    def add_image(self, image=None, name=None):
         if isinstance(image, PDFImage):  # It's an image object
             myimage = self._get_image(image.name)
             if not myimage:
@@ -370,20 +365,35 @@ class PDFDocument(object):
                 if not myimage:  # New image
                     extension = os.path.splitext(image_string)[1]
                     if extension == '.png':
-                        myimage = PDFPNG(self.session, image_string, name,
-                                         imagecursor, dpi)
+                        myimage = PDFPNG(self.session, image_string, name)
                     elif extension == '.jpg':
-                        myimage = PDFJPG(self.session, image_string, name,
-                                         imagecursor)
+                        myimage = PDFJPG(self.session, image_string, name)
                     else:
                         raise Exception("Image format %s not supported" % extension)
                     self._register_new_image(myimage)
+
+        return myimage
+
+    def draw_image(self, image, cursor=None, width=None, height=None):
+        if isinstance(image, PDFImage):  # It's an image object
+            myimage = self._get_image(image.name)
+        else:
+            try:
+                myimage = self._get_image(image)
+            except:
+                raise Exception("%s is an invalid image. Add it first.")
+
+        if not cursor:
+            imagecursor = self.page.cursor
+        else:
+            imagecursor = cursor
+        myimage._set_cursor(imagecursor)
+        myimage._set_size(width, height)
         myimage._draw(self.page)
 
         # If a cursor was not specified, place at the end
         if not cursor:
             self.page.cursor = myimage.cursor
-        return myimage
 
     def set_background_image(self, image, dpi=72):
         margins = PDFMargin(0, 0, None, None)
