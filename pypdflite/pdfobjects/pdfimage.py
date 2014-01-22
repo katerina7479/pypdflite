@@ -45,7 +45,6 @@ class PDFImage(object):
         self.cursor = cursor
 
     def _set_size(self, width=None, height=None):
-        print "Setting size", self.width, self.height
         if width is not None and height is None:
             self.scale = width / float(self.width)
             self._set_scale()
@@ -58,7 +57,6 @@ class PDFImage(object):
         else:
             self.scale_width = int(width)
             self.scale_height = int(height)
-        print self.scale_width, self.scale_height
 
     def _set_scale(self):
         self.scale_width = int(self.width * self.scale)

@@ -2,50 +2,36 @@ from colorref import color_reference
 
 
 class PDFColor(object):
-    """ Black by default.
-
-    """
-    def __init__(self, color_type="d", r=0, g=0, b=0, name=None):
-
+    def __init__(self, name=None, r=0, g=0, b=0):
         # Get color dictionary
         self.color_dict = color_reference
 
         # Type may be "draw", "fill", or "text"
         self.type_list = ["d", "f", "t"]
-        self._set_type(color_type)
+        self.color_type = 'd'
 
         if name is not None:
-            self.set_color_by_name(name, r, g, b)
+            self.set_color_by_name(name)
         else:
             self.set_color_by_number(r, g, b)
 
-    def __repr__(self):
-        return '%s, %s, %s' % (self.red, self.green, self.blue)
-
-    def set_color_by_name(self, name, r, g, b):
+    def set_color_by_name(self, name):
         name = name.lower()
         if name in self.color_dict:
-            # Ignore r, g, b
-            self._set_from_dict(name)
-        elif (r != 0 or g != 0 or b != 0):
-            # Not default, assume defining new color
-            # (If all 0, then it's black and already defined)
-            # Could check for int between 0 - 255 here.
-            self.color_dict[name] = (r, g, b)
             self._set_from_dict(name)
         else:
             raise ValueError("Color (%s) not found." % name)
 
     def set_color_by_number(self, r, g, b):
         self.red = r
-        self.blue = b
         self.green = g
+        self.blue = b
 
-        self.value = (self.red, self.blue, self.green)
+        self.value = (self.red, self.green, self.blue)
         self.name = None
 
     def copy(self):
-        new_color = PDFColor(self.color_type, self.red, self.green, self.blue, self.name)
+        new_color = PDFColor(self.name, self.red, self.green, self.blue)
         return new_color
 
     # Used by other objects
@@ -57,15 +43,14 @@ class PDFColor(object):
             self.color_type = color_type
         else:
             raise TypeError(
-                "Invalid color_type %s, must be draw, fill or text" %
-                color_type)
+                "Invalid color_type %s, must be draw, fill or text" % color_type)
 
     def _set_from_dict(self, name):
         self.value = self.color_dict[name]  # Triplet from color ref
         self.name = name
         self.red = self.value[0]
-        self.blue = self.value[1]
-        self.green = self.value[2]
+        self.green = self.value[1]
+        self.blue = self.value[2]
 
     def _is_equal(self, test_color):
         "Equality test"
