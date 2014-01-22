@@ -89,6 +89,7 @@ class PDFTTFont(PDFFont):
 
     def _string_width(self, s):
         "Get width of a string in the current font"
+        s = str(s)
         w = 0
         for char in s:
             char = ord(char)

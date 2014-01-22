@@ -398,11 +398,12 @@ class PDFDocument(object):
         if not cursor:
             self.page.cursor = myimage.cursor
 
-    def set_background_image(self, image, dpi=72):
+    def set_background_image(self, image):
         margins = PDFMargin(0, 0, None, None)
         self.page.set_margins(margins)
         background_cursor = PDFCursor(0, 0)
-        self.add_image(image, cursor=background_cursor, dpi=dpi)
+        myimage = self.add_image(image)
+        self.draw_image(myimage, background_cursor, width=self.page.width)
 
     # Private methods for outputting document
     def _get_image(self, image_name):
