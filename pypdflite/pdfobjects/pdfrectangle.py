@@ -1,3 +1,4 @@
+from pdfcolor import PDFColor
 
 
 class PDFRectangle(object):
@@ -35,13 +36,13 @@ class PDFRectangle(object):
         self.session._out('%.2f w' % self.line_size, self.page)
 
     def _set_colors(self):
-        if self.border_color is not None:
+        if isinstance(self.border_color, PDFColor):
             self.border_color._set_type('d')
             if not self.session._compare_color(self.border_color):
                 self.session._out(self.border_color._get_color_string(), self.page)
                 self.session._save_color(self.border_color.copy())
 
-        if self.fill_color is not None:
+        if isinstance(self.fill_color, PDFColor):
             self.fill_color._set_type('f')
             if not self.session._compare_color(self.fill_color):
                 self.session._out(self.fill_color._get_color_string(), self.page)

@@ -65,11 +65,14 @@ class PDFDocument(object):
 
         """
         if draw_color is None:
-            draw_color = PDFColor('d')
+            draw_color = PDFColor()
+            draw_color._set_type('d')
         if fill_color is None:
-            fill_color = PDFColor('f')
+            fill_color = PDFColor()
+            fill_color._set_type('f')
         if text_color is None:
-            text_color = PDFColor('t')
+            text_color = PDFColor()
+            text_color._set_type('t')
 
         self.draw_color = draw_color
         self.fill_color = fill_color
