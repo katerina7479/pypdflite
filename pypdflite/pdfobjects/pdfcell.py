@@ -2,12 +2,13 @@ from pdftext import PDFText
 from pdfline import PDFLine
 from pdfcellformat import PDFCellFormat
 from pdfrectangle import PDFRectangle
+from pdfcolor import PDFColor
 
 
 class PDFCell(object):
     def __init__(self, table, row_index, column_index, text_cursor, border_cursor):
         self.table = table
-        self.default_font = self.table.font
+        self.font = self.table.font
         self.row_index = row_index
         self.column_index = column_index
 
@@ -17,7 +18,8 @@ class PDFCell(object):
         self.height = 0
         self.width = 0
         self.max_width = 0
-        self.width_diff = 0
+
+        self.line_space = 2
 
     def __repr__(self):
         return '(%s, %s)' % (self.row_index, self.column_index)
@@ -25,26 +27,45 @@ class PDFCell(object):
     # Text
     def _set_text(self, text):
         self.text = text
+        if hasattr(self, 'format'):
+            numf = self.format['num_format']
+            if numf is not None:
+                precision = numf[1]
+                numf = numf[0]
+                if precision <= 0:
+                    self.text = str(int(self.text))
+                else:
+                    self.text = '%0.*f' % (precision, float(self.text))
+                if 'euro' in numf:
+                    self.text = self.text.replace('.', ',')
+                    self.text = '%s%s' % (chr(128), self.text)
+                if any(s in numf for s in ['comma', ',']):
+                    self.text = str('{:,}'.format(int(self.text)))
+                if any(s in numf for s in ['percent', '%']):
+                    self.text = '%s %' % (self.text)
+                if any(s in numf for s in ['$', 'money', 'dollar']):
+                    self.text = '$%s' % (self.text)
 
     def _draw_text(self):
         if self.text == '' or self.text is None:
             self.text_cursor.x_plus(self.max_width)
         elif hasattr(self, 'text_list'):
-            self.text_cursor.y_plus(-(len(self.text_list) * (self.line_size + self.padding_bottom
-                                    + self.padding_top)) + self.width_diff_bottom + self.width_diff_top)
-            self.text_cursor.x_plus(self.padding_left + self.width_diff_left / 2)
+            self.text_cursor.y_plus(-self.padding_bottom - ((len(self.text_list) - 1) * (self.line_size + self.line_space)) - self.diff_bottom)
+            i = 0
             for item in self.text_list:
+                self.text_cursor.x_plus(self.padding_left + self.width_diff_l[i])
                 self.text_object = PDFText(self.table.session, self.table.page, item, self.font, self.text_color, self.text_cursor)
-                self.text_cursor.x_plus(-self.font._string_width(item))
-                self.text_cursor.y_plus(self.line_size + self.padding_bottom + self.padding_top)
-            self.text_cursor.x_plus(self.font._string_width(self.text_list[-1]) + self.padding_right + self.width_diff_right)
-            self.text_cursor.y_plus(self.padding_bottom + self.width_diff_bottom)
+                self.text_cursor.x_plus(-self.font._string_width(item) - self.width_diff_l[i])
+                self.text_cursor.y_plus(self.line_space + self.line_size)
+                i += 1
+            self.text_cursor.x_plus(self.font._string_width(self.text_list[-1]) + self.padding_right + self.width_diff_right + self.width_diff_l[-1])
+            self.text_cursor.y_plus(self.padding_bottom + self.diff_bottom - self.line_space - self.line_size)
         else:
-            self.text_cursor.y_plus(-(self.padding_bottom + self.width_diff_bottom))
+            self.text_cursor.y_plus(-(self.padding_bottom + self.diff_bottom))
             self.text_cursor.x_plus(self.padding_left + self.width_diff_left)
             self.text_object = PDFText(self.table.session, self.table.page, self.text, self.font, self.text_color, self.text_cursor)
             self.text_cursor.x_plus(self.padding_right + self.width_diff_right)
-            self.text_cursor.y_plus(self.padding_bottom + self.width_diff_bottom)
+            self.text_cursor.y_plus(self.padding_bottom + self.diff_bottom)
 
     def _set_text_padding(self):
         if self.format['padding'] is not False:
@@ -69,6 +90,7 @@ class PDFCell(object):
         self.text_color = self.format['text_color']
         if self.text != '' and self.text is not None:
             self.text_width = self.font._string_width(self.text)
+            self._set_text(self.text)
         else:
             self.text_width = 0
         if self.font is not None:
@@ -141,10 +163,13 @@ class PDFCell(object):
     # Fill
     def _draw_fill(self):
         if self.format['fill_color'] is not None:
-            rect = PDFRectangle(self.table.session, self.table.page,
-                                self.point_nw, self.point_se, None,
-                                self.format['fill_color'], 'F', 1)
-            rect._draw()
+            if isinstance(self.format['fill_color'], PDFColor):
+                rect = PDFRectangle(self.table.session, self.table.page,
+                                    self.point_nw, self.point_se, None,
+                                    self.format['fill_color'], 'F', 1)
+                rect._draw()
+            else:
+                raise Exception("Color %s is not a PDFColor" % self.format['fill_color'])
 
     # Finishing
     def _compile(self):
@@ -162,7 +187,7 @@ class PDFCell(object):
     def _finish(self):
         if self.text_wrap is True and self.width > self.max_width:
             self.text_list = self.text.split('\n')
-            self.height = len(self.text_list) * (self.line_size + self.padding_bottom + self.padding_top) + self.width_diff_bottom + self.width_diff_top
+            self.height = len(self.text_list) * (self.line_size + self.padding_bottom + self.padding_top) + self.diff_bottom + self.diff_top
             for item in self.text_list:
                 w = self.font._string_width(item)
                 self.width = 0
@@ -176,26 +201,52 @@ class PDFCell(object):
 
     def _set_max_width(self, value):
         self.max_width = value
-        width_diff = self.max_width - self.width
-        if self.format['align'] == 'left':
-            self.width_diff_left = 0
-            self.width_diff_right = width_diff
-        elif self.format['align'] == 'right':
-            self.width_diff_right = 0
-            self.width_diff_left = width_diff
+        self.width = self.font._string_width(self.text) + self.padding_right + self.padding_left
+        self._set_side_diffs()
+
+    def _set_side_diffs(self):
+        if hasattr(self, 'text_list'):
+            self.width_diff_l = []
+            for item in self.text_list:
+                textwidth = self.font._string_width(item)
+                width_diff = self.max_width - self.padding_right - self.padding_left - textwidth
+                if self.format['align'] == 'left':
+                    self.width_diff_l.append(0)
+                    self.width_diff_right = width_diff
+                elif self.format['align'] == 'right':
+                    self.width_diff_l.append(width_diff)
+                    self.width_diff_right = 0
+                else:
+                    self.width_diff_l.append(int(width_diff / 2.0))
+                    self.width_diff_right = width_diff - int(width_diff / 2.0)
         else:
-            self.width_diff_left = int(width_diff / 2.0)
-            self.width_diff_right = width_diff - self.width_diff_left
+            width_diff = self.max_width - self.width
+            if self.format['align'] == 'left':
+                self.width_diff_left = 0
+                self.width_diff_right = width_diff
+            elif self.format['align'] == 'right':
+                self.width_diff_right = 0
+                self.width_diff_left = width_diff
+            else:
+                self.width_diff_left = int(width_diff / 2.0)
+                self.width_diff_right = width_diff - self.width_diff_left
 
     def _set_max_height(self, value):
         self.max_height = value
-        width_diff = self.max_height - self.height
-        if self.format['valign'] == 'bottom':
-            self.width_diff_bottom = 0
-            self.width_diff_top = width_diff
-        elif self.format['valign'] == 'top':
-            self.width_diff_top = 0
-            self.width_diff_bottom = width_diff
+        self._set_vertical_diffs()
+
+    def _set_vertical_diffs(self):
+        if hasattr(self, 'text_list'):
+            diff = self.max_height - (len(self.text_list) * (self.line_size + self.line_space)) + self.line_space - self.padding_bottom - self.padding_top
         else:
-            self.width_diff_bottom = int(width_diff / 2.0)
-            self.width_diff_top = width_diff - self.width_diff_bottom
+            diff = self.max_height - self.height
+
+        if self.format['valign'] == 'bottom':
+            self.diff_bottom = 0
+            self.diff_top = diff
+        elif self.format['valign'] == 'top':
+            self.diff_top = 0
+            self.diff_bottom = diff
+        else:
+            self.diff_bottom = int(diff / 2.0)
+            self.diff_top = diff - self.diff_bottom

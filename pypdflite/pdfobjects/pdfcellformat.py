@@ -10,7 +10,7 @@ class PDFCellFormat(object):
     def __init__(self, data=None, font=None, **kwargs):
         self.dict = {}
         self.available_keys = {'font': font,  # PDFFont
-                               'num_format': None,  # 'float', 'int', 'percent', 'decimal_#', 'money' # Not implemented
+                               'num_format': None,  # ('percent', #decimals), ('decimal', #d), ('money' or '$', #d), ('comma', #d), ('$comma' or 'money_comma') # Tuples
                                'align': "left",  # Left, right, center
                                'valign': 'center',  # Top, center, bottom
                                'text_wrap': False,  # True  # Not implemented
