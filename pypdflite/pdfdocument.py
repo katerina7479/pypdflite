@@ -221,7 +221,13 @@ class PDFDocument(object):
         if cursor is None:
             cursor = self.page.cursor
 
-        text = PDFText(self.session, self.page, text, self.font, self.text_color, cursor)
+        if '\n' in text:
+            text_list = text.split('\n')
+            for text in text_list:
+                text = PDFText(self.session, self.page, text, self.font, self.text_color, cursor)
+                self.add_newline()
+        else:
+            text = PDFText(self.session, self.page, text, self.font, self.text_color, cursor)
 
     def add_newline(self, number=1):
         """ Starts over again at the new line. If number is specified,

@@ -10,7 +10,7 @@ def TextTest():
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("generated/TextTest.pdf")
+    writer = PDFLite("TextTest.pdf")
 
     # If desired (in production code), set compression
     # writer.setCompression(True)
