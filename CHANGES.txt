@@ -5,3 +5,4 @@ v0.1.3, 01-20-2014 -- Fixed tables, added text_wrap in cells
 v0.1.4, 01-21-2014 -- Added num_format to tables, adjusted Colors and Images
 v0.1.5, 01-21-2014 -- Fixed background method, string width
 v0.1.6, 01-23-2014 -- Rectangles print in the right direction.
+v0.1.7, 01-23-2014 -- Added imports to __init__.py, make imports easier.
