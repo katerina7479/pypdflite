@@ -52,5 +52,5 @@ class PDFRectangle(object):
         self._set_colors()
         s = '%.2f %.2f %.2f %.2f re %s' % (
             self.corner.x, self.corner.y_prime,
-            self.width, self.height, self.style)
+            self.width, -self.height, self.style)
         self.session._out(s, self.page)
