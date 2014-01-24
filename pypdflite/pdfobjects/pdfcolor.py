@@ -15,6 +15,9 @@ class PDFColor(object):
         else:
             self.set_color_by_number(r, g, b)
 
+    def __repr__(self):
+        return "%s: (%s, %s, %s)" % (self.color_type, self.red, self.green, self.blue)
+
     def set_color_by_name(self, name):
         name = name.lower()
         if name in self.color_dict:
@@ -32,6 +35,7 @@ class PDFColor(object):
 
     def copy(self):
         new_color = PDFColor(self.name, self.red, self.green, self.blue)
+        new_color._set_type(self.color_type)
         return new_color
 
     # Used by other objects

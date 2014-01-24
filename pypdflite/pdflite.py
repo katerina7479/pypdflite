@@ -87,6 +87,7 @@ class PDFLite(object):
         """ Prompt the objects to output pdf code, and save to file.
 
         """
+        self.document._set_page_numbers()
         # Places header, pages, page content first.
         self._put_header()
         self._put_pages()

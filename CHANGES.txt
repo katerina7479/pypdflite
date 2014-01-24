@@ -7,3 +7,4 @@ v0.1.5, 01-21-2014 -- Fixed background method, string width
 v0.1.6, 01-23-2014 -- Rectangles print in the right direction.
 v0.1.7, 01-23-2014 -- Added imports to __init__.py, make imports easier.
 v0.1.8, 01-23-2014 -- Made it so \n works in text.
+v0.1.9, 01-23-2014 -- Added page numbers

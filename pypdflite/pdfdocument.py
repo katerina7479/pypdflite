@@ -126,6 +126,12 @@ class PDFDocument(object):
         else:
             self.margins = PDFMargin(left, top, right, bottom)
 
+    def add_page_numbers(self, location='right', font=None, cursor=None, color=None):
+        self.page_numbers = location
+        self.page_numbers_font = font
+        self.page_numbers_cursor = cursor
+        self.page_numbers_color = color
+
     # Cursor
     def get_new_cursor(self):
         " Returns a new default cursor "
@@ -452,6 +458,41 @@ class PDFDocument(object):
                 self.session._out('<<%s/Length %s >>' % (textfilter, len(page.buffer)))
                 self.session._put_stream(page.buffer)
                 self.session._out('endobj')
+
+    def _set_page_numbers(self):
+        if hasattr(self, 'page_numbers'):
+            for page in self.pages:
+                self._add_page_number(page, len(self.pages))
+
+    def _add_page_number(self, page, number_of_pages):
+        if self.page_numbers_font is not None:
+            fs = 'BT /F%d %.2f Tf ET' % (self.page_numbers_font.index, self.page_numbers_font.font_size)
+            self.session._out(fs, page)
+
+        if self.page_numbers_color is not None:
+            self.page_numbers_color._set_type('t')
+            self.session._out(self.page_numbers_color._get_color_string(), page)
+
+        text_string = "Page %s of %s" % (page.index + 1, number_of_pages)
+
+        if self.page_numbers_cursor is None:
+            sw = self.font._string_width(text_string)
+            y = page.page_size[1]
+            y = y - self.page.margin.bottom
+
+            if self.page_numbers == 'left':
+                x = self.page.margin.left
+            elif self.page_numbers == 'right':
+                x = page.page_size[0] - page.margin.right - sw
+            else:
+                x = page.page_size[0] / 2 - int(sw / 2.0)
+            cursor = PDFCursor(x, y)
+        else:
+            cursor = self.page_numbers_cursor
+
+        text_string = '(%s)' % text_string
+        s = 'BT %.2f %.2f Td %s Tj ET' % (cursor.x, cursor.y_prime, text_string)
+        self.session._out(s, page)
 
     def _get_orientation_changes(self):
         """ Returns a list of the pages that have

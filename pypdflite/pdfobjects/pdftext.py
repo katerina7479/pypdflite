@@ -11,6 +11,7 @@ class PDFText(object):
         else:
             self.font = font
         self.color = color
+        self.color._set_type('t')
         if cursor is None:
             self.cursor = page.cursor
         else:
@@ -48,7 +49,7 @@ class PDFText(object):
                     self.color._set_type('t')
                     if not self.session._compare_color(self.color):
                         self.session._out(self.color._get_color_string(), self.page)
-                        self.session._save_color(self.color.copy())
+                    self.session._save_color(self.color.copy())
 
                 # Set Font for text
                 if self.font.is_set is False:
