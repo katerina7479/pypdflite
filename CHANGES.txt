@@ -9,3 +9,4 @@ v0.1.7, 01-23-2014 -- Added imports to __init__.py, make imports easier.
 v0.1.8, 01-23-2014 -- Made it so \n works in text.
 v0.1.9, 01-23-2014 -- Added page numbers.
 v0.1.10, 01-29-2014 -- Fixed load_fonts & cellformats.
+v0.1.11, 01-29-2014 -- Fixed cellformats.
