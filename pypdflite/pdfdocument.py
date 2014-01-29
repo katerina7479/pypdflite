@@ -353,11 +353,8 @@ class PDFDocument(object):
         else:
             raise Exception("Invalid Table")
 
-    def add_cell_format(self, data=None, font=None):
-        if font is None:
-            font = self.font
-
-        format = PDFCellFormat(data, font=font)
+    def add_cell_format(self, data=None):
+        format = PDFCellFormat(data)
         return format
 
     def add_image(self, image=None, name=None):

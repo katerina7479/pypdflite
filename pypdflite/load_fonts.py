@@ -7,7 +7,7 @@ import pickle
 PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
 FONT_DIR = os.path.join(PROJECT_DIR, 'fonts')
 
-MAC_SEARCH_PATH = '/Library/Fonts/'
+MAC_SEARCH_PATH = '/Library/Fonts/;/Library/Fonts/Microsoft'
 WINDOWS_SEARCH_PATH = "C:\\Windows\\Fonts:"
 LINUX_SEACH_PATH = 'usr/share/fonts/truetype'
 SEARCH_PATH = None
@@ -50,8 +50,13 @@ def get_ttf():
 
 def load_fonts():
     # Check for system, guess path of fonts
-    global SEARCH_PATH
+    try:
+        os.makedirs(FONT_DIR)
+    except OSError as exception:
+        if exception.errno != errno.EEXIST:
+            raise
 
+    global SEARCH_PATH
     if _platform == "linux" or _platform == "linux2":
         SEARCH_PATH = LINUX_SEACH_PATH
     elif _platform == "darwin":
