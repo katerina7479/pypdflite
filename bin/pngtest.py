@@ -23,7 +23,7 @@ def PNGTest():
     document.add_text("This should be before the image.")
     document.add_newline(1)
 
-    mylogo = document.add_image("bin/testing_colors.png")
+    mylogo = document.add_image("testing_colors.png")
     document.draw_image(mylogo)
     document.add_newline(1)
 
@@ -35,14 +35,12 @@ def PNGTest():
     document.add_text("There it is without a newline")
 
     document.add_newline(3)
-    apple = document.add_image('bin/apple_logo.png')
+    apple = document.add_image('apple_logo.png')
     document.draw_image(apple)
 
     document.add_page()
-    bgcursor = document.get_new_cursor()
 
-    background = document.add_image("bin/background.png")
-    document.draw_image(background)
+    document.set_background_image("background.png")
 
     document.add_text("This text, ")
     document.add_text("And this text")

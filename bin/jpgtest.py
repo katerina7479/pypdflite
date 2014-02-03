@@ -23,7 +23,7 @@ def JPGTest():
     document.add_text("This should be before the image.")
     document.add_newline(1)
 
-    mylogo = document.add_image("bin/example.jpg")
+    mylogo = document.add_image("example.jpg")
     document.draw_image(mylogo)
     document.add_newline(1)
 
