@@ -1,5 +1,5 @@
 from datetime import datetime
-
+import load_fonts
 from session import _Session
 from .pdfdocument import PDFDocument
 
@@ -105,7 +105,15 @@ class PDFLite(object):
         else:
             self._output_to_file()
             output = None
+        load_fonts.remove_fonts()
         return output
+
+    # Font loading helpers
+    def load_fonts(self):
+        load_fonts.load_fonts()
+
+    def remove_fonts(self):
+        load_fonts.remove_fonts()
 
     # Private Methods for building the PDF
     def _put_header(self):

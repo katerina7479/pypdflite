@@ -1,5 +1,5 @@
 from pdfobjects.pdfobject import _PDFObject
-import load_fonts
+import load_fonts()
 import sys, os
 
 
@@ -24,7 +24,6 @@ class _Session(object):
     """
 
     def __init__(self, parent):
-        load_fonts.check_fonts_loaded()
         self.parent = parent
 
         # Central buffer for storing PDF code not in pages.

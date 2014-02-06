@@ -50,6 +50,14 @@ def get_ttf():
     return font_dict, families
 
 
+def remove_fonts():
+    try:
+        os.remove(os.path.join(FONT_DIR, 'font_dict.p'))
+        os.rmdir(FONT_DIR)
+    except OSError as exception:
+        if exception.errno != errno.ENOENT:
+            raise
+
 def load_fonts():
     # Check for system, guess path of fonts
     try:
@@ -75,11 +83,5 @@ def load_fonts():
     pickle.dump(font_dict, open(os.path.join(FONT_DIR, 'font_dict.p'), 'wb'))
 
 
-def check_fonts_loaded():
-    if os.path.exists(os.path.join(FONT_DIR, 'font_dict.p')):
-        pass
-    else:
-        load_fonts()
-
 if __name__ == '__main__':
-    check_fonts_loaded()
+    load_fonts()
