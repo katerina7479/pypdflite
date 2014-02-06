@@ -9,7 +9,7 @@ FONT_DIR = os.path.join(PROJECT_DIR, 'fonts')
 
 MAC_SEARCH_PATH = '/Library/Fonts/;/Library/Fonts/Microsoft'
 WINDOWS_SEARCH_PATH = "C:\\Windows\\Fonts:"
-LINUX_SEACH_PATH = 'usr/share/fonts/truetype'
+LINUX_SEARCH_PATH = '/usr/share/fonts'
 SEARCH_PATH = None
 
 english = 'abcdefghijklmnopqrstuvwxyz'
@@ -58,7 +58,7 @@ def load_fonts():
 
     global SEARCH_PATH
     if _platform == "linux" or _platform == "linux2":
-        SEARCH_PATH = LINUX_SEACH_PATH
+        SEARCH_PATH = LINUX_SEARCH_PATH
     elif _platform == "darwin":
         SEARCH_PATH = MAC_SEARCH_PATH
     elif _platform == "win32":
