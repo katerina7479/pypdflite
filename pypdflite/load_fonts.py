@@ -1,5 +1,6 @@
 import os
 import string
+import errno
 from sys import platform as _platform
 import shutil
 import pickle
@@ -7,8 +8,8 @@ import pickle
 PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
 FONT_DIR = os.path.join(PROJECT_DIR, 'fonts')
 
-MAC_SEARCH_PATH = '/Library/Fonts/;/Library/Fonts/Microsoft'
-WINDOWS_SEARCH_PATH = "C:\\Windows\\Fonts:"
+MAC_SEARCH_PATH = '/Library/Fonts/'
+WINDOWS_SEARCH_PATH = "C:\\Windows\\Fonts"
 LINUX_SEARCH_PATH = '/usr/share/fonts'
 SEARCH_PATH = None
 
@@ -19,31 +20,32 @@ def get_ttf():
     """ Given a search path, find file with requested extention """
     font_dict = {}
     families = []
-    for path in string.split(SEARCH_PATH, os.pathsep):
-        path = os.path.expanduser(path)
-        for item in os.listdir(path):
-            root, ext = os.path.splitext(item)
-            if ext == '.ttf':
-                if root[0].lower() in english:
-                    source = os.path.join(path, item)
-                    name = root.lower()
-                    if ' bold' in name:
-                        name = name.replace(' bold', '_bold')
-                        if ' italic' in name:
+    for rootdir in string.split(SEARCH_PATH, os.pathsep):
+        rootdir = os.path.expanduser(rootdir)
+        for dirName, subdirList, filelist in os.walk(rootdir):
+            for item in filelist:
+                root, ext = os.path.splitext(item)
+                if ext == '.ttf':
+                    if root[0].lower() in english:
+                        source = os.path.join(dirName, item)
+                        name = root.lower()
+                        if ' bold' in name:
+                            name = name.replace(' bold', '_bold')
+                            if ' italic' in name:
+                                name = name.replace(' italic', '_italic')
+                        elif 'bold' in name:
+                            name = name.replace('bold', '_bold')
+                            if 'italic' in name:
+                                name = name.replace('italic', '_italic')
+                        elif ' italic' in name:
                             name = name.replace(' italic', '_italic')
-                    elif 'bold' in name:
-                        name = name.replace('bold', '_bold')
-                        if 'italic' in name:
+                        elif 'italic' in name:
                             name = name.replace('italic', '_italic')
-                    elif ' italic' in name:
-                        name = name.replace(' italic', '_italic')
-                    elif 'italic' in name:
-                        name = name.replace('italic', '_italic')
-                    elif 'oblique' in name:
-                        name = name.replace('oblique', '_italic')
-                    else:
-                        families.append(name)
-                    font_dict[name] = source
+                        elif 'oblique' in name:
+                            name = name.replace('oblique', '_italic')
+                        else:
+                            families.append(name)
+                        font_dict[name] = source
 
     return font_dict, families
 

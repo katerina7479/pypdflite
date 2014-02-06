@@ -34,3 +34,4 @@ Plans:
 Online documentation
 
 Thanks to: Marc Angelone, Noah Abelson, and John Lockwood for support and input!
+Also: @klmitch for loading fonts on linux bug.
