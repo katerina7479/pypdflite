@@ -1,5 +1,4 @@
 from pdfobjects.pdfobject import _PDFObject
-import load_fonts()
 import sys, os
 
 
