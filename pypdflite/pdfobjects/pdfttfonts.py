@@ -4,9 +4,9 @@ import re, zlib
 import pickle
 import os
 from ..session import FONT_DIR
-from .load_fonts
+from ..load_fonts import load_fonts
 
-load_fonts.load_fonts()
+load_fonts()
 TTFONTS = pickle.load(open(os.path.join(FONT_DIR, 'font_dict.p'), 'rb'))
 FAMILIES = TTFONTS['font_families']
 TTFONTS['font_families'] = None
