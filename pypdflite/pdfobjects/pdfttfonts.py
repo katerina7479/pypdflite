@@ -4,7 +4,7 @@ import re, zlib
 import pickle
 import os
 from ..session import FONT_DIR
-import ..load_fonts
+from .load_fonts
 
 load_fonts.load_fonts()
 TTFONTS = pickle.load(open(os.path.join(FONT_DIR, 'font_dict.p'), 'rb'))
