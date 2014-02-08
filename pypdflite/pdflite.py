@@ -21,8 +21,14 @@ class PDFLite(object):
 
     """
 
-    def __init__(self, filepath, orientation="P", layout="letter"):
-        load_fonts.load_fonts()
+    def __init__(self, filepath, orientation="P", layout="letter", font_list=None, font_dir=None):
+        if font_dir is not None:
+            load_fonts.load_fonts(font_dir)
+        elif font_list is not None:
+            load_fonts.load_font_files(font_list)
+        else:
+            load_fonts.load_fonts()
+
         self.filepath = filepath
         self.destination = None
         if self.filepath == 'string':

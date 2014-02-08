@@ -4,17 +4,17 @@ import re, zlib
 import pickle
 import os
 from ..session import FONT_DIR
-from ..load_fonts import load_fonts
 
-load_fonts()
-TTFONTS = pickle.load(open(os.path.join(FONT_DIR, 'font_dict.p'), 'rb'))
-FAMILIES = TTFONTS['font_families']
-TTFONTS['font_families'] = None
 
 
 class PDFTTFont(PDFFont):
     def __init__(self, session, family='arial', style=None, size=20):
         self.session = session
+
+        global FAMILIES
+        global TTFONTS
+        FAMILIES, TTFONTS = self._get_available_font_families()
+
         self.is_set = False
         self.font_size = None
         self.subset = []
@@ -32,7 +32,10 @@ class PDFTTFont(PDFFont):
                         =+_!@#$%^&*()~`""")
 
     def _get_available_font_families(self):
-        return FAMILIES
+        TTFONTS = pickle.load(open(os.path.join(FONT_DIR, 'font_dict.p'), 'rb'))
+        FAMILIES = TTFONTS['font_families']
+        TTFONTS['font_families'] = None
+        return FAMILIES, TTFONTS
 
     def _set_family(self, family):
         if family is not None:
