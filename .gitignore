@@ -43,3 +43,7 @@ pip-log.txt
 # Images
 *.png
 *.jpg
+
+# File
+/fonts
+/fonts/*
