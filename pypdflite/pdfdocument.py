@@ -126,11 +126,13 @@ class PDFDocument(object):
         else:
             self.margins = PDFMargin(left, top, right, bottom)
 
-    def add_page_numbers(self, location='right', font=None, cursor=None, color=None):
+    def add_page_numbers(self, location='right', font=None, cursor=None, color=None, text1="Page %s", text2=None):
         self.page_numbers = location
         self.page_numbers_font = font
         self.page_numbers_cursor = cursor
         self.page_numbers_color = color
+        self.page_numbers_text1 = text1
+        self.page_numbers_text2 = text2
 
     # Cursor
     def get_new_cursor(self):
@@ -474,7 +476,9 @@ class PDFDocument(object):
             self.page_numbers_color._set_type('t')
             self.session._out(self.page_numbers_color._get_color_string(), page)
 
-        text_string = "Page %s of %s" % (page.index + 1, number_of_pages)
+        text_string = self.page_numbers_text1 % (page.index + 1)
+        if self.page_numbers_text2 is not None:
+            text_string += self.page_numbers_text2 % number_of_pages
 
         if self.page_numbers_cursor is None:
             sw = self.font._string_width(text_string)

@@ -2,7 +2,7 @@ from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcolor import PDFColor
 
 
-def TextTest():
+def PageNumberTest():
 
     """ Functional test for text, paragraph, and page
     splitting.
@@ -10,7 +10,7 @@ def TextTest():
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("TextTest.pdf")
+    writer = PDFLite("PageNumberTest.pdf")
 
     # If desired (in production code), set compression
     # writer.setCompression(True)
@@ -126,4 +126,4 @@ def TextTest():
     writer.close()
 
 if __name__ == "__main__":
-    TextTest()
+    PageNumberTest()

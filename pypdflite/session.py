@@ -2,10 +2,6 @@ from pdfobjects.pdfobject import _PDFObject
 import sys, os
 
 
-PROJECT_DIR = os.path.abspath(os.path.dirname(__file__))
-FONT_DIR = os.path.join(PROJECT_DIR, 'fonts')
-
-
 class _Session(object):
 
     """ Manages the storing of the
@@ -39,7 +35,6 @@ class _Session(object):
         self.compression = False
         self.drawn_color = None
         self.color = None
-        self.project_dir = PROJECT_DIR
 
     # Compression
     def _set_compression(self, value):
