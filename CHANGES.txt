@@ -15,3 +15,5 @@ v0.1.13, 02-05-2014 -- Added path walking to font loads. Fixed import error.
 v0.1.14, 02-06-2014 -- Made fonts load on each startup. Added remove fonts function.
 v0.1.15, 02-06-2014 -- Fix import error
 v0.1.16, 02-06-2014 -- Really fixed import error
+v0.1.17, 02-07-2014 -- Bug Fix
+v0.1.18, 02-10-2014 -- Loaded fonts into memory, rather then pickle.
