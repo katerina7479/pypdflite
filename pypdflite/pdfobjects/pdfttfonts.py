@@ -1,19 +1,16 @@
 from pdffont import PDFFont
 from ttfonts import TTFontFile
 import re, zlib
-import pickle
 import os
-from ..session import FONT_DIR
-
+from ..font_loader import Font_Loader
 
 
 class PDFTTFont(PDFFont):
     def __init__(self, session, family='arial', style=None, size=20):
         self.session = session
 
-        global FAMILIES
-        global TTFONTS
-        FAMILIES, TTFONTS = self._get_available_font_families()
+        self.FAMILIES = Font_Loader.families
+        self.TTFONTS = Font_Loader.font_dict
 
         self.is_set = False
         self.font_size = None
@@ -31,16 +28,10 @@ class PDFTTFont(PDFFont):
                         1234567890-,.<>/?;:\'\"\\[]{}
                         =+_!@#$%^&*()~`""")
 
-    def _get_available_font_families(self):
-        TTFONTS = pickle.load(open(os.path.join(FONT_DIR, 'font_dict.p'), 'rb'))
-        FAMILIES = TTFONTS['font_families']
-        TTFONTS['font_families'] = None
-        return FAMILIES, TTFONTS
-
     def _set_family(self, family):
         if family is not None:
             family = family.lower()
-            if family not in TTFONTS:
+            if family not in self.TTFONTS:
                 raise Exception("%s not a valid font name" % family)
             self.family = family
         else:
@@ -68,7 +59,7 @@ class PDFTTFont(PDFFont):
         self._set_font_key()
 
     def _set_metrics(self):
-        self.path = TTFONTS[self.family]
+        self.path = self.TTFONTS[self.family]
 
         self.info_object = TTFontFile()
         ttf = self.info_object

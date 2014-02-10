@@ -1,5 +1,5 @@
 from datetime import datetime
-import load_fonts
+from font_loader import Font_Loader
 from session import _Session
 from .pdfdocument import PDFDocument
 
@@ -23,16 +23,20 @@ class PDFLite(object):
 
     def __init__(self, filepath, orientation="P", layout="letter", font_list=None, font_dir=None):
         if font_dir is not None:
-            load_fonts.load_fonts(font_dir)
+            Font_Loader.load_from_dir(font_dir)
         elif font_list is not None:
-            load_fonts.load_font_files(font_list)
+            Font_Loader.load_from_list(font_list)
         else:
-            load_fonts.load_fonts()
+            Font_Loader.load_fonts()
 
         self.filepath = filepath
         self.destination = None
-        if self.filepath == 'string':
+
+        if hasattr(self.filepath, 'write'):
+            self.destination = self.filepath
+        elif self.filepath == 'string':
             self.destination = 'string'
+
         # Create session and document objects
         self.session = _Session(self)
         self.document = PDFDocument(self.session, orientation, layout)
@@ -107,12 +111,14 @@ class PDFLite(object):
         self._put_cross_reference()
         # Trailer object
         self._put_trailer()
-        if self.destination == 'string':
+
+        if hasattr(self.destination, "write"):
+            output = self._output_to_io()
+        elif self.destination == 'string':
             output = self._output_to_string()
         else:
             self._output_to_file()
             output = None
-        load_fonts.remove_fonts()
         return output
 
     # Font loading helpers
@@ -291,6 +297,10 @@ class PDFLite(object):
 
     def _output_to_string(self):
         return self.session.buffer
+
+    def _output_to_io(self):
+        self.destination.write(self.session.buffer)
+        return self.destination
 
     def _text_to_string(self, text):
         """ Provides for escape characters and converting to
