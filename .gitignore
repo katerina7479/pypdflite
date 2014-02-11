@@ -1,0 +1,5 @@
+/bin
+/dist
+/pypdflite
+*.sublime-project
+*.sublime-workspace
