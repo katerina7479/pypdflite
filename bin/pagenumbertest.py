@@ -10,7 +10,7 @@ def PageNumberTest():
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("PageNumberTest.pdf")
+    writer = PDFLite("generated/PageNumberTest.pdf")
 
     # If desired (in production code), set compression
     # writer.setCompression(True)
@@ -121,7 +121,7 @@ def PageNumberTest():
         quam. Proin feugiat urna ut rutrum facilisis. Vivamus gravida iaculis\
         nibh at feugiat.""")
 
-    document.add_page_numbers(font=normal_font, color=PDFColor())
+    document.add_page_numbers(font=normal_font, color=PDFColor(), text2=' of %s')
     # Close writer
     writer.close()
 

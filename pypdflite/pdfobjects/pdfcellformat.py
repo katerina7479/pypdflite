@@ -7,9 +7,9 @@ class PDFCellFormat(object):
         in a dictionary of key / value pairs.
 
     """
-    def __init__(self, data, default_font):
+    def __init__(self, data, cell_font):
         self.dict = {}
-        self.available_keys = {'font': default_font,  # PDFFont
+        self.available_keys = {'font': cell_font,  # PDFFont
                                'num_format': None,  # ('percent', #decimals), ('decimal', #d), ('money' or '$', #d), ('comma', #d), ('$comma' or 'money_comma') # Tuples
                                'align': "left",  # Left, right, center
                                'valign': 'center',  # Top, center, bottom

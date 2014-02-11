@@ -19,7 +19,7 @@ CORE_FONTS = {
 
 class PDFFont(object):
 
-    def __init__(self, session, family='helvetica', style='', size=20):
+    def __init__(self, session, family='helvetica', style='', size=12):
         self.session = session
 
         self.is_set = False

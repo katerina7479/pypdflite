@@ -4,7 +4,7 @@ README.txt
 setup.py
 bin/runexamples.py
 pypdflite/__init__.py
-pypdflite/load_fonts.py
+pypdflite/font_loader.py
 pypdflite/pdfdocument.py
 pypdflite/pdflite.py
 pypdflite/session.py

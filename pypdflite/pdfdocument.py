@@ -98,6 +98,9 @@ class PDFDocument(object):
         self.fonts.append(self.font)
         self.fontkeys.append(self.font.font_key)
 
+    def get_color(self):
+        return PDFColor()
+
     # Public methods, main interface
     # Pages
     def add_page(self, page=None):
@@ -125,6 +128,8 @@ class PDFDocument(object):
             self.margins = left
         else:
             self.margins = PDFMargin(left, top, right, bottom)
+        if self.page is not None:
+            self.page.set_margins(self.margins)
 
     def add_page_numbers(self, location='right', font=None, cursor=None, color=None, text1="Page %s", text2=None):
         self.page_numbers = location
@@ -134,10 +139,16 @@ class PDFDocument(object):
         self.page_numbers_text1 = text1
         self.page_numbers_text2 = text2
 
+    def change_page_orientation(self):
+        self.page._change_orientation()
+
     # Cursor
     def get_new_cursor(self):
         " Returns a new default cursor "
         return PDFCursor()
+
+    def get_cursor(self):
+        return self.page.cursor.copy()
 
     def set_cursor(self, x=None, y=None):
         if x is not None and isinstance(x, PDFCursor):
@@ -208,12 +219,6 @@ class PDFDocument(object):
             pass
         else:
             self.font._set_size(size)
-
-    def get_available_tt(self):
-        ttfont = PDFTTFont()
-        famlies = ttfont._get_available_font_families()
-        print famlies
-        return famlies
 
     # Writing
     def add_text(self, text, cursor=None):
@@ -293,9 +298,20 @@ class PDFDocument(object):
         if cursor1 is not None:
             if cursor2 is not None:
                 pass
-        else:
+            elif x2 is not None and y2 is not None:
+                cursor2 = PDFCursor(x2, y2)
+            else:
+                raise Exception("Line not fully specified")
+        elif x1 is not None and y1 is not None:
             cursor1 = PDFCursor(x1, y1)
-            cursor2 = PDFCursor(x2, y2)
+            if cursor2 is not None:
+                pass
+            elif x2 is not None and y2 is not None:
+                cursor2 = PDFCursor(x2, y2)
+            else:
+                raise Exception("Line not fully specified")
+        else:
+            raise Exception("Line not specified")
 
         myline = PDFLine(self.session, self.page, cursor1, cursor2, self.draw_color, style)
         myline._draw()
@@ -328,6 +344,8 @@ class PDFDocument(object):
                 elif width is not None and height is not None:
                     dims = PDFCursor(width, height)
                     cursor2 = cursor1.add(dims)
+                elif cursor2 is not None:
+                    pass
                 else:
                     raise Exception("Rectangle not defined")
             else:
@@ -355,15 +373,15 @@ class PDFDocument(object):
         else:
             raise Exception("Invalid Table")
 
-    def add_cell_format(self, data=None, default_font=None):
-        if default_font is None:
-            default_font = self.font
+    def add_cell_format(self, data=None, cell_font=None):
+        if cell_font is None:
+            cell_font = self.font
         if data is None:
             data = {}
-        format = PDFCellFormat(data, default_font)
+        format = PDFCellFormat(data, cell_font)
         return format
 
-    def add_image(self, image=None, name=None):
+    def add_image(self, image, name=None):
         if isinstance(image, PDFImage):  # It's an image object
             myimage = self._get_image(image.name)
             if not myimage:

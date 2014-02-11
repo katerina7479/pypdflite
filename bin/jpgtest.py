@@ -8,7 +8,7 @@ def JPGTest():
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("JPGTest.pdf")
+    writer = PDFLite("generated/JPGTest.pdf")
 
     # If desired (in production code), set compression
     # writer.setCompression(True)
@@ -23,7 +23,7 @@ def JPGTest():
     document.add_text("This should be before the image.")
     document.add_newline(1)
 
-    mylogo = document.add_image("example.jpg")
+    mylogo = document.add_image("bin/example.jpg")
     document.draw_image(mylogo)
     document.add_newline(1)
 

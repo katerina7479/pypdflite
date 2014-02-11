@@ -19,6 +19,8 @@ class PDFLine(object):
     def _set_style(self, style=None):
         if style == "dashed" or style == 1:
             self.style = "dashed"
+        elif style == 'dots' or style == 2:
+            self.style = 'dots'
         else:
             self.style = "solid"
 
@@ -32,8 +34,10 @@ class PDFLine(object):
     def _draw_style(self):
         if self.style == "dashed":
             self.session._out('[%s] %s d' % (3, 0), self.page)
-        elif (self.style == "solid"):
+        elif self.style == "solid":
             self.session._out('[] 0 d', self.page)
+        elif self.style == 'dots':
+            self.session._out('[%s] %s d' % (1, 1), self.page)
 
     def _draw_line_size(self):
         self.session._out('%.2f w' % self.line_size, self.page)

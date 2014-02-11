@@ -19,7 +19,7 @@ class PDFRectangle(object):
 
     def _set_dimensions(self, cursor_start, cursor_end):
         self.corner = cursor_start
-        difference = cursor_end.subtract(cursor_start)
+        difference = cursor_end - cursor_start
 
         self.width = difference.x
         self.height = difference.y

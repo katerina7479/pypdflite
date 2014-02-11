@@ -50,7 +50,7 @@ class PDFLite(object):
         self.set_information()
         self.set_compression()
 
-    def set_compression(self, value=False):
+    def set_compression(self, value=True):
         # False is easier to read with a text editor.
         self.session._set_compression(value)
 
@@ -120,13 +120,6 @@ class PDFLite(object):
             self._output_to_file()
             output = None
         return output
-
-    # Font loading helpers
-    def load_fonts(self):
-        load_fonts.load_fonts()
-
-    def remove_fonts(self):
-        load_fonts.remove_fonts()
 
     # Private Methods for building the PDF
     def _put_header(self):

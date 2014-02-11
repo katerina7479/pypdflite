@@ -92,12 +92,13 @@ class PDFPage(object):
 
     def _change_orientation(self):
         if self.orientation_change is False:
-            self.size = (self.size[1], self.size[0])
             self.orientation_change = True
-            self._set_dimensions()
-            self._set_bounds()
         else:
-            pass
+            self.orientation_change = False
+
+        self.size = (self.size[1], self.size[0])
+        self._set_dimensions()
+        self._set_bounds()
 
     def _set_cursor(self, cursor):
         self.cursor = cursor

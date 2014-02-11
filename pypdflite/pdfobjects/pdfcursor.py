@@ -130,7 +130,7 @@ class PDFCursor(object):
         else:
             return False
 
-    def is_greater_than(self, test_ordinate):
+    def __gt__(self, test_ordinate):
         " Comparison for both ordinates, prioritizing the y direction. "
         self._is_coordinate(test_ordinate)
         if self.y > test_ordinate.y:
@@ -141,7 +141,7 @@ class PDFCursor(object):
         else:
             return False
 
-    def is_equal_to(self, test_ordinate):
+    def __eq__(self, test_ordinate):
         " Test to see if coordinates are equal to each other. "
         self._is_coordinate(test_ordinate)
         if self.y == test_ordinate.y:
@@ -150,7 +150,7 @@ class PDFCursor(object):
         else:
             return False
 
-    def is_less_than(self, test_ordinate):
+    def __lt__(self, test_ordinate):
         " Comparison for both ordinates, prioritizing the y direction."
         self._is_coordinate(test_ordinate)
         if self.y < test_ordinate.y:
@@ -169,21 +169,21 @@ class PDFCursor(object):
         new_cursor.set_deltas(self.dx, self.dy)
         return new_cursor
 
-    def add(self, add_ordinate):
+    def __add__(self, add_ordinate):
         " Add two coordinates to each other, return new coordinate. "
         self._is_coordinate(add_ordinate)
         x = self.x + add_ordinate.x
         y = self.y + add_ordinate.y
         return self.__class__(x, y)
 
-    def subtract(self, sub_ordinate):
+    def __sub__(self, sub_ordinate):
         " Subtract two coordinates from each other, suppress negatives. "
         self._is_coordinate(sub_ordinate)
         x = abs(self.x - sub_ordinate.x)
         y = abs(self.y - sub_ordinate.y)
         return self.__class__(x, y)
 
-    def scale(self, scale):
+    def __mul__(self, scale):
         " Return scaled coordinate"
         scale = float(scale)
         x = self.x * scale

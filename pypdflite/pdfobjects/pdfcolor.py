@@ -2,7 +2,7 @@ from colorref import color_reference
 
 
 class PDFColor(object):
-    def __init__(self, name=None, r=0, g=0, b=0):
+    def __init__(self, r=0, g=0, b=0, name=None):
         # Get color dictionary
         self.color_dict = color_reference
 
@@ -34,7 +34,7 @@ class PDFColor(object):
         self.name = None
 
     def copy(self):
-        new_color = PDFColor(self.name, self.red, self.green, self.blue)
+        new_color = PDFColor(self.red, self.green, self.blue, self.name)
         new_color._set_type(self.color_type)
         return new_color
 
