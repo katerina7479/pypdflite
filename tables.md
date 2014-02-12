@@ -1,11 +1,19 @@
-# <a name="top"></a>Pypdflite Documentation
+---
+layout: default
+title: Tables
+---
+
+# PDFTable
+
+Create rows and columns, with individually formatted cells.
 
 1. [Intro](index.html)
 1. [Writer](writer.html)
 2. [Document Object](document.html)
 3. [Cursor Object](cursor.html)
 4. [Color Object](color.html)
-5. [Tables](#table)
+5. [Tables](table.html)
+    1. [Object](#table)
     1. [Constructor](#construct)
     2. [Writing](#writing)
     3. [Formatting](#format)
@@ -27,150 +35,147 @@ for a row, and then overwrite them with individual cell formats.
 
 ### document.add_table(rows, columns, cursor=None)
 
-** Returns: ** PDFTable object
+**Returns:** PDFTable object
 
-* ** rows (int): **
+* **rows (int):**
     * Requires an integer number of rows
 
-* ** columns (int): **
+* **columns (int):**
     * Required an integer number of columns
 
-* ** cursor (PDFCursor): **
+* **cursor (PDFCursor):**
     * Cursor for upper left corner of the table
     * Defaults to page cursor
 
 Note: Cells are initialized with a default font equal to the page font, and default
 formats. See [Cell Formats](cellformat.html) for reference.
 
-*[top](#top)*
 
-## <a name="writing"></a>Writing
+# <a name="writing"></a>Writing
 
-### table.write(row, col, text, format=None)
+## table.write(row, col, text, format=None)
 
 Writes text to cell, and sets format, if provided.
 
-* ** row (int): **
+* **row (int):**
     * Row number of cell
     * Row numbering starts at 0
 
-* ** column (int): **
+* **column (int):**
     * Column number of cell
     * Column numbering starts at 0
 
-* ** text (string or numbers): **
+* **text (string or numbers):**
     * Unless overwritten, columns will re-size to fit text.
     * May use 'text-wrap' attribute in format to allow for wrapping
     * Use '\n' character to specify wrap point.
 
-* ** format (PDFCellFormat): **
+* **format (PDFCellFormat):**
     * Get through the document.add_cell_format() method.
     * Will use default cell format.
 
-### table.write_row(row, col_start, data, format)
+## table.write\_row(row, col_start, data, format)
 
-* ** row (int): **
+* **row (int):**
     * Row number of cell
     * Row numbering starts at 0
 
-* ** column_start (int): **
+* **column_start (int):**
     * Number of column to start writing (does not need to be 0, you may write only part of a row)
     * Column numbering starts at 0
 
-* ** data [list of strings or numbers]: **
+* **data [list of strings or numbers]:**
     * Unless overwritten, columns will re-size to fit text.
     * May use 'text-wrap' attribute in format to allow for wrapping
     * Use '\n' character to specify wrap point.
 
-* ** format (PDFCellFormat): **
+* **format (PDFCellFormat):**
     * Get through the document.add_cell_format() method.
     * Will use default cell format.
 
-### table.write_column(row_start, col, data, format)
+## table.write\_column(row\_start, col, data, format)
 
-* ** row_start (int): **
+* **row_start (int):**
     * Number of row to start writing, (may write part of a column)
     * Row numbering starts at 0
 
-* ** column (int): **
+* **column (int):**
     * Column number
     * Column numbering starts at 0
 
-* ** data [list of strings or numbers]: **
+* **data [list of strings or numbers]:**
     * Unless overwritten, columns will re-size to fit text.
     * May use 'text-wrap' attribute in format to allow for wrapping
     * Use '\n' character to specify wrap point.
 
-* ** format (PDFCellFormat): **
+* **format (PDFCellFormat):**
     * Get through the document.add_cell_format() method.
     * Will use default cell format.
 
-*[top](#top)*
 
-## <a name="format"></a>Setting Format
+# <a name="format"></a>Setting Format
 
-### table.set_format(row, col, format)
+## table.set\_format(row, col, format)
 
 Sets format of cell.
 
-* ** row (int): **
+* **row (int):**
     * Row number of cell
     * Row numbering starts at 0
 
-* ** column (int): **
+* **column (int):**
     * Column number of cell
     * Column numbering starts at 0
 
-* ** format (PDFCellFormat): **
+* **format (PDFCellFormat):**
     * Get through the document.add_cell_format() method.
 
 
-### table.set_format_row(row, col_start, format)
+## table.set\_format\_row(row, col_start, format)
 
-* ** row (int): **
+* **row (int):**
     * Row number of cell
     * Row numbering starts at 0
 
-* ** column_start (int): **
+* **column_start (int):**
     * Number of column to start setting format (may set only part of a row)
     * Column numbering starts at 0
 
-* ** format (PDFCellFormat): **
+* **format (PDFCellFormat):**
     * Get through the document.add_cell_format() method.
 
 
-### table.set_format_column(row_start, col, format)
+## table.set\_format\_column(row_start, col, format)
 
-* ** row_start (int): **
+* **row_start (int):**
     * Number of row to start setting format, (may set part of a column)
     * Row numbering starts at 0
 
-* ** column (int): **
+* **column (int):**
     * Column number
     * Column numbering starts at 0
 
-* ** format (PDFCellFormat): **
+* **format (PDFCellFormat):**
     * Get through the document.add_cell_format() method.
 
-### table.set_column_width(column, width)
+## table.set\_column\_width(column, width)
 
-* ** column (int): **
+* **column (int):**
     * Column number
     * Column numbering starts at 0
 
-* ** width (int): **
+* **width (int):**
     * May set the width of the column in pixels. 
     * Be careful: If the width is less then the largest text, there will be overlap on the page
     * If the width is too large, the table may run off the edge of the page.
 
-### table.set_row_height(row, height)
+## table.set\_row\_height(row, height)
 
-* ** row (int): **
+* **row (int):**
     * Row number of cell
     * Row numbering starts at 0
 
-* ** height (int): **
+* **height (int):**
     * May set the height of the row in pixels.
     * Use 'valign' in cell format to change vertical alignment
 
-*[top](#top)*

@@ -1,19 +1,27 @@
-# <a name="top"></a>Pypdflite Documentation
+---
+layout: default
+title: Cell Format
+---
+
+# PDFCellFormat
+
+Stores values for formatting each cell in a table
 
 1. [Intro](index.html)
 1. [Writer](writer.html)
-2. [Document Object](document.html)
-3. [Cursor Object](cursor.html)
-4. [Color Object](color.html)
+2. [Document](document.html)
+3. [Cursor](cursor.html)
+4. [Color](color.html)
 5. [Tables](tables.html)
-6. [Cell Formats](#cellformat)
+6. [Cell Formats](cellformat.html)
+    1. [Object](#cellformat)
     1. [Constructor](#construct)
     2. [Dictionary Keys](#keys)
     3. [Number Format](#numformat)
     4. [Borders](#borders)
     5. [Use Case](#example)
 
-# <a name='cellformt'></a>Cell Format Object
+# <a name='cellformat'></a>Cell Format Object
 
 Cell formats should be set throug the document.add_cell_format method.
 They contain dictionary settings for fonts, text alignment, number formatting,
@@ -25,7 +33,7 @@ the table.set_format methods.
 
 ## <a name="construct"></a>Constructor
 
-### document.add_cell_format(data=None, font=None)
+### document.add\_cell\_format(data=None, font=None)
 
 * **data (dictionary):**
     Dictionary of key value pairs specifing a cell format.
@@ -33,7 +41,6 @@ the table.set_format methods.
 * **font (PDFFont):**
     Sets font for cell. Defaults to page font.
 
-*[top](#top)*
 
 ## <a name="keys"></a>Data Dictionary Keys
 
@@ -64,8 +71,6 @@ Key              | Type                | Default            | Options
 
 *If set, this value will be applied to all sides of cell
 
-*[top](#top)*
-
 ## <a name="numformat"></a>Number Format
 
 If the cell contains a number (int, float), num_format allows you to change
@@ -90,7 +95,6 @@ how that number is formatted by keyword, and number of decimals.
     document.add_cell_format()
 ```
 
-*[top](#top)*
 
 ## <a name="borders"></a>Borders
 
@@ -118,18 +122,14 @@ Int | border style
 Border colors may be set, or it will default to the current page draw_text value,
 (typically black).
 
-*[top](#top)*
-
 ## <a name='example'></a> Use case
 
 ```
+    # Set cell format
     myfont = document.get_font()
-    border_center_dict = {'font': myfont, 'border': (0,1), 'align': 'center'}
+    border_dict = {'font': myfont, 'border': (0,1)}
+    border_format = document.add_cell_format(border_dict)
 
-    border_center_format = document.add_cell_format(border_center_dict)
-
-    #.... Later in the table declarations
-    mytable.write_row(1, 0, row_data, border_center_format)
+    # ... In the table declarations
+    mytable.write_row(1, 0, row_data, border_format)
 ```
-
-*[top](#top)*

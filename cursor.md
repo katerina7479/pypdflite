@@ -1,23 +1,30 @@
+---
+layout: default
+title: Cursor
+---
 
-# <a name="top"></a>Pypdflite Documentation
+# PDFCursor
+
+The cursor represents an x, y coordinate point on the pdf page. 
 
 1. [Intro](index.html)
 1. [Writer](writer.html)
-2. [Document Object](document.html)
-3. [Cursor Object](#cursor)
+2. [Document](document.html)
+3. [Cursor](cursor.html)
+    1. [Object](#cursor)
     1. [Constructor](#construct)
     2. [Comparisons](#compare)
     3. [Cursor Math](#math)
     4. [Change](#change)
-4. [Color Object](color.html)
-5. [Tables](tables.html)
+4. [Color](color.html)
+5. [Table](tables.html)
 6. [Cell Formats](cellformat.html)
 
-# <a name="cursor"></a>Cursor Object
+# <a name="cursor"></a>Object
 
-The cursor represents an x, y coordinate point on the pdf page. The origin (0,0)
-is at the upper left hand corner. The x increases horizontally to the right, and 
-y increases going down, up to the page size (in pixels).
+The origin (0,0) is at the upper left hand corner. The x increases 
+horizontally to the right, and y increases going down, 
+up to the page size (in pixels).
 
 Page Sizes, portrait in pixels
 
@@ -36,19 +43,19 @@ Cursors themselves can be modified, or can return a new cursor object.
 
 ### PDFCursor(x, y, boundary_flag)
 
-* **x (int): **
+* **x (int):**
     * Defines the x coordinate. 
     * If it is less than the xmin boundary, it will be set to the xmin.
     * If it is greater then x_max, it does not change the value, but drawings 
     will be off the page to the right.
 
-* **y (int): **
+* **y (int):**
     * Defines the y coordinate.
     * If it is less then ymin, it is set to ymin.
     * If it is greater then ymax, it does not change the value, but will
     draw off the page to the bottom.
 
-* **boundary_flag (bool): **
+* **boundary_flag (bool):**
     * Sets the xmin and ymin boundaries to the value of x and y.
     * Defaults to false
 
@@ -57,7 +64,6 @@ Cursors themselves can be modified, or can return a new cursor object.
     document.set_cursor(cursor)
 ```
 
-*[top](#top)*
 
 ##  <a name="compare"></a>Comparison Methods
 
@@ -102,13 +108,11 @@ y coordinate, then x coordinates are compared.
     cursor1.xmin  # 0
 ```
 
-*[top](#top)*
-
 ##  <a name="math"></a>Cursor Math methods
 
 ### cursor.copy()
 
-** Returns: ** PDFCursor object
+**Returns:** PDFCursor object
 
 * Coordinates, boundaries are set equal.
 * cursor1 remains unchanged.
@@ -123,7 +127,7 @@ y coordinate, then x coordinates are compared.
 
 ### cursor1 + cursor2
 
-** Returns: ** PDFCursor object
+**Returns:** PDFCursor object
 
 * x's are added, and y's are added.
 * Cursors remain unchanged.
@@ -139,7 +143,7 @@ y coordinate, then x coordinates are compared.
 
 ### cursor1 - cursor2
 
-** Returns: ** PDFCursor object
+**Returns:** PDFCursor object
 
 * x's are added, and y's are added.
 * Cursors remain unchanged.
@@ -155,7 +159,7 @@ y coordinate, then x coordinates are compared.
 
 ### cursor * number
 
-** Returns: ** PDFCursor object
+**Returns:** PDFCursor object
 
 * x's and y's are scaled by the number. May result in non-integer coordinates.
 * Cursors remain unchanged.
@@ -165,20 +169,19 @@ y coordinate, then x coordinates are compared.
     cursor2 = cursor1 * 0.5
     cursor2.x, cursor2.y  # 50, 50
 ```
-*[top](#top)*
 
 ##  <a name="change"></a>Changes the existing cursor
 
 ### cursor.x_plus(dx)
 
-* **dx (number): **
+* **dx (number):**
     * Adds dx to x coordinate.
     * number may be negative for subtraction
     * If no number is supplied, defaults to 2 px.
 
 ### cursor.y_plus(dy)
 
-* **dy (number): **
+* **dy (number):**
     * Adds dy to y coordinate. 
     * number may be negative for subtraction
     * If no number is supplied, defaults to 2 px.
@@ -191,4 +194,3 @@ y coordinate, then x coordinates are compared.
 
 * Resets y to y_min
 
-*[top](#top)*

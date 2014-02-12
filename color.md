@@ -1,18 +1,26 @@
-# <a name="top"></a>Pypdflite Documentation
+---
+layout: default
+title: Color
+---
+
+# PDFColor
+
+Representation of color in pdf documents.
 
 1. [Intro](index.html)
 1. [Writer](writer.html)
-2. [Document Object](document.html)
-3. [Cursor Object](cursor.html)
-4. [Color Object](#color)
+2. [Document](document.html)
+3. [Cursor](cursor.html)
+4. [Color](color.html)
+    1. [Object](#color)
     1. [Constructor](#construct)
     2. [Setters](#set)
     3. [Copy](#copy)
     4. [Color Reference](#ref)
-5. [Tables](tables.html)
+5. [Table](tables.html)
 6. [Cell Formats](cellformat.html)
 
-## <a name="color"></a>Color Object
+## <a name="color"></a>Object
 
 PDF colors are stored by rbg. A generic PDFColor defaults to black if no
 rbg value is entered.
@@ -25,55 +33,52 @@ and writer.
 
 ### PDFColor(red=0, green=0, blue=0, name=None)
 
-** Returns: ** PDFColor object
+**Returns:** PDFColor object
 
-* **red (int): ** 
+* **red (int):** 
     * Must be between 0 - 255
 
 
-* **green (int): ** 
+* **green (int):** 
     * Must be between 0 - 255
 
 
-* **blue (int): ** 
+* **blue (int):** 
     * Must be between 0 - 255
 
-* **name (string): **
+* **name (string):**
     * Set color from color reference.
 
-*[top](#top)*
 
 ## <a name="set"></a>Setters
 
 ### color.set_color_by_name(name)
 
-* **name (string): **
+* **name (string):**
     * Must be a color from the color reference.
 
 ### color.set_color_by_number(red, green, blue)
 
-* **red (int): ** 
+* **red (int):** 
     * Must be between 0 - 255
 
 
-* **green (int): ** 
+* **green (int):** 
     * Must be between 0 - 255
 
 
-* **blue (int): ** 
+* **blue (int):** 
     * Must be between 0 - 255
 
 ## <a name="copy"></a>Copy Method
 
-*[top](#top)*
 
 ### color.copy()
 
-** Returns: ** PDFColor object
+**Returns:** PDFColor object
 
 * Copies the color object.
 
-*[top](#top)*
 
 ## <a name="ref"></a>Color Name Chart
 
@@ -124,4 +129,3 @@ Name             | (r, g, b)
 'darkgray'       | (105, 105, 105)
 'maroon'         | (128, 0, 0)
 
-*[top](#top)*
