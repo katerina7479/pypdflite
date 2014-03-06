@@ -22,7 +22,7 @@ def ImageSizeTest():
     document.add_text("This is the image")
     document.add_newline(1)
 
-    mylogo = document.add_image("elephant.png")
+    mylogo = document.add_image("bin/apple_logo.png")
     document.draw_image(mylogo)
     document.add_newline(1)
 

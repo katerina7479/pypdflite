@@ -35,6 +35,10 @@ class _Session(object):
         self.compression = False
         self.drawn_color = None
         self.color = None
+        self.project_dir = os.path.dirname(__file__)
+
+        if '/modules' in self.project_dir:  # pypdflite is a submodule
+            self.project_dir, other = self.project_dir.split('/modules')
 
     # Compression
     def _set_compression(self, value):

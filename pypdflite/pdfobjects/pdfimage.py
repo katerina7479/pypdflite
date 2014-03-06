@@ -70,11 +70,12 @@ class PDFImage(object):
                 self.file = open(self.path, 'rb')
             except IOError:
                 try:
-                    path = os.path.join(self.session.project_dir, 'bin', self.path)
+                    path = os.path.join(self.session.project_dir, self.path)
                     self.file = open(path, 'rb')
                     self.path = path
                 except:
-                    raise Exception("Use absolute paths for images")
+                    path = os.path.join(self.session.project_dir, self.path)
+                    raise Exception("Can't open path: %s" % path)
 
     def _initialize(self):
         self._open_file()
@@ -82,7 +83,7 @@ class PDFImage(object):
         self.initial_data = str(self.file.read())
         self.file.close()
         if not self.initial_data:
-            raise Exception("Can't openimage file: ", self.path)
+            raise Exception("Can't open image file: ", self.path)
 
     def _read(self):
         pass

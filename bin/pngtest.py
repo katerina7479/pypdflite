@@ -23,7 +23,7 @@ def PNGTest():
     document.add_text("This should be before the image.")
     document.add_newline(1)
 
-    mylogo = document.add_image("bin/testing_colors.png")
+    mylogo = document.add_image("bin/example.png")
     document.draw_image(mylogo)
     document.add_newline(1)
 
