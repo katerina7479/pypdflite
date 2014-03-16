@@ -11,7 +11,7 @@ def LinesTest():
     writer = PDFLite("generated/LinesTest.pdf")
 
     # Set compression defaults to False
-    # writer.setCompression(True)
+    writer.set_compression(False)
 
     # Set document metadata
     writer.set_information(title="Testing Lines")  # set optional information

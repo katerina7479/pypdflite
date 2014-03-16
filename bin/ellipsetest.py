@@ -13,7 +13,7 @@ def EllipseTest():
     Functional test for drawing eclipses
     '''
     # Create PDFLite object
-    writer = PDFLite("generated/EclipseTest.pdf")
+    writer = PDFLite("generated/EllipseTest.pdf")
 
     # Set compression defaults to False
     writer.set_compression(False)
