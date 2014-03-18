@@ -39,7 +39,7 @@ class Font_Loader(object):
                 if ext == '.ttf':
                     if root[0].lower() in english:
                         source = os.path.join(dirName, item)
-                        name = root.lower()
+                        name = root.lower().replace('_', ' ')
                         if ' bold' in name:
                             name = name.replace(' bold', '_bold')
                             if ' italic' in name:
