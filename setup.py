@@ -6,7 +6,7 @@ setup(
     author='Katerina Hanson',
     author_email='katerina.hanson@gmail.com',
     packages=['pypdflite', 'pypdflite.pdfobjects'],
-    scripts=['bin/runexamples.py'],
+    scripts=['runexamples.py'],
     license='LICENSE.txt',
     description='Simple PDF Writer.',
     long_description=open('README.txt').read(),
