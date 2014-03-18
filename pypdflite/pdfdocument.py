@@ -354,7 +354,7 @@ class PDFDocument(object):
         rectangle = PDFRectangle(self.session, self.page,
                                  cursor1, cursor2,
                                  self.draw_color, self.fill_color,
-                                 style, size)
+                                 None, style, size)
 
         rectangle._draw()
 

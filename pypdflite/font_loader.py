@@ -26,7 +26,7 @@ class Font_Loader(object):
         self.search_path = search_path
 
     def get_ttf(self):
-        """ Given a search path, find file with requested extention """
+        """ Given a search path, find file with requested extension """
         font_dict = {}
         families = []
         rootdirlist = string.split(self.search_path, os.pathsep)

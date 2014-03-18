@@ -7,7 +7,7 @@ def ImageSizeTest():
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("generated/ImageSizeTest.pdf")
+    writer = PDFLite("ImageSizeTest.pdf")
 
     # If desired (in production code), set compression
     # writer.setCompression(True)

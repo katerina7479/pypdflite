@@ -9,7 +9,7 @@ from bin.pngtest import PNGTest
 from bin.jpgtest import JPGTest
 from bin.pagenumbertest import PageNumberTest
 from bin.pngsizetest import ImageSizeTest
-
+from bin.ellipsetest import EllipseTest
 
 def main():
     print "Running TextTest"
@@ -34,6 +34,8 @@ def main():
     PageNumberTest()
     print "Running PNGSizeTest"
     ImageSizeTest()
+    print "Running EllipseTest"
+    EllipseTest()
 
 
 if __name__ == '__main__':
