@@ -4,7 +4,7 @@ from pdfdraw import PDFDraw
 class PDFLine(PDFDraw):
 
     def __init__(self, session, page, cursor_start, cursor_end, color=None, style=None, size=1):
-        super(PDFLine, self).__init__(session, page, color, style, None, size)
+        super(PDFLine, self).__init__(session, page, color, style, size=size)
         self.start = cursor_start
         self.end = cursor_end
 

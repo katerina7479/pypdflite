@@ -19,3 +19,4 @@ v0.1.17, 02-07-2014 -- Bug Fix
 v0.1.18, 02-10-2014 -- Loaded fonts into memory, rather then pickle.
 v0.1.19, 02-11-2014 -- Changes based on writing documentation.
 v0.1.20, 03-14-2014 -- Fixed setup.py bug, runexamples.py
+v0.1.21, 03-14-2014 -- Merged pull request for ellipses
