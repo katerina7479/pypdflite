@@ -1,4 +1,5 @@
 
+from math import cos, tan, sin, pi
 
 class PDFText(object):
 
@@ -11,7 +12,6 @@ class PDFText(object):
         else:
             self.font = font
         self.color = color
-        self.color._set_type('t')
         if cursor is None:
             self.cursor = page.cursor
         else:
@@ -37,8 +37,14 @@ class PDFText(object):
             else:
                 # Escape and put in ()
                 text_string = self._text_to_string(self.text)
-                s = 'BT %.2f %.2f Td %s Tj ET' % (
-                    self.cursor.x, self.cursor.y_prime, text_string)
+                
+                if getattr(self, '_textMatrix', False):
+                    self.text_position(self.cursor.x, self.cursor.y_prime)
+                
+                s = 'BT '
+                s += getattr(self,'_textMatrix', '%.2f %.2f Td ' % (self.cursor.x, self.cursor.y_prime)) 
+                s += ' %s Tj ' % text_string
+                s += ' ET'
 
                 # Underline Flag
                 if(self.font.underline):
@@ -128,3 +134,33 @@ class PDFText(object):
     def _newline(self):
         self.cursor.y_plus(self.font.line_size)
         self.cursor.x_reset()
+
+    def _text_transform(self, a, b, c, d, e, f):
+        i, j, k, l, m, n = getattr(self, '_currentMatrix', (1., 0., 0., 1., 0., 0.))
+        # i j 0    a b 0    i*a + j*c    i*b + j*d    i*0+j*0
+        # k l 0 X  c d 0  = k*a + l*c    k*b + l*d    k*0+l*0
+        # m n 1    e f 1    m*a + n*c+e  m*b + n*d+f  
+        
+        a1,b1,c1,d1,e1,f1 = (i*a+j*c,    i*b+j*d,
+                             k*a+l*c,    k*b+l*d,
+                             m*a+n*c+e,  m*b+n*d+f)
+        self._textMatrix = '%.2f %.2f %.2f %.2f %.2f %.2f Tm' % (a1,b1,c1,d1,e1,f1)
+        print self._textMatrix
+        self._currentMatrix = (a1,b1,c1,d1,e1,f1)
+
+    def text_rotate (self, theta):
+        c = cos(theta * pi / 180)
+        s = sin(theta * pi / 180)
+        self._text_transform(c, s, -s, c, 0., 0.)
+
+
+    def text_scale(self, x, y):
+        self._text_transform(x,0,0,y,0,0)
+
+    def text_position(self, x, y):
+        self._text_transform(1., 0., 0., 1., x, y)
+
+    def text_skew(self, alpha, beta):
+        tanAlpha = tan(alpha * pi / 180)
+        tanBeta  = tan(beta  * pi / 180)
+        self._text_transform(1, tanAlpha, tanBeta, 1, 0, 0)        
