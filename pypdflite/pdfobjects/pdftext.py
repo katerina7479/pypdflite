@@ -141,21 +141,20 @@ class PDFText(object):
         # k l 0 X  c d 0  = k*a + l*c    k*b + l*d    k*0+l*0
         # m n 1    e f 1    m*a + n*c+e  m*b + n*d+f  
         
-        a1,b1,c1,d1,e1,f1 = (i*a+j*c,    i*b+j*d,
-                             k*a+l*c,    k*b+l*d,
-                             m*a+n*c+e,  m*b+n*d+f)
-        self._textMatrix = '%.2f %.2f %.2f %.2f %.2f %.2f Tm' % (a1,b1,c1,d1,e1,f1)
+        a1, b1, c1, d1, e1, f1 = (i * a + j * c, i * b + j * d,
+                                  k * a + l * c, k * b + l * d,
+                                  m * a + n * c + e, m * b + n * d + f)
+        self._textMatrix = '%.2f %.2f %.2f %.2f %.2f %.2f Tm' % (a1, b1, c1, d1, e1, f1)
         print self._textMatrix
-        self._currentMatrix = (a1,b1,c1,d1,e1,f1)
+        self._currentMatrix = (a1, b1, c1, d1, e1, f1)
 
     def text_rotate (self, theta):
         c = cos(theta * pi / 180)
         s = sin(theta * pi / 180)
         self._text_transform(c, s, -s, c, 0., 0.)
 
-
     def text_scale(self, x, y):
-        self._text_transform(x,0,0,y,0,0)
+        self._text_transform(x, 0, 0, y, 0, 0)
 
     def text_position(self, x, y):
         self._text_transform(1., 0., 0., 1., x, y)

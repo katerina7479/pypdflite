@@ -1,5 +1,6 @@
 from pdfdraw import PDFDraw
 
+
 class PDFRectangle(PDFDraw):
 
     def __init__(self, session, page, cursor_start, cursor_end, border_color=None, fill_color=None,
