@@ -3,14 +3,14 @@ from pypdflite.pdfobjects.pdfcolor import PDFColor
 
 
 def HtmlTest():
-    writer = PDFLite("htmltest.pdf")
+    writer = PDFLite("generated/HTMLtest.pdf")
     document = writer.get_document()
 
     document.add_text('Sample text')
     document.add_newline(2)
 
 
-    red = PDFColor("red")
+    red = PDFColor(name="red")
 
     normalfont = document.get_font()
     header1 = document.set_font('helvetica', style='B', size=24)
