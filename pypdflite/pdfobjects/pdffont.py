@@ -136,7 +136,7 @@ class PDFFont(object):
             self.session._out('<</Type /Font')
             self.session._out('/BaseFont /' + self.name)
             self.session._out('/Subtype /Type1')
-            if(self.name != 'Symbol' and self.name != 'ZapfDingbats'):
+            if self.name != 'Symbol' and self.name != 'ZapfDingbats':
                 self.session._out('/Encoding /WinAnsiEncoding')
             self.session._out('>>')
             self.session._out('endobj')

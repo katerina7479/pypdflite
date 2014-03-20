@@ -3,7 +3,6 @@ import struct
 import StringIO
 
 
-
 class PDFJPG(PDFImage):
 
     def __init__(self, *args, **kwargs):
@@ -18,12 +17,12 @@ class PDFJPG(PDFImage):
             b = jpeg.read(1)
             try:
                 w, h = 0, 0
-                while (b and ord(b) != 0xDA):
+                while b and ord(b) != 0xDA:
                     while ord(b) != 0xFF:
                         b = jpeg.read(1)
-                    while (ord(b) == 0xFF):
+                    while ord(b) == 0xFF:
                         b = jpeg.read(1)
-                    if ord(b) >= 0xC0 and ord(b) <= 0xC3:
+                    if 0xC0 <= ord(b) <= 0xC3:
                         jpeg.read(3)
                         h, w = struct.unpack(">HH", jpeg.read(4))
                         break

@@ -1,8 +1,8 @@
+import re
+import zlib
+from ..font_loader import FontLoader
 from pdffont import PDFFont
 from ttfonts import TTFontFile
-import re, zlib
-
-from ..font_loader import FontLoader
 
 
 class PDFTTFont(PDFFont):

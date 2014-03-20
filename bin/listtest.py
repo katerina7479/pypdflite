@@ -20,8 +20,6 @@ def ListTest():
     # Use get_document method to get the generated document object.
     document = writer.get_document()
 
-
-
     # Make a header
     document.set_font(family='helvetica', style='B', size=24)
     document.add_text("This is my list!")

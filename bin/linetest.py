@@ -16,7 +16,7 @@ def LinesTest():
     # Set document metadata
     writer.set_information(title="Testing Lines")  # set optional information
 
-    # Get documnet object
+    # Get document object
     document = writer.get_document()
 
     # Test add line by (x, y, x, y)

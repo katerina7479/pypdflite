@@ -1,5 +1,6 @@
 from pypdflite import PDFCursor
 
+
 def TestCursor():
     cursor1 = PDFCursor(20, 30)
     cursor2 = PDFCursor(22, 50)

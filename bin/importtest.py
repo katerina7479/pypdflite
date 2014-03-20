@@ -1,6 +1,7 @@
 from pypdflite import PDFLite
 from pypdflite import PDFColor
 
+
 def main():
     writer = PDFLite
     color = PDFColor('green')

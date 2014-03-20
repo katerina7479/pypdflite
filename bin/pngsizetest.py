@@ -35,7 +35,6 @@ def ImageSizeTest():
     document.draw_image(mylogo, width=300)
     document.add_newline(3)
 
-
     # Close writer
     writer.close()
 

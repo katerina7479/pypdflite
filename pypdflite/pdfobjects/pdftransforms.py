@@ -6,6 +6,7 @@ Created on Mar 16, 2014
 
 from math import cos, tan, sin, pi
 
+
 class PDFTransform(object):
     """
     classdocs
@@ -59,7 +60,7 @@ class PDFTransform(object):
         (a, b, c, d, e, f) = self._currentMatrix
         xp = a * x + c * y + e
         yp = b * x + d * y + f
-        return (xp, yp)
+        return xp, yp
 
     def translate(self, dx, dy):
         """move the origin from the current (0,0) point to the (dx,dy) point

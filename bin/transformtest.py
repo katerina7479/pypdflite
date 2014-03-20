@@ -1,5 +1,4 @@
 from pypdflite.pdflite import PDFLite
-from pypdflite.pdfobjects.pdftransforms import PDFTransform
 from pypdflite.pdfobjects.pdftext import PDFText
 
 
@@ -19,51 +18,49 @@ def TransformTest():
     document.add_text("Transform test")
     
     document.add_newline(4)
-    
-    
-    text = PDFText (document.session, document.page, None)
+
+    text = PDFText(document.session, document.page, None)
     text._text('transform')
     
     text.cursor.x_plus(20)
     text.text_rotate(90)
     text._text('transform')
     
-    text = PDFText (document.session, document.page, None)
+    text = PDFText(document.session, document.page, None)
     text.cursor.x_plus(20)
     text.text_rotate(180)
     text._text('transform')
     
-    text = PDFText (document.session, document.page, None)
+    text = PDFText(document.session, document.page, None)
     text.cursor.x_plus(20)
     text.text_rotate(-90)
     text._text('transform')
     
     document.add_newline(5)
 
-    text = PDFText (document.session, document.page, None)
+    text = PDFText(document.session, document.page, None)
     text._text('transform  ')
     text.text_scale(2, 0.5)
     text._text('transform')
 
     document.add_newline(2)
-    text = PDFText (document.session, document.page, None)
+    text = PDFText(document.session, document.page, None)
     text._text('transform  ')
     text.text_scale(0.5, 2)
     text._text('transform')
 
     document.add_newline(2)
-    text = PDFText (document.session, document.page, None)
+    text = PDFText(document.session, document.page, None)
     text._text('transform  ')
     text.text_skew(30, 0)
     text._text('transform')
 
     document.add_newline(2)
-    text = PDFText (document.session, document.page, None)
+    text = PDFText(document.session, document.page, None)
     text._text('transform  ')
     text.text_skew(0, 30)
     text._text('transform')
 
-    
     # Close writer
     writer.close()
 

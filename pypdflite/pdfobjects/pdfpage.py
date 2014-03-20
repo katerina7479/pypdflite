@@ -42,7 +42,7 @@ class PDFPage(object):
     # Page may be retrieved and manipulated using these:
     def set_orientation(self, orientation="P"):
         self.orientation = orientation.lower()
-        if(self.orientation == 'p' or self.orientation == 'portrait'):
+        if self.orientation == 'p' or self.orientation == 'portrait':
             self.size = self.page_size
         elif self.orientation == 'l' or self.orientation == 'landscape':
             self.size = (self.page_size[1], self.page_size[0])

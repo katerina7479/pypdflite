@@ -43,9 +43,9 @@ class PDFCell(object):
                 if any(s in numf for s in ['comma', ',']):
                     self.text = str('{:,}'.format(int(self.text)))
                 if any(s in numf for s in ['percent', '%']):
-                    self.text = '%s \%' % self.text
+                    self.text = '%s %' % self.text
                 if any(s in numf for s in ['$', 'money', 'dollar']):
-                    self.text = '$%s' % (self.text)
+                    self.text = '$%s' % self.text
 
     def _draw_text(self):
         if self.text == '' or self.text is None:

@@ -48,7 +48,6 @@ def TableTest():
     mytable.write_row(1, 0, data[1], justleft)
     mytable.write_row(2, 0, data[2], green_format)
 
-
     document.draw_table(mytable)
     document.add_newline(4)
     document.add_text("Testing followup text")

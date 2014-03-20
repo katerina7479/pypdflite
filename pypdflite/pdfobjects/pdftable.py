@@ -102,7 +102,7 @@ class PDFTable(object):
             self.rows[i]._draw_fill()
 
     def _set_final_cursor(self):
-        if self.text_cursor > (self.border_cursor):
+        if self.text_cursor > self.border_cursor:
             self.cursor = self.text_cursor
         else:
             self.cursor = self.border_cursor

@@ -200,7 +200,7 @@ class PDFDocument(object):
 
         self.font.is_set = False
 
-        if(self.page.index > 0):
+        if self.page.index > 0:
                 self.session._out('BT /F%d %.2f Tf ET' %
                                   (self.font.index, self.font.font_size),
                                   self.page)
@@ -216,7 +216,7 @@ class PDFDocument(object):
 
     def set_font_size(self, size):
         """Convenience method for just changing font size."""
-        if(self.font.font_size == size):
+        if self.font.font_size == size:
             pass
         else:
             self.font._set_size(size)

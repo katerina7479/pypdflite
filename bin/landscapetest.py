@@ -3,7 +3,7 @@ from pypdflite.pdflite import PDFLite
 
 def LandscapeTest():
 
-    """ Test landscape orentation & background images.
+    """ Test landscape orientation & background images.
 
     """
 

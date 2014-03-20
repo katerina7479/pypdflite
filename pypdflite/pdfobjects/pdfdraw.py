@@ -7,9 +7,9 @@ from pdfcolor import PDFColor
 
 
 class PDFDraw(object):
-    '''
+    """
     Base class for the drawing classes: PDFLine, PDFRectangle, PDFEllipse
-    '''
+    """
 
     def __init__(self, session, page, color=None, style=None, stroke=None, size=1):
         # S is plain, B is filled with border, F is filled no border.

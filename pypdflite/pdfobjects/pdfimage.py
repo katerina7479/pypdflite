@@ -9,6 +9,8 @@ class PDFImage(object):
 
     def __init__(self, session, path, name):
 
+        self.pal = None
+        self.palette_length = None
         self.session = session
         self.path = path
         self.name = name
@@ -104,7 +106,7 @@ class PDFImage(object):
         f = self.file
 
         f.read(12)
-        if(f.read(4) != 'IHDR'):
+        if f.read(4) != 'IHDR':
             raise Exception('Image is broken')
         w = struct.unpack('>HH', f.read(4))[1]
         h = struct.unpack('>HH', f.read(4))[1]
@@ -118,13 +120,13 @@ class PDFImage(object):
 
         # Find ct
         self.ct = ord(f.read(1))
-        if(self.ct == 0 or self.ct == 4):
+        if self.ct == 0 or self.ct == 4:
             self.colorspace = 'DeviceGray'
             coord = 1
-        elif(self.ct == 2 or self.ct == 6):
+        elif self.ct == 2 or self.ct == 6:
             self.colorspace = 'DeviceRGB'
             coord = 3
-        elif(self.ct == 3):
+        elif self.ct == 3:
             self.colorspace = 'Indexed'
             coord = 1
         else:

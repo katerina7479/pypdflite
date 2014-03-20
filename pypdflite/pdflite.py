@@ -84,7 +84,7 @@ class PDFLite(object):
         self.zoom_options = ["fullpage", "fullwidth", "real", "default"]
         self.layout_options = ["single", "continuous", "two", "default"]
 
-        if zoom in self.zoom_options or (isinstance(zoom, int) and zoom > 0 and zoom <=100):
+        if zoom in self.zoom_options or (isinstance(zoom, int) and 0 < zoom <= 100):
             self.zoom_mode = zoom
         else:
             raise Exception('Incorrect zoom display mode: ' + zoom)
@@ -223,22 +223,22 @@ class PDFLite(object):
 
         self.session._out('/Type /Catalog')
         self.session._out('/Pages 1 0 R')
-        if(self.zoom_mode == 'fullpage'):
+        if self.zoom_mode == 'fullpage':
             self.session._out('/OpenAction [3 0 R /Fit]')
-        elif(self.zoom_mode == 'fullwidth'):
+        elif self.zoom_mode == 'fullwidth':
             self.session._out('/OpenAction [3 0 R /FitH null]')
-        elif(self.zoom_mode == 'real'):
+        elif self.zoom_mode == 'real':
             self.session._out('/OpenAction [3 0 R /XYZ null null 1]')
-        elif(not isinstance(self.zoom_mode, basestring)):
+        elif not isinstance(self.zoom_mode, basestring):
             self.session._out(
                 '/OpenAction [3 0 R /XYZ null null ' +
                 (self.zoom_mode / 100) + ']')
 
-        if(self.layout_mode == 'single'):
+        if self.layout_mode == 'single':
             self.session._out('/PageLayout /SinglePage')
-        elif(self.layout_mode == 'continuous'):
+        elif self.layout_mode == 'continuous':
             self.session._out('/PageLayout /OneColumn')
-        elif(self.layout_mode == 'two'):
+        elif self.layout_mode == 'two':
             self.session._out('/PageLayout /TwoColumnLeft')
         self.session._out('>>')
         self.session._out('endobj')
