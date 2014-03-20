@@ -1,5 +1,5 @@
 from datetime import datetime
-from font_loader import Font_Loader
+from font_loader import FontLoader
 from session import _Session
 from .pdfdocument import PDFDocument
 
@@ -23,11 +23,11 @@ class PDFLite(object):
 
     def __init__(self, filepath, orientation="P", layout="letter", font_list=None, font_dir=None):
         if font_dir is not None:
-            Font_Loader.load_from_dir(font_dir)
+            FontLoader.load_from_dir(font_dir)
         elif font_list is not None:
-            Font_Loader.load_from_list(font_list)
+            FontLoader.load_from_list(font_list)
         else:
-            Font_Loader.load_fonts()
+            FontLoader.load_fonts()
 
         self.filepath = filepath
         self.destination = None
@@ -84,7 +84,7 @@ class PDFLite(object):
         self.zoom_options = ["fullpage", "fullwidth", "real", "default"]
         self.layout_options = ["single", "continuous", "two", "default"]
 
-        if zoom in self.zoom_options:
+        if zoom in self.zoom_options or (isinstance(zoom, int) and zoom > 0 and zoom <=100):
             self.zoom_mode = zoom
         else:
             raise Exception('Incorrect zoom display mode: ' + zoom)
@@ -123,7 +123,7 @@ class PDFLite(object):
 
     # Private Methods for building the PDF
     def _put_header(self):
-        " Standard first line in a PDF. "
+        """ Standard first line in a PDF. """
         self.session._out('%%PDF-%s' % self.pdf_version)
 
     def _put_pages(self):
@@ -195,7 +195,7 @@ class PDFLite(object):
         self.session._out('endobj')
 
     def _put_information(self):
-        "PDF Information object."
+        """PDF Information object."""
         self.session._add_object()
         self.session._out('<<')
         self.session._out('/Producer ' + self._text_to_string(
@@ -217,7 +217,7 @@ class PDFLite(object):
         self.session._out('endobj')
 
     def _put_catalog(self):
-        "Catalog object."
+        """Catalog object."""
         self.session._add_object()
         self.session._out('<<')
 
@@ -248,7 +248,7 @@ class PDFLite(object):
             the position in bytes to the start
             (first number) of each object in
             order by number (zero is special)
-            from the begining of the file.
+            from the beginning of the file.
 
         """
         self.session._out('xref')

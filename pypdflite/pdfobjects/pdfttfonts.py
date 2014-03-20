@@ -1,16 +1,16 @@
 from pdffont import PDFFont
 from ttfonts import TTFontFile
 import re, zlib
-import os
-from ..font_loader import Font_Loader
+
+from ..font_loader import FontLoader
 
 
 class PDFTTFont(PDFFont):
     def __init__(self, session, family='arial', style=None, size=20):
         self.session = session
 
-        self.FAMILIES = Font_Loader.families
-        self.TTFONTS = Font_Loader.font_dict
+        self.FAMILIES = FontLoader.families
+        self.TTFONTS = FontLoader.font_dict
 
         self.is_set = False
         self.font_size = None
@@ -44,7 +44,7 @@ class PDFTTFont(PDFFont):
         pass
 
     def _set_font(self, family=None, style=None, size=None):
-        "Select a font; size given in points"
+        """Select a font; size given in points"""
         if style is not None:
             if 'B' in style:
                 family += '_bold'
@@ -84,7 +84,7 @@ class PDFTTFont(PDFFont):
         pass
 
     def _string_width(self, s):
-        "Get width of a string in the current font"
+        """Get width of a string in the current font"""
         s = str(s)
         w = 0
         for char in s:
@@ -119,7 +119,7 @@ class PDFTTFont(PDFFont):
         for i in xrange(32, 256):
             try:
                 s += str(cw[i]) + ' '
-            except:
+            except KeyError:
                 s += '0 '
         self.session._out(s + ']')
         self.session._out('endobj')
@@ -142,7 +142,7 @@ class PDFTTFont(PDFFont):
         self.file = zlib.compress(self.file)
         self.length = len(self.file)
 
-        obj = self.session._add_object()
+        self.session._add_object()
         self.session._out('<</Length ' + str(self.length))
         self.session._out('/Filter /FlateDecode')
         self.session._out('/Length1 ' + str(self.length1))

@@ -1,7 +1,8 @@
 import os
-import struct, StringIO
+import struct
 import urllib
-import zlib, re
+import zlib
+import re
 
 
 class PDFImage(object):
@@ -133,7 +134,6 @@ class PDFImage(object):
         self.decode = '/Predictor 15 /Colors %s /BitsPerComponent %s /Columns %s' \
                       % (coord, self.bits_per_component, self.width)
 
-        n = 1
         test_n = 1
         while True:
             last_pos = f.tell()

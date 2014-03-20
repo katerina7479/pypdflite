@@ -10,7 +10,7 @@ class PDFCursor(object):
             Adobe sets the origin. They place the origin at the lower
             left hand corner, and y increases from the bottom to the
             top of the page. I feel that their way required more explanation,
-            and was less intuitive. THerefore, I have provided the y_prime
+            and was less intuitive. Therefore, I have provided the y_prime
             property for use in outputting the cursor data at document
             generation.
 
@@ -83,14 +83,14 @@ class PDFCursor(object):
         return self.ymax - self.y
 
     def x_fit(self, test_length):
-        " Test to see if the line can has enough space for the given length. "
+        """ Test to see if the line can has enough space for the given length. """
         if (self.x + test_length) >= self.xmax:
             return False
         else:
             return True
 
     def y_fit(self, test_length):
-        " Test to see if the page has enough space for the given text height. "
+        """ Test to see if the page has enough space for the given text height. """
         if (self.y + test_length) >= self.ymax:
             return False
         else:
@@ -98,24 +98,25 @@ class PDFCursor(object):
 
     @property
     def x_left(self):
-        " Space remaining on line. "
+        """ Space remaining on line. """
         return self.xmax - self.x
 
     @property
     def y_left(self):
-        " Space remaining on page. "
+        """ Space remaining on page. """
         return self.ymax - self.y
 
     # Equality methods
-    def _is_coordinate(self, test_ordinate):
-        " Test to see if object is a proper PDFCursor. "
+    @staticmethod
+    def _is_coordinate(test_ordinate):
+        """ Test to see if object is a proper PDFCursor. """
         if isinstance(test_ordinate, PDFCursor):
             return True
         else:
             raise Exception("Not a valid PDFCursor object")
 
     def x_is_greater_than(self, test_ordinate):
-        " Comparison for x coordinate"
+        """ Comparison for x coordinate"""
         self._is_coordinate(test_ordinate)
         if self.x > test_ordinate.x:
             return True
@@ -123,7 +124,7 @@ class PDFCursor(object):
             return False
 
     def y_is_greater_than(self, test_ordinate):
-        "Comparison for y coordinate"
+        """Comparison for y coordinate"""
         self._is_coordinate(test_ordinate)
         if self.y > test_ordinate.y:
             return True
@@ -131,7 +132,7 @@ class PDFCursor(object):
             return False
 
     def __gt__(self, test_ordinate):
-        " Comparison for both ordinates, prioritizing the y direction. "
+        """ Comparison for both ordinates, prioritizing the y direction. """
         self._is_coordinate(test_ordinate)
         if self.y > test_ordinate.y:
             return True
@@ -142,7 +143,7 @@ class PDFCursor(object):
             return False
 
     def __eq__(self, test_ordinate):
-        " Test to see if coordinates are equal to each other. "
+        """ Test to see if coordinates are equal to each other. """
         self._is_coordinate(test_ordinate)
         if self.y == test_ordinate.y:
             if self.x == test_ordinate.x:
@@ -151,7 +152,7 @@ class PDFCursor(object):
             return False
 
     def __lt__(self, test_ordinate):
-        " Comparison for both ordinates, prioritizing the y direction."
+        """ Comparison for both ordinates, prioritizing the y direction."""
         self._is_coordinate(test_ordinate)
         if self.y < test_ordinate.y:
             return True
@@ -163,56 +164,56 @@ class PDFCursor(object):
 
     # Returns a new cursor
     def copy(self):
-        " Create a copy, and return it."
+        """ Create a copy, and return it."""
         new_cursor = self.__class__(self.x, self.y)
         new_cursor.set_bounds(self.xmin, self.ymin, self.xmax, self.ymax)
         new_cursor.set_deltas(self.dx, self.dy)
         return new_cursor
 
     def __add__(self, add_ordinate):
-        " Add two coordinates to each other, return new coordinate. "
+        """ Add two coordinates to each other, return new coordinate. """
         self._is_coordinate(add_ordinate)
         x = self.x + add_ordinate.x
         y = self.y + add_ordinate.y
         return self.__class__(x, y)
 
     def __sub__(self, sub_ordinate):
-        " Subtract two coordinates from each other, suppress negatives. "
+        """ Subtract two coordinates from each other, suppress negatives. """
         self._is_coordinate(sub_ordinate)
         x = abs(self.x - sub_ordinate.x)
         y = abs(self.y - sub_ordinate.y)
         return self.__class__(x, y)
 
     def __mul__(self, scale):
-        " Return scaled coordinate"
+        """ Return scaled coordinate"""
         scale = float(scale)
         x = self.x * scale
         y = self.y * scale
         return self.__class__(x, y)
 
     def invert(self):
-        " Return inverse coordinate. "
+        """ Return inverse coordinate. """
         return self.__class__(self.y, self.x)
 
     # Changes this cursor
     def x_plus(self, dx=None):
-        " Mutable x addition. Defaults to set delta value. "
+        """ Mutable x addition. Defaults to set delta value. """
         if dx is None:
-            self.x = self.x + self.dx
+            self.x += self.dx
         else:
             self.x = self.x + dx
 
     def y_plus(self, dy=None):
-        " Mutable y addition. Defaults to set delta value. "
+        """ Mutable y addition. Defaults to set delta value. """
         if dy is None:
-            self.y = self.y + self.dy
+            self.y += self.dy
         else:
             self.y = self.y + dy
 
     def x_reset(self):
-        " Resets x to xmin."
+        """ Resets x to xmin."""
         self.x = self.xmin
 
     def y_reset(self):
-        " Resets y to ymin."
+        """ Resets y to ymin."""
         self.y = self.ymin

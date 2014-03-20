@@ -1,8 +1,7 @@
-from os.path import splitext
 from pdfimage import PDFImage
-import struct, StringIO
-import urllib
-import zlib, re
+import struct
+import StringIO
+
 
 
 class PDFJPG(PDFImage):
@@ -18,12 +17,13 @@ class PDFJPG(PDFImage):
             jpeg.read(2)
             b = jpeg.read(1)
             try:
+                w, h = 0, 0
                 while (b and ord(b) != 0xDA):
-                    while (ord(b) != 0xFF):
+                    while ord(b) != 0xFF:
                         b = jpeg.read(1)
                     while (ord(b) == 0xFF):
                         b = jpeg.read(1)
-                    if (ord(b) >= 0xC0 and ord(b) <= 0xC3):
+                    if ord(b) >= 0xC0 and ord(b) <= 0xC3:
                         jpeg.read(3)
                         h, w = struct.unpack(">HH", jpeg.read(4))
                         break

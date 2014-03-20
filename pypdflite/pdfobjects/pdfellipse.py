@@ -1,16 +1,16 @@
-'''
+"""
 Created on Mar 15, 2014
 
 @author: tjoneslo
-'''
+"""
 from pdfdraw import PDFDraw
 
 class PDFEllipse(PDFDraw):
-    '''
-    Draw an elipse or circle using the Bezier Cubic Splines
-    present in the PDF primitives. 
+    """
+    Draw an ellipse or circle using the Bezier Cubic Splines
+    present in the PDF primitives.
     See: http://www.tinaja.com/glib/ellipse4.pdf
-    '''
+    """
 
     def __init__(self, session, page, cursor_center, cursor_radius, border_color=None, fill_color=None, style=None, stroke=None, size=1):
         super(PDFEllipse, self).__init__(session, page, border_color, style, stroke, size)
@@ -19,7 +19,7 @@ class PDFEllipse(PDFDraw):
         self.magic = 0.551787
         self.fill_color = fill_color
 
-    def _draw (self):
+    def _draw(self):
         self._draw_colors()
         self._draw_line_size()
         xmagic = self.radius.x * self.magic

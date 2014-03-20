@@ -1,14 +1,14 @@
-'''
+"""
 Created on Mar 15, 2014
 
 @author: tjoneslo
-'''
+"""
 from pdfcolor import PDFColor
 
 
 class PDFDraw(object):
     '''
-    Base class for the drawing classes: PDFLine, PDFRectangle, PDFElipse
+    Base class for the drawing classes: PDFLine, PDFRectangle, PDFEllipse
     '''
 
     def __init__(self, session, page, color=None, style=None, stroke=None, size=1):
@@ -35,7 +35,7 @@ class PDFDraw(object):
         else:
             self.style = "solid"
 
-    def _set_stroke (self, stroke='S'):
+    def _set_stroke(self, stroke='S'):
         stroke = stroke.upper() if stroke is not None else 'S'
         self.stroke = stroke if stroke in self.stroke_list else 'S'
         
@@ -64,7 +64,6 @@ class PDFDraw(object):
 
     def _draw_line_size(self):
         self.session._out('%.2f w' % self.line_size, self.page)
-
 
     def _draw(self):
         raise NotImplementedError

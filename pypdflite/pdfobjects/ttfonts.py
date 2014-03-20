@@ -16,7 +16,7 @@
 #
 #******************************************************************************
 
-from struct import pack, unpack, unpack_from
+from struct import pack, unpack
 import re
 
 _TTF_MAC_HEADER = False
@@ -39,11 +39,11 @@ def sub32(x, y):
         xlo += 1 << 16
         yhi += 1
     reslo = xlo - ylo
-    if (yhi > xhi):
+    if yhi > xhi:
         xhi += 1 << 16
     reshi = xhi - yhi
     reshi = reshi & 0xFFFF
-    return (reshi, reslo)
+    return reshi, reslo
 
 
 def calcChecksum(data):
@@ -63,7 +63,7 @@ def calcChecksum(data):
 class TTFontFile:
 
     def __init__(self):
-        self.maxStrLenRead = 200000     # Maximum size of glyf table to read in
+        self.maxStrLenRead = 200000     # Maximum size of glyph table to read in
                                         # as string (otherwise reads each glyph
                                         # from file)
 
@@ -332,8 +332,8 @@ class TTFontFile:
             self.skip(2)
             fsType = self.read_ushort()
             if (fsType == 0x0002 or (fsType & 0x0300) != 0):
-                raise Exception('ERROR - Font file ' + self.filename + ' cannot be embedded due to copyright restrictions.')
                 self.restrictedUse = True
+                raise Exception('ERROR - Font file ' + self.filename + ' cannot be embedded due to copyright restrictions.')
 
             self.skip(20)
             sF = self.read_short()
@@ -389,7 +389,7 @@ class TTFontFile:
         self.skip(32)
         metricDataFormat = self.read_ushort()
         if (metricDataFormat != 0):
-            raise Exception('Unknown horizontal metric data format '.metricDataFormat)
+            raise Exception('Unknown horizontal metric data format ', metricDataFormat)
         numberOfHMetrics = self.read_ushort()
         if (numberOfHMetrics == 0):
             raise Exception('Number of horizontal metrics is 0')
@@ -436,7 +436,6 @@ class TTFontFile:
 
 ############################################/
 ############################################/
-
     def makeSubset(self, file, subset):
         self.filename = file
         self.fh = open(file, 'rb')
@@ -466,7 +465,7 @@ class TTFontFile:
         self.seek_table("hhea")
         self.skip(32)
         metricDataFormat = self.read_ushort()
-        orignHmetrics = numberOfHMetrics = self.read_ushort()
+        originHmetrics = numberOfHMetrics = self.read_ushort()
 
         #################/
         # maxp - Maximum profile table
@@ -669,7 +668,7 @@ class TTFontFile:
 
         for originalGlyphIdx, uni in subsetglyphs:
             # hmtx - Horizontal Metrics
-            hm = self.getHMetric(orignHmetrics, originalGlyphIdx)
+            hm = self.getHMetric(originHmetrics, originalGlyphIdx)
             hmtxstr += hm
 
             offsets.append(pos)
@@ -787,9 +786,9 @@ class TTFontFile:
 
         nonlocals['depth'] -= 1
 
-
     #########################################
     # Recursively get composite glyphs
+    #########################################
     def getGlyphs(self, originalGlyphIdx, nonlocals):
         # &start, &glyphSet, &subsetglyphs)
 
@@ -956,7 +955,6 @@ class TTFontFile:
                 if (unichar < 196608):
                     self.maxUniChar = max(unichar, self.maxUniChar)
                 glyphToChar.setdefault(glyph, []).append(unichar)
-
 
     # Put the TTF file together
     def endTTFile(self, stm):

@@ -10,6 +10,7 @@ LINUX_SEARCH_PATH = '/usr/share/fonts'
 
 english = 'abcdefghijklmnopqrstuvwxyz'
 
+
 class Singleton(type):
     _instances = {}
 
@@ -19,7 +20,7 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-class Font_Loader(object):
+class FontLoader(object):
     __metaclass__ = Singleton
 
     def __init__(self, search_path=None):
@@ -31,8 +32,8 @@ class Font_Loader(object):
         families = []
         rootdirlist = string.split(self.search_path, os.pathsep)
 
-        for rootdir in rootdirlist:
-            rootdir = os.path.expanduser(rootdir)
+        #for rootdir in rootdirlist:
+        #    rootdir = os.path.expanduser(rootdir)
         for dirName, subdirList, filelist in itertools.chain.from_iterable(os.walk(path) for path in rootdirlist):
             for item in filelist:
                 root, ext = os.path.splitext(item)
@@ -83,4 +84,4 @@ class Font_Loader(object):
         self.load_fonts()
 
 
-Font_Loader = Font_Loader()
+FontLoader = FontLoader()

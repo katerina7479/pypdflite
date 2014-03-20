@@ -1,6 +1,5 @@
 from pdfrow import PDFRow
 from pdfcolumn import PDFColumn
-from pdfcell import PDFCell
 
 
 class PDFTable(object):
@@ -23,7 +22,6 @@ class PDFTable(object):
 
         for x in range(self.number_of_columns):
             self.columns.append(PDFColumn(parent=self))
-
 
         for x in range(self.number_of_rows):
             self.rows.append(PDFRow(self, x, self.number_of_columns,

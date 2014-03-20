@@ -1,5 +1,5 @@
 from pdfobjects.pdfobject import _PDFObject
-import sys, os
+import os
 
 
 class _Session(object):
@@ -71,7 +71,7 @@ class _Session(object):
             Used for overwriting the placeholder objects.
 
         """
-        self.offset = self.offset + len(self.buffer)
+        self.offset += len(self.buffer)
         if flag is None:
             objnum = len(self.objects)
             obj = _PDFObject(objnum, self.offset)
@@ -119,7 +119,8 @@ class _Session(object):
         self.parent.document.add_text(text)
 
     # Strings
-    def _UTF8toUTF16(self, utf8, setbom=True):
+    @staticmethod
+    def _UTF8toUTF16(utf8, setbom=True):
         result = ''
         if setbom:
             result = '\xFE\xFF'

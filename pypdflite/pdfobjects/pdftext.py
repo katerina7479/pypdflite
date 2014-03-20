@@ -1,5 +1,5 @@
-
 from math import cos, tan, sin, pi
+
 
 class PDFText(object):
 
@@ -42,12 +42,12 @@ class PDFText(object):
                     self.text_position(self.cursor.x, self.cursor.y_prime)
                 
                 s = 'BT '
-                s += getattr(self,'_textMatrix', '%.2f %.2f Td ' % (self.cursor.x, self.cursor.y_prime)) 
+                s += getattr(self, '_textMatrix', '%.2f %.2f Td ' % (self.cursor.x, self.cursor.y_prime))
                 s += ' %s Tj ' % text_string
                 s += ' ET'
 
                 # Underline Flag
-                if(self.font.underline):
+                if self.font.underline:
                     s = '%s %s' % (s, self._underline())
 
                 # See if the text color is the same as the written
@@ -115,7 +115,8 @@ class PDFText(object):
         txt = "(%s)" % txt
         return str(txt)
 
-    def _escape(self, text):
+    @staticmethod
+    def _escape(text):
         for i, j in {'\\': '\\\\'}.iteritems():
             text = text.replace(i, j)
         for i, j in {')': '\)', '(': '\('}.iteritems():
@@ -145,10 +146,10 @@ class PDFText(object):
                                   k * a + l * c, k * b + l * d,
                                   m * a + n * c + e, m * b + n * d + f)
         self._textMatrix = '%.2f %.2f %.2f %.2f %.2f %.2f Tm' % (a1, b1, c1, d1, e1, f1)
-        print self._textMatrix
+        #print self._textMatrix
         self._currentMatrix = (a1, b1, c1, d1, e1, f1)
 
-    def text_rotate (self, theta):
+    def text_rotate(self, theta):
         c = cos(theta * pi / 180)
         s = sin(theta * pi / 180)
         self._text_transform(c, s, -s, c, 0., 0.)
@@ -160,6 +161,6 @@ class PDFText(object):
         self._text_transform(1., 0., 0., 1., x, y)
 
     def text_skew(self, alpha, beta):
-        tanAlpha = tan(alpha * pi / 180)
-        tanBeta  = tan(beta  * pi / 180)
-        self._text_transform(1, tanAlpha, tanBeta, 1, 0, 0)        
+        tan_alpha = tan(alpha * pi / 180)
+        tan_beta = tan(beta * pi / 180)
+        self._text_transform(1, tan_alpha, tan_beta, 1, 0, 0)

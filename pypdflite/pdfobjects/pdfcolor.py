@@ -57,7 +57,7 @@ class PDFColor(object):
         self.blue = self.value[2]
 
     def _is_equal(self, test_color):
-        "Equality test"
+        """Equality test"""
         if test_color is None:
             ans = False
         elif test_color.color_type != self.color_type:
@@ -73,8 +73,9 @@ class PDFColor(object):
         return ans
 
     def _get_color_string(self):
-        "Adobe output string for defining colors"
-        if self.color_type == "d":
+        """Adobe output string for defining colors"""
+        s = ''
+        if self.color_type == 'd':
             if self.name is "black":
                 s = '%.3f G' % 0
             else:

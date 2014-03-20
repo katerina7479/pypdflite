@@ -1,4 +1,4 @@
-import os, sys
+import os
 from pdfobjects.pdffont import PDFFont, CORE_FONTS
 from pdfobjects.pdfpage import PDFPage
 from pdfobjects.pdftext import PDFText
@@ -34,7 +34,7 @@ class PDFDocument(object):
     """
 
     def __init__(self, session, orientation, layout):
-        "Sets up a standard default document."
+        """Sets up a standard default document."""
         self.session = session
         self.pages = []
         self.fonts = []
@@ -54,7 +54,7 @@ class PDFDocument(object):
 
     # Set Defaults
     def _set_defaults(self):
-        "Set color scheme & font to defaults."
+        """Set color scheme & font to defaults."""
         self._set_color_scheme()
         self._set_default_font()
         self.add_page()     # add first page
@@ -98,7 +98,8 @@ class PDFDocument(object):
         self.fonts.append(self.font)
         self.fontkeys.append(self.font.font_key)
 
-    def get_color(self):
+    @staticmethod
+    def get_color():
         return PDFColor()
 
     # Public methods, main interface
@@ -120,7 +121,7 @@ class PDFDocument(object):
         self.session._reset_colors()
 
     def get_page(self):
-        "Returns reference to current page object."
+        """Returns reference to current page object."""
         return self.page
 
     def set_margins(self, left, top=None, right=None, bottom=None):
@@ -144,7 +145,7 @@ class PDFDocument(object):
 
     # Cursor
     def get_new_cursor(self):
-        " Returns a new default cursor "
+        """ Returns a new default cursor """
         return PDFCursor()
 
     def get_cursor(self):
@@ -214,7 +215,7 @@ class PDFDocument(object):
         return self.font
 
     def set_font_size(self, size):
-        "Convinence method for just changing font size."
+        """Convenience method for just changing font size."""
         if(self.font.font_size == size):
             pass
         else:
@@ -237,10 +238,10 @@ class PDFDocument(object):
         if '\n' in text:
             text_list = text.split('\n')
             for text in text_list:
-                text = PDFText(self.session, self.page, text, self.font, self.text_color, cursor)
+                PDFText(self.session, self.page, text, self.font, self.text_color, cursor)
                 self.add_newline()
         else:
-            text = PDFText(self.session, self.page, text, self.font, self.text_color, cursor)
+            PDFText(self.session, self.page, text, self.font, self.text_color, cursor)
 
     def add_newline(self, number=1):
         """ Starts over again at the new line. If number is specified,
@@ -267,6 +268,7 @@ class PDFDocument(object):
         self.set_cursor(self.page.cursor.x - self.px, self.page.cursor.y)
 
     def add_list(self, *args, **kwargs):
+        bullet_code = 149
         if 'bullet' in kwargs:
             if kwargs['bullet'] == 1:
                 bullet_code = 149
@@ -274,15 +276,13 @@ class PDFDocument(object):
                 bullet_code = 186
             elif kwargs['bullet'] == 3:
                 bullet_code = 150
-        else:
-            bullet_code = 149
 
         char = chr(bullet_code)
 
         if 'force' in kwargs and kwargs['force'] is True:
             saved_font = self.get_font()
             for arg in args:
-                helvetica = self.set_font(family='helvetica', size=saved_font.font_size)
+                self.set_font(family='helvetica', size=saved_font.font_size)
                 self.add_text(char)
                 self.set_font(saved_font)
                 self.add_text(' %s' % arg)
@@ -331,7 +331,7 @@ class PDFDocument(object):
                 pass
             elif width is not None and height is not None:
                 dims = PDFCursor(width, height)
-                cursor2 = cursor1.add(dims)
+                cursor2 = cursor1 + dims
             elif x2 is not None and y2 is not None:
                 cursor2 = PDFCursor(x2, y2)
             else:
@@ -343,7 +343,7 @@ class PDFDocument(object):
                     cursor2 = PDFCursor(x2, y2)
                 elif width is not None and height is not None:
                     dims = PDFCursor(width, height)
-                    cursor2 = cursor1.add(dims)
+                    cursor2 = cursor1 + dims
                 elif cursor2 is not None:
                     pass
                 else:
@@ -537,7 +537,7 @@ class PDFDocument(object):
         if hasattr(font, 'diffs') and font.diffs is not None:
             try:
                 index_of_diff = self.diffs.index(font.diffs)
-            except:
+            except AttributeError:
                 index_of_diff = len(self.diffs) + 1
                 self.diffs.append(font.diffs)
             font.diff_number = index_of_diff
@@ -563,8 +563,8 @@ class PDFDocument(object):
 
     def _output_encoding_diffs(self):
         if self.diffs:
-            for diff in self.diffs:
-                obj = self.session._add_object()
+            for _ in self.diffs:
+                self.session._add_object()
                 self.session._out('<</Type /Encoding /BaseEncoding /WinAnsiEncoding /Differences [%s]>>')
                 self.session._out('endobj')
 

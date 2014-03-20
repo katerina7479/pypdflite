@@ -1,5 +1,5 @@
-
 from pdfdraw import PDFDraw
+
 
 class PDFLine(PDFDraw):
 
@@ -7,7 +7,6 @@ class PDFLine(PDFDraw):
         super(PDFLine, self).__init__(session, page, color, style, size=size)
         self.start = cursor_start
         self.end = cursor_end
-
 
     def _draw(self):
         self._draw_color()

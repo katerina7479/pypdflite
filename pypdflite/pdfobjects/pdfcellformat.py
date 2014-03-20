@@ -1,5 +1,4 @@
 from pdfcolor import PDFColor
-from pdffont import PDFFont
 
 
 class PDFCellFormat(object):

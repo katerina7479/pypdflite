@@ -20,6 +20,7 @@ class PDFCell(object):
         self.max_width = 0
 
         self.line_space = 2
+        self.text = ''
 
     def __repr__(self):
         return '(%s, %s)' % (self.row_index, self.column_index)
@@ -42,7 +43,7 @@ class PDFCell(object):
                 if any(s in numf for s in ['comma', ',']):
                     self.text = str('{:,}'.format(int(self.text)))
                 if any(s in numf for s in ['percent', '%']):
-                    self.text = '%s %' % (self.text)
+                    self.text = '%s \%' % self.text
                 if any(s in numf for s in ['$', 'money', 'dollar']):
                     self.text = '$%s' % (self.text)
 
@@ -180,7 +181,7 @@ class PDFCell(object):
             self.text = ''
             self.text_width = 1
             self.line_size = 1
-            self.format = PDFCellFormat()
+            self.format = PDFCellFormat(None, None)
             self.text_wrap = False
             self._set_text_padding()
 

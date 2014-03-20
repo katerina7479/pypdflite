@@ -1,28 +1,27 @@
-'''
+"""
 Created on Mar 16, 2014
 
 @author: tjoneslo
-'''
+"""
 
 from math import cos, tan, sin, pi
 
 class PDFTransform(object):
-    '''
+    """
     classdocs
-    '''
-
+    """
 
     def __init__(self, session, page):
-        '''
+        """
         Constructor
-        '''
+        """
         self.session = session
         self.page = page
 
         self._currentMatrix = (1., 0., 0., 1., 0., 0.)
         self._textMatrix = (1., 0., 0., 1., 0., 0.)
 
-    def saveState(self):
+    def save_state(self):
         """Save the current graphics state to be restored later by restoreState.
         This saves/restores only the current graphics state on the PDF Page, 
         not in the internal state of the PyPDFLite.
@@ -40,11 +39,10 @@ class PDFTransform(object):
         """
         self.session._out('q', self.page)
 
-    def restoreState(self):
+    def restore_state(self):
         """restore the graphics state to the matching saved state (see saveState)."""
         self.session._out('Q', self.page)
 
-        
     def transform(self, a, b, c, d, e, f):
         """ Adjust the current transformation state of the current graphics state
         matrix. Not recommended for the faint of heart. 
@@ -52,11 +50,11 @@ class PDFTransform(object):
         a0, b0, c0, d0, e0, f0 = self._currentMatrix
         self._currentMatrix = (a0 * a + c0 * b, b0 * a + d0 * b,
                                a0 * c + c0 * d, b0 * c + d0 * d,
-                               a0 * e+ c0 * f + e0, b0 * e + d0 * f + f0)
+                               a0 * e + c0 * f + e0, b0 * e + d0 * f + f0)
         a1, b1, c1, d1, e1, f1 = self._currentMatrix
         self.session._out('%.2f %.2f %.2f %.2f %.2f %.2f cm' % (a1, b1, c1, d1, e1, f1), self.page)
 
-    def absolutePosition(self, x, y):
+    def absolute_position(self, x, y):
         """return the absolute position of x,y in user space w.r.t. default user space"""
         (a, b, c, d, e, f) = self._currentMatrix
         xp = a * x + c * y + e
@@ -81,6 +79,6 @@ class PDFTransform(object):
         self.transform(c, s, -s, c, 0, 0)
 
     def skew(self, alpha, beta):
-        tanAlpha = tan(alpha * pi / 180)
-        tanBeta  = tan(beta  * pi / 180)
-        self.transform(1, tanAlpha, tanBeta, 1, 0, 0)
+        tan_alpha = tan(alpha * pi / 180)
+        tan_beta = tan(beta * pi / 180)
+        self.transform(1, tan_alpha, tan_beta, 1, 0, 0)

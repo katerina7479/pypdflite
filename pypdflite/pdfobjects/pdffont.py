@@ -65,8 +65,9 @@ class PDFFont(object):
     def _set_underline_params(self):
         # Does a pretty good job visually representing an underline
         if 'B' in self.style:
-                multiplier = 1.5
-        multiplier = 1
+            multiplier = 1.5
+        else:
+            multiplier = 1
 
         self.underline_thickness = int(multiplier * self.font_size / 12.0)
         if self.underline_thickness < 1:
@@ -95,7 +96,7 @@ class PDFFont(object):
         self.character_widths = pdf_character_widths[self.font_key]
 
     def _set_font(self, family=None, style=None, size=None):
-        "Select a font; size given in points"
+        """Select a font; size given in points"""
         self._set_family(family)
         self._set_style(style)
         self._set_size(size)
@@ -111,7 +112,7 @@ class PDFFont(object):
         self.index = index
 
     def _set_number(self, value):
-        "This is the font pdf object number."
+        """This is the font pdf object number."""
         self.number = value
 
     def _equals(self, font):
@@ -124,7 +125,7 @@ class PDFFont(object):
         return ans
 
     def _string_width(self, s):
-        "Get width of a string in the current font"
+        """Get width of a string in the current font"""
         s = str(s)
         w = 0
         for i in s:
