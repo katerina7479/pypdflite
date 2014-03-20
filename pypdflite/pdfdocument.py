@@ -13,6 +13,7 @@ from pdfobjects.pdfjpg import PDFJPG
 from pdfobjects.pdfttfonts import PDFTTFont
 from pdfobjects.pdfmargin import PDFMargin
 from pdfobjects.pdfcellformat import PDFCellFormat
+from pdfobjects.pdfhtml import PDFHtml
 
 
 class PDFDocument(object):
@@ -292,6 +293,12 @@ class PDFDocument(object):
                 self.add_text(char)
                 self.add_text(' %s' % arg)
                 self.add_newline(2)
+
+    def add_html(self, htmltext, context=None, formats=None, cursor=None):
+        if cursor is None:
+            cursor = self.page.cursor
+
+        PDFHtml(self, self.session, self.page, htmltext, cursor, formats, context)
 
     def add_line(self, x1=None, y1=None, x2=None, y2=None,
                  cursor1=None, cursor2=None, style="solid"):

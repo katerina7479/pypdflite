@@ -11,8 +11,10 @@ from bin.pagenumbertest import PageNumberTest
 from bin.pngsizetest import ImageSizeTest
 from bin.ellipsetest import EllipseTest
 from bin.transformtest import TransformTest
+from bin.htmltest import HtmlTest
 
 def main():
+    """
     print "Running TextTest"
     TextTest()
     print "Running TrueTypeTest"
@@ -39,6 +41,8 @@ def main():
     EllipseTest()
     print "Running TransormTest"
     TransformTest()
+    """
+    HtmlTest()
 
 if __name__ == '__main__':
     main()

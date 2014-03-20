@@ -1,8 +1,9 @@
 from pypdflite.pdflite import PDFLite
+from pypdflite.pdfobjects.pdfcolor import PDFColor
 
 
 def HtmlTest():
-    writer = PDFLite(reportfile, font_dir=settings.REPORTING_FONT_DIR)
+    writer = PDFLite("htmltest.pdf")
     document = writer.get_document()
 
     document.add_text('Sample text')
@@ -17,8 +18,8 @@ def HtmlTest():
 
     document.add_html("""<h1>This is h1 text.</h1>
                     <p>This is a sample paragraph with a formatted variable equal to <span class="red coolfont" data-bind="myvar"></span></p>
-                    """, context={"myvar": 5}, formatting={"h1": header1, "red": red, "coolfont": coolfont, "p": normalfont}
-    )
+                    """, context={"myvar": 5}, formats={"h1": header1, "red": red, "coolfont": coolfont, "p": normalfont}
+                      )
 
     document.add_newline(2)
     document.add_text("After HTML.")
