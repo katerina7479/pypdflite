@@ -290,15 +290,25 @@ class PDFDocument(object):
                 self.add_newline(2)
         else:
             for arg in args:
-                self.add_text(char)
-                self.add_text(' %s' % arg)
-                self.add_newline(2)
+                if isinstance(arg, list):
+                    for item in arg:
+                        self.add_text(char)
+                        self.add_text(' %s' % item)
+                        self.add_newline(1)
+                else:
+                    self.add_text(char)
+                    self.add_text(' %s' % arg)
+                    self.add_newline(2)
 
     def add_html(self, htmltext, context=None, formats=None, cursor=None):
-        if cursor is None:
-            cursor = self.page.cursor
+        if cursor is not None:
+            self.set_cursor(cursor)
 
-        PDFHtml(self, self.session, self.page, htmltext, cursor, formats, context)
+        if hasattr(htmltext, 'write'):
+            fileobj = open(htmltext, 'r')
+            htmltext = fileobj.read()
+
+        PDFHtml(self, self.session, self.page, htmltext, formats, context)
 
     def add_line(self, x1=None, y1=None, x2=None, y2=None,
                  cursor1=None, cursor2=None, style="solid"):

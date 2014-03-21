@@ -17,21 +17,27 @@ def HtmlTest():
     normalfont = document.get_font()
     header1 = document.set_font('helvetica', style='B', size=22)
     coolfont = document.set_font('comic sans ms', style='', size=12)
-
+    header2 = document.set_font('helvetica', style='I', size=20)
 
     html_text = """
                   <h1>My Week</h1>
                   <p>Today, the day is <span class="red coolfont" data-bind="daytoday"></span>, and it is sunny here in
                         <span class="green" data-bind="location"></span>. Honestly, it's almost always sunny. It
-                        can get rather boring. I miss snow.
-                  </p><br/>
+                        can get rather boring.</p>
+                  <br/>
+                  <h2>Things I miss</h2>
+                  <ul>
+                  <li>Fall Carnivals</li>
+                  <li>Skiing</li>
+                  <li>Museums</li>
+                  </ul>
                   <p>Next week I will go to the <span class="blue coolfont" data-bind="destination"></span>.....
                   </p>
                 """
 
     document.add_html(html_text,
                       context={"daytoday": " Thursday", "location": " California", "destination": " opera"},
-                      formats={"h1": header1, "red": red, "coolfont": coolfont, "p": normalfont, 'blue': blue, 'green': green}
+                      formats={"h1": header1, "h2": header2, "red": red, "coolfont": coolfont, "p": normalfont, 'blue': blue, 'green': green}
                       )
 
     document.add_text("After HTML.")

@@ -5,7 +5,6 @@ from pdffont import PDFFont
 from pdftext import PDFText
 
 
-
 class PDFHTMLParser(HTMLParser):
     def __init__(self):
         # HTMLParser is old-style class
@@ -49,7 +48,7 @@ class PDFHTMLParser(HTMLParser):
 
 
 class PDFHtml(object):
-    def __init__(self, parent, session, page, htmltext, cursor, formats=None, context=None):
+    def __init__(self, parent, session, page, htmltext, formats=None, context=None):
         self.document = parent
         self.session = session
         self.page = page
