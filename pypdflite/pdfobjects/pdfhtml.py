@@ -1,7 +1,9 @@
+import re
 from HTMLParser import HTMLParser
 from pdfcolor import PDFColor
 from pdffont import PDFFont
 from pdftext import PDFText
+
 
 
 class PDFHTMLParser(HTMLParser):
@@ -13,29 +15,37 @@ class PDFHTMLParser(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         if self.datastring != '' and len(self.commandlist) >= 1:
-            self.commandlist[-1]['data'] = " ".join(self.datastring.split())
+            self.commandlist[-1]['data'] = self.strip(self.datastring)
             self.datastring = ''
         self.commandlist.append({'name': tag, 'attributes': attrs})
 
 
     def handle_data(self, data):
-        print data
-        self.datastring += data
+        data = self.strip(data)
+        if data != '':
+            self.datastring += data
 
     def handle_endtag(self, tag):
-        print "endtag", tag
         if tag == 'span':
             last = self.commandlist[-2]
             self.commandlist.append({'name': last['name'], 'attributes': last['attributes']})
             self.datastring = ''
         if tag == 'p':
-            if self.datastring != '':
-                self.commandlist[-1]['data'] = " ".join(self.datastring.split())
+            self.datastring = self.strip(self.datastring)
+            if self.datastring != '' and self.datastring != ' ':
+                self.commandlist[-1]['data'] = self.strip(self.datastring)
                 self.datastring = ''
+
+            self.commandlist.append({'name': 'end'})
 
 
     def get_commandlist(self):
+        #for item in self.commandlist:
+        #    print item
         return self.commandlist
+
+    def strip(self, mystring):
+        return re.sub("\s\s+" , " ", mystring.strip())
 
 
 class PDFHtml(object):
@@ -50,7 +60,6 @@ class PDFHtml(object):
         self.formats = {}
         if isinstance(formats, dict):
             self.formats = formats
-        self._parseformats()
         self._parsehtml()
         self._runlist()
 
@@ -59,23 +68,23 @@ class PDFHtml(object):
         parser.feed(self.htmltext)
         self.commandlist = parser.get_commandlist()
 
-    def _parseformats(self):
-        print self.formats
-
     def _runlist(self):
         for tag in self.commandlist:
-            if tag['name'] == 'h1':
-                self.document.set_font(self.formats['h1'])
+            if tag['name'] in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+                self.document.set_font(self.formats[tag['name']])
                 self.document.add_text('%s' % tag['data'])
                 self.document.add_newline()
             elif tag['name'] == 'p':
-                self.document.set_font(self.formats['p'])
-                self.document.add_text('%s' % tag['data'])
+                if 'data' in tag:
+                    self.document.set_font(self.formats['p'])
+                    self.document.add_text('%s' % tag['data'])
+            elif tag['name'] == 'end' or tag['name'] == 'br':
+                self.document.add_newline()
             elif tag['name'] == 'span':
                 savefont = self.document.get_font()
                 font, color, variable = self.parse_atts(tag['attributes'])
                 if variable is not None:
-                    PDFText(self.session, self.page, ' %s' % variable, font, color, self.page.cursor)
+                    PDFText(self.session, self.page, '%s' % variable, font, color, self.page.cursor)
                     self.document.set_font(savefont)
 
     def parse_atts(self, atts):
@@ -97,3 +106,4 @@ class PDFHtml(object):
                 if isinstance(value, PDFColor):
                     color = value
         return font, color, variable
+
