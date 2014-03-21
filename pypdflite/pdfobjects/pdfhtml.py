@@ -11,12 +11,26 @@ class PDFHTMLParser(HTMLParser):
         HTMLParser.__init__(self)
         self.commandlist = []
         self.datastring = ''
+        self.openlist = False
 
     def handle_starttag(self, tag, attrs):
-        if self.datastring != '' and len(self.commandlist) >= 1:
-            self.commandlist[-1]['data'] = self.strip(self.datastring)
-            self.datastring = ''
-        self.commandlist.append({'name': tag, 'attributes': attrs})
+        if tag in ["ul", 'ol']:
+            self.openlist = True
+            self.commandlist.append({'name': tag, 'attributes': attrs, 'elements': []})
+        elif tag == 'li':
+            self.commandlist[-1]['elements'].append({'name': tag, 'attributes': attrs, 'elements': []})
+        elif self.openlist:
+            if self.datastring != '' and len(self.commandlist[-1]['elements']) >= 1:
+                self.commandlist[-1]['elements'][-1]['data'] = self.strip(self.datastring)
+                self.datastring = ''
+            self.commandlist[-1]['elements'][-1]['elements'].append({'name': tag, 'attributes': attrs})
+        else:
+            self.datastring = self.strip(self.datastring)
+
+            if self.datastring != '' and len(self.commandlist) >= 1:
+                self.commandlist[-1]['data'] = self.datastring
+                self.datastring = ''
+            self.commandlist.append({'name': tag, 'attributes': attrs})
 
 
     def handle_data(self, data):
@@ -26,21 +40,35 @@ class PDFHTMLParser(HTMLParser):
 
     def handle_endtag(self, tag):
         if tag == 'span':
-            last = self.commandlist[-2]
-            self.commandlist.append({'name': last['name'], 'attributes': last['attributes']})
-            self.datastring = ''
+            if not self.openlist:
+                last = self.commandlist[-2]
+                self.commandlist.append({'name': last['name'], 'attributes': last['attributes']})
+                self.datastring = ''
+
         if tag == 'p':
             self.datastring = self.strip(self.datastring)
             if self.datastring != '' and self.datastring != ' ':
-                self.commandlist[-1]['data'] = self.strip(self.datastring)
+                if not self.openlist:
+                    target = self.commandlist
+                else:
+                    target = self.commandlist[-1]['elements']
+
+                target[-1]['data'] = self.datastring
+                self.datastring = ''
+                target.append({'name': 'end'})
+        if tag == 'li':
+            self.datastring = self.strip(self.datastring)
+            if self.datastring != '':
+                self.commandlist[-1]['elements'][-1]['data'] = self.datastring
+                self.datastring = ''
+        if tag in ['ul', 'ol']:
+            self.openlist = False
+        else:
+            if self.datastring != '':
+                self.commandlist[-1]['data'] = self.datastring
                 self.datastring = ''
 
-            self.commandlist.append({'name': 'end'})
-
-
     def get_commandlist(self):
-        #for item in self.commandlist:
-        #    print item
         return self.commandlist
 
     def strip(self, mystring):
@@ -60,15 +88,15 @@ class PDFHtml(object):
         if isinstance(formats, dict):
             self.formats = formats
         self._parsehtml()
-        self._runlist()
+        self._runlist(self.commandlist)
 
     def _parsehtml(self):
         parser = PDFHTMLParser()
         parser.feed(self.htmltext)
         self.commandlist = parser.get_commandlist()
 
-    def _runlist(self):
-        for tag in self.commandlist:
+    def _runlist(self, mylist):
+        for tag in mylist:
             if tag['name'] in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
                 self.document.set_font(self.formats[tag['name']])
                 self.document.add_text('%s' % tag['data'])
@@ -85,6 +113,27 @@ class PDFHtml(object):
                 if variable is not None:
                     PDFText(self.session, self.page, '%s' % variable, font, color, self.page.cursor)
                     self.document.set_font(savefont)
+            if tag['name'] in ['ul']:
+                self.page.cursor.x_shift_left(10)
+                bullet_code = 149
+                char = chr(bullet_code)
+                if 'ul' in self.formats:
+                    self.document.set_font(self.formats['ul'])
+                for element in tag['elements']:
+                    if element['name'] == 'li':
+                        if 'data' in element:
+                            self.document.add_text(char +' %s' % element['data'])
+                        if element['elements']:
+                            self._runlist(element['elements'])
+                        self.document.add_newline(1)
+                    else:
+                        if element['name'] == 'end':
+                            pass
+                        else:
+                            self.document.add_text(char)
+                            self._runlist(element)
+                self.document.add_newline()
+                self.page.cursor.x_shift_left(-10)
 
     def parse_atts(self, atts):
         formats = []

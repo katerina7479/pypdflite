@@ -17,7 +17,7 @@ def HtmlTest():
     normalfont = document.get_font()
     header1 = document.set_font('helvetica', style='B', size=22)
     coolfont = document.set_font('comic sans ms', style='', size=12)
-    header2 = document.set_font('helvetica', style='I', size=20)
+    header2 = document.set_font('helvetica', style='I', size=18)
 
     html_text = """
                   <h1>My Week</h1>
@@ -28,16 +28,19 @@ def HtmlTest():
                   <h2>Things I miss</h2>
                   <ul>
                   <li>Fall Carnivals</li>
-                  <li>Skiing</li>
+                  <li>Skiing <span class='blue' data-bind="skiing"></span></li>
                   <li>Museums</li>
+                  <li><p>And a whole bunch of other things, that I'm not sure if I just liked it because I was a kid,
+                  or because it was actually a lot of fun.</p></li>
                   </ul>
                   <p>Next week I will go to the <span class="blue coolfont" data-bind="destination"></span>.....
                   </p>
                 """
 
     document.add_html(html_text,
-                      context={"daytoday": " Thursday", "location": " California", "destination": " opera"},
-                      formats={"h1": header1, "h2": header2, "red": red, "coolfont": coolfont, "p": normalfont, 'blue': blue, 'green': green}
+                      context={"daytoday": " Thursday", "location": " California", "destination": " opera", "skiing": " at Stowe."},
+                      formats={"h1": header1, "h2": header2, "red": red, "coolfont": coolfont, "p": normalfont,
+                               'ul': normalfont, 'blue': blue, 'green': green}
                       )
 
     document.add_text("After HTML.")

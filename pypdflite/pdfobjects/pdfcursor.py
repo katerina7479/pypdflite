@@ -217,3 +217,7 @@ class PDFCursor(object):
     def y_reset(self):
         """ Resets y to ymin."""
         self.y = self.ymin
+
+    def x_shift_left(self, delta):
+        self.xmin = self.xmin + delta
+        self.x = self.x + delta
