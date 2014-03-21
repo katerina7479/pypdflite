@@ -13,17 +13,26 @@ class PDFHTMLParser(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         if self.datastring != '' and len(self.commandlist) >= 1:
-            self.commandlist[-1]['data'] = self.datastring
+            self.commandlist[-1]['data'] = " ".join(self.datastring.split())
             self.datastring = ''
         self.commandlist.append({'name': tag, 'attributes': attrs})
 
 
     def handle_data(self, data):
+        print data
         self.datastring += data
 
     def handle_endtag(self, tag):
+        print "endtag", tag
+        if tag == 'span':
+            last = self.commandlist[-2]
+            self.commandlist.append({'name': last['name'], 'attributes': last['attributes']})
+            self.datastring = ''
         if tag == 'p':
-            self.commandlist.append({'name': "End Paragraph"})
+            if self.datastring != '':
+                self.commandlist[-1]['data'] = " ".join(self.datastring.split())
+                self.datastring = ''
+
 
     def get_commandlist(self):
         return self.commandlist
@@ -66,10 +75,8 @@ class PDFHtml(object):
                 savefont = self.document.get_font()
                 font, color, variable = self.parse_atts(tag['attributes'])
                 if variable is not None:
-                    PDFText(self.session, self.page, '%s' % variable, font, color, self.page.cursor)
+                    PDFText(self.session, self.page, ' %s' % variable, font, color, self.page.cursor)
                     self.document.set_font(savefont)
-            elif tag['name'] == 'End Paragraph':
-                self.document.add_newline()
 
     def parse_atts(self, atts):
         formats = []

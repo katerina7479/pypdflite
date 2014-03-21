@@ -13,12 +13,14 @@ def HtmlTest():
     red = PDFColor(name="red")
 
     normalfont = document.get_font()
-    header1 = document.set_font('helvetica', style='B', size=24)
+    header1 = document.set_font('helvetica', style='B', size=22)
     coolfont = document.set_font('comic sans ms', style='', size=12)
 
     document.add_html("""<h1>This is h1 text.</h1>
-                    <p>This is a sample paragraph with a formatted variable equal to <span class="red coolfont" data-bind="myvar"></span></p>
-                    """, context={"myvar": 5}, formats={"h1": header1, "red": red, "coolfont": coolfont, "p": normalfont}
+                      <p>This is a sample paragraph with a formatted variable\
+                      equal to <span class="red coolfont" data-bind="myvar"></span>. More paragraph after, that\
+                      just keeps going and going and going and going.</p>
+                      """, context={"myvar": 5}, formats={"h1": header1, "red": red, "coolfont": coolfont, "p": normalfont}
                       )
 
     document.add_newline(2)
