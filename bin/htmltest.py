@@ -26,13 +26,13 @@ def HtmlTest():
                         can get rather boring.</p>
                   <br/>
                   <h2>Things I miss</h2>
-                  <ul>
+                  <ol type='I' ">
                   <li>Fall Carnivals</li>
                   <li>Skiing <span class='blue' data-bind="skiing"></span></li>
                   <li>Museums</li>
                   <li><p>And a whole bunch of other things, that I'm not sure if I just liked it because I was a kid,
                   or because it was actually a lot of fun.</p></li>
-                  </ul>
+                  </ol>
                   <p>Next week I will go to the <span class="blue coolfont" data-bind="destination"></span>.....
                   </p>
                 """
@@ -40,7 +40,7 @@ def HtmlTest():
     document.add_html(html_text,
                       context={"daytoday": " Thursday", "location": " California", "destination": " opera", "skiing": " at Stowe."},
                       formats={"h1": header1, "h2": header2, "red": red, "coolfont": coolfont, "p": normalfont,
-                               'ul': normalfont, 'blue': blue, 'green': green}
+                               'ul': normalfont, 'ol': normalfont, 'blue': blue, 'green': green}
                       )
 
     document.add_text("After HTML.")
