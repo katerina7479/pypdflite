@@ -16,13 +16,12 @@ class PDFHTMLParser(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         self.datastring = self.strip(self.datastring)
-        if tag in ["ul", 'ol']:
+        if tag in ['ul', 'ol']:
             self.target.append({'name': tag, 'attributes': attrs, 'elements': []})
             self.openlist = True
             self.target = self.target[-1]['elements']
         elif tag == 'li':
             self.target.append({'name': tag, 'attributes': attrs, 'elements': []})
-
         else:
             if self.datastring != '' and len(self.target) >= 1:
                 self.target[-1]['data'] = self.datastring
@@ -38,24 +37,23 @@ class PDFHTMLParser(HTMLParser):
             self.datastring += data
 
     def handle_endtag(self, tag):
-        if tag == 'span':
+        if tag in ['span', 'a']:
             if not self.openlist:
                 last = self.target[-2]
                 self.target.append({'name': last['name'], 'attributes': last['attributes']})
                 self.datastring = ''
-
-        if tag == 'p':
+        elif tag == 'p':
             self.datastring = self.strip(self.datastring)
             if self.datastring != '' and self.datastring != ' ':
                 self.target[-1]['data'] = self.datastring
                 self.datastring = ''
                 self.target.append({'name': 'end'})
-        if tag == 'li':
+        elif tag == 'li':
             self.datastring = self.strip(self.datastring)
             if self.datastring != '':
                 self.target[-1]['data'] = self.datastring
                 self.datastring = ''
-        if tag in ['ul', 'ol']:
+        elif tag in ['ul', 'ol']:
             self.openlist = False
             self.target = self.commandlist
         else:

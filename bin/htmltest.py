@@ -20,6 +20,10 @@ def HtmlTest():
     header2 = document.set_font('helvetica', style='I', size=18)
 
     html_text = """
+                  <html>
+                  <head><title>Test Title</title>
+                        <script>document.write("Hello World!")</script>
+                  </head>
                   <h1>My Week</h1>
                   <p>Today, the day is <span class="red coolfont" data-bind="daytoday"></span>, and it is sunny here in
                         <span class="green" data-bind="location"></span>. Honestly, it's almost always sunny. It
@@ -41,7 +45,9 @@ def HtmlTest():
                   </li>
                   </ol>
                   <p>Next week I will go to the <span class="blue coolfont" data-bind="destination"></span>.....
+                  <a href="http://www.google.com">Visit Google.com!</a> I hope it's fun.
                   </p>
+                  </html>
                 """
 
     document.add_html(html_text,
