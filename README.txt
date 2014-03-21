@@ -34,5 +34,5 @@ Online Documentation:
 http://katerina7479.github.io/pypdflite/
 
 Thanks to: Marc Angelone, Noah Abelson, and John Lockwood for support and input!
-Also: @klmitch for loading fonts on linux bug; @tjoneslo for ellipses and linux
-font fix!
+Also: @klmitch for loading fonts on linux bug; @tjoneslo for ellipses, transforms
+and linux font fix!
