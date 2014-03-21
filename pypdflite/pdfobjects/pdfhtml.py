@@ -108,7 +108,7 @@ class PDFHtml(object):
                 if variable is not None:
                     PDFText(self.session, self.page, '%s' % variable, font, color, self.page.cursor)
                     self.document.set_font(savefont)
-            if tag['name'] == 'ul':
+            elif tag['name'] == 'ul':
                 self.page.cursor.x_shift_left(10)
                 if 'ul' in self.formats:
                     self.document.set_font(self.formats['ul'])
@@ -128,7 +128,7 @@ class PDFHtml(object):
 
                 self.document.add_newline()
                 self.page.cursor.x_shift_left(-10)
-            if tag['name'] == 'ol':
+            elif tag['name'] == 'ol':
                 self.page.cursor.x_shift_left(10)
                 if 'ol' in self.formats:
                     self.document.set_font(self.formats['ol'])
@@ -154,6 +154,8 @@ class PDFHtml(object):
 
                 self.document.add_newline()
                 self.page.cursor.x_shift_left(-10)
+            else:
+                pass
 
     def set_list_element(self, element, char):
         if element['name'] == 'li':
