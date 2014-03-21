@@ -32,6 +32,13 @@ def HtmlTest():
                   <li>Museums</li>
                   <li><p>And a whole bunch of other things, that I'm not sure if I just liked it because I was a kid,
                   or because it was actually a lot of fun.</p></li>
+                  <li>
+                    <ol>
+                    <li>One</li>
+                    <li>Two</li>
+                    <li>Three</li>
+                    </ol>
+                  </li>
                   </ol>
                   <p>Next week I will go to the <span class="blue coolfont" data-bind="destination"></span>.....
                   </p>

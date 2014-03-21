@@ -134,8 +134,9 @@ class PDFHtml(object):
                 self.page.cursor.x_shift_left(10)
                 if 'ol' in self.formats:
                     self.document.set_font(self.formats['ol'])
+
+                charlist = (n + 1 for n in range(0, 50))
                 for att in tag['attributes']:
-                    charlist = (n + 1 for n in range(0, 50))
                     if att[0] == 'type':
                         if att[1] == 'a':
                             charlist = (chr(n) for n in range(97, 123))
@@ -162,7 +163,8 @@ class PDFHtml(object):
                 self.document.add_text(char +' %s' % element['data'])
             if element['elements']:
                 self._runlist(element['elements'])
-            self.document.add_newline(1)
+            if 'data' in element:
+                self.document.add_newline()
         else:
             if element['name'] != 'end':
                 self.document.add_text(char)
