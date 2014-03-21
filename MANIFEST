@@ -19,6 +19,7 @@ pypdflite/pdfobjects/pdfcursor.py
 pypdflite/pdfobjects/pdfdraw.py
 pypdflite/pdfobjects/pdfellipse.py
 pypdflite/pdfobjects/pdffont.py
+pypdflite/pdfobjects/pdfhtml.py
 pypdflite/pdfobjects/pdfimage.py
 pypdflite/pdfobjects/pdfjpg.py
 pypdflite/pdfobjects/pdfline.py
@@ -30,5 +31,6 @@ pypdflite/pdfobjects/pdfrectangle.py
 pypdflite/pdfobjects/pdfrow.py
 pypdflite/pdfobjects/pdftable.py
 pypdflite/pdfobjects/pdftext.py
+pypdflite/pdfobjects/pdftransforms.py
 pypdflite/pdfobjects/pdfttfonts.py
 pypdflite/pdfobjects/ttfonts.py
