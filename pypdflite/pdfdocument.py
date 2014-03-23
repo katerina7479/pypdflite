@@ -48,6 +48,7 @@ class PDFDocument(object):
         self.margins = None
         self.orientation_default = orientation
         self.layout_default = layout
+        self.justification = 'left'
 
         self.diffs = []
 
@@ -132,6 +133,12 @@ class PDFDocument(object):
             self.margins = PDFMargin(left, top, right, bottom)
         if self.page is not None:
             self.page.set_margins(self.margins)
+
+    def set_justification(self, value='left'):
+        if value in ['left', 'right', 'center']:
+            self.justification = value
+        else:
+            raise ValueError("Incorrect value for justification %s" % value)
 
     def add_page_numbers(self, location='right', font=None, cursor=None, color=None, text1="Page %s", text2=None):
         self.page_numbers = location
@@ -239,10 +246,10 @@ class PDFDocument(object):
         if '\n' in text:
             text_list = text.split('\n')
             for text in text_list:
-                PDFText(self.session, self.page, text, self.font, self.text_color, cursor)
+                PDFText(self.session, self.page, text, self.font, self.text_color, cursor, self.justification)
                 self.add_newline()
         else:
-            PDFText(self.session, self.page, text, self.font, self.text_color, cursor)
+            PDFText(self.session, self.page, text, self.font, self.text_color, cursor, self.justification)
 
     def add_newline(self, number=1):
         """ Starts over again at the new line. If number is specified,

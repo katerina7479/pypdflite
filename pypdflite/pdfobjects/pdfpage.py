@@ -55,7 +55,6 @@ class PDFPage(object):
         """ Valid choices: 'a3, 'a4', 'a5', 'letter', 'legal', '11x17'.
 
         """
-        print "Setting page size"
         self.layout = layout.lower()
         if self.layout in self.layout_dict:
             self.page_size = self.layout_dict[self.layout]

@@ -12,9 +12,10 @@ from bin.pngsizetest import ImageSizeTest
 from bin.ellipsetest import EllipseTest
 from bin.transformtest import TransformTest
 from bin.htmltest import HtmlTest
+from bin.justifytest import JustifyTest
+
 
 def main():
-    """
     print "Running TextTest"
     TextTest()
     print "Running TrueTypeTest"
@@ -41,8 +42,11 @@ def main():
     EllipseTest()
     print "Running TransormTest"
     TransformTest()
-    """
+    print "Running HTML test"
     HtmlTest()
+    print "Running Justify Test"
+    JustifyTest()
+
 
 if __name__ == '__main__':
     main()

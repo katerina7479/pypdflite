@@ -3,10 +3,11 @@ from math import cos, tan, sin, pi
 
 class PDFText(object):
 
-    def __init__(self, session, page, text, font=None, color=None, cursor=None):
+    def __init__(self, session, page, text, font=None, color=None, cursor=None, justify='left'):
         self.session = session
         self.page = page
         self.text = text
+        self.justify=justify
         if font is None:
             self.font = self.session.parent.document.font
         else:
@@ -18,12 +19,23 @@ class PDFText(object):
             self.cursor = cursor
 
         if self._test_x_fit() is True:
+            self._set_justification(self.text)
             self._text()
         else:
             self._write()
 
         if self.font.type == 'TTF':
             self.font._cache_text(self.text)
+
+    def _set_justification(self, text):
+        width = self.font._string_width(text)
+        if width > 0:
+            if self.justify == 'right':
+                self.cursor.x = (self.cursor.xmax - width)
+            elif self.justify == 'center':
+                self.cursor.x = (self.cursor.xmax + self.cursor.xmin - width) / 2.0
+            else:
+                pass
 
     def _text(self, value=None):
         if value is not None:
@@ -78,6 +90,7 @@ class PDFText(object):
             self.session._add_page(self.text)
         else:
             for line in line_array:
+                self._set_justification(line)
                 self._text(line)
                 self._newline()
 

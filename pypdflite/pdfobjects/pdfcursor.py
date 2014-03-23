@@ -28,6 +28,7 @@ class PDFCursor(object):
         self.x = x
         self.y = y
 
+
     def __repr__(self):
         return "(%s, %s)" % (self.x, self.y)
 
@@ -57,12 +58,9 @@ class PDFCursor(object):
         # If in left margin, sets to minimum value.
         if value <= self.xmin:
             self._x = self.xmin
-        elif value > self.xmax:
-            # Consider resetting to minimum as well?
-            #print "X ord %s is > bounds %s" % (value, self.xmax)
-            self._x = value
         else:
             self._x = value
+
 
     @property
     def y(self):
@@ -72,9 +70,6 @@ class PDFCursor(object):
     def y(self, value=0):
         if value <= self.ymin:
             self._y = self.ymin
-        elif value > self.ymax:
-            #print "Y ord %s is > bounds %s" % (value, self.ymax)
-            self._y = value
         else:
             self._y = value
 
