@@ -55,11 +55,16 @@ class PDFPage(object):
         """ Valid choices: 'a3, 'a4', 'a5', 'letter', 'legal', '11x17'.
 
         """
+        print "Setting page size"
         self.layout = layout.lower()
         if self.layout in self.layout_dict:
             self.page_size = self.layout_dict[self.layout]
         else:
-            raise Exception('Unknown page layout: ', self.layout)
+            dimensions = map(unicode, self.layout.split('x'))
+            if len(dimensions) == 2 and dimensions[0].isnumeric() and dimensions[1].isnumeric():
+                self.page_size = (float(dimensions[0]) * 72, float(dimensions[1]) * 72)
+            else:
+                raise Exception('Unknown page layout: ', self.layout)
 
     def set_margins(self, margin=None):
         if margin is None:
