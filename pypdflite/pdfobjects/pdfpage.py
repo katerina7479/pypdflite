@@ -59,11 +59,11 @@ class PDFPage(object):
         if self.layout in self.layout_dict:
             self.page_size = self.layout_dict[self.layout]
         else:
-            dimensions = map(unicode, self.layout.split('x'))
-            if len(dimensions) == 2 and dimensions[0].isnumeric() and dimensions[1].isnumeric():
+            dimensions = self.layout.split('x')
+            if len(dimensions) == 2:
                 self.page_size = (float(dimensions[0]) * 72, float(dimensions[1]) * 72)
             else:
-                raise Exception('Unknown page layout: ', self.layout)
+                raise IndexError("Page is two dimensions, given: %s" % len(dimensions))
 
     def set_margins(self, margin=None):
         if margin is None:
