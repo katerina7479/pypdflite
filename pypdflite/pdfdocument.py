@@ -312,8 +312,7 @@ class PDFDocument(object):
             self.set_cursor(cursor)
 
         if hasattr(htmltext, 'write'):
-            fileobj = open(htmltext, 'r')
-            htmltext = fileobj.read()
+            htmltext = htmltext.read()
 
         PDFHtml(self, self.session, self.page, htmltext, formats, context)
 
