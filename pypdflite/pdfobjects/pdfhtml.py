@@ -11,6 +11,7 @@ class PDFHTMLParser(HTMLParser):
         HTMLParser.__init__(self)
         self.commandlist = []
         self.target = self.commandlist
+        self.last_target = []
         self.datastring = ''
         self.openlist = False
 
@@ -19,9 +20,15 @@ class PDFHTMLParser(HTMLParser):
         if tag in ['ul', 'ol']:
             self.target.append({'name': tag, 'attributes': attrs, 'elements': []})
             self.openlist = True
+            self.last_target.append(self.target)
             self.target = self.target[-1]['elements']
         elif tag == 'li':
             self.target.append({'name': tag, 'attributes': attrs, 'elements': []})
+        elif tag == 'blockquote':
+            if self.datastring != '':
+                self.target[-1]['data'] = self.datastring
+                self.datastring = ''
+            self.target.append({'name': tag, 'attributes': attrs})
         else:
             if self.datastring != '' and len(self.target) >= 1:
                 self.target[-1]['data'] = self.datastring
@@ -42,12 +49,12 @@ class PDFHTMLParser(HTMLParser):
                 last = self.target[-2]
                 self.target.append({'name': last['name'], 'attributes': last['attributes']})
                 self.datastring = ''
-        elif tag == 'p':
+        elif tag == 'p' or tag == 'blockquote':
             self.datastring = self.strip(self.datastring)
-            if self.datastring != '' and self.datastring != ' ':
+            if self.datastring != '':
                 self.target[-1]['data'] = self.datastring
                 self.datastring = ''
-                self.target.append({'name': 'end'})
+                self.target.append({'name': 'end', 'type': tag})
         elif tag == 'li':
             self.datastring = self.strip(self.datastring)
             if self.datastring != '':
@@ -55,7 +62,8 @@ class PDFHTMLParser(HTMLParser):
                 self.datastring = ''
         elif tag in ['ul', 'ol']:
             self.openlist = False
-            self.target = self.commandlist
+            self.target = self.last_target[-1]
+            del self.last_target[-1]
         else:
             if self.datastring != '':
                 self.target[-1]['data'] = self.datastring
@@ -100,8 +108,21 @@ class PDFHtml(object):
                 if 'data' in tag:
                     self.document.set_font(self.formats['p'])
                     self.document.add_text('%s' % tag['data'])
+            elif tag['name'] == 'blockquote':
+                self.document.add_newline()
+                self.page.cursor.x_shift_left(20)
+                if 'data' in tag:
+                    if 'blockquote' in self.formats:
+                        self.document.set_font(self.formats['blockquote'])
+                    else:
+                        self.document.set_font(self.formats['p'])
+                    self.document.add_text('%s' % tag['data'])
             elif tag['name'] == 'end' or tag['name'] == 'br':
                 self.document.add_newline()
+                if 'type' in tag:
+                    if tag['type'] == 'blockquote':
+                        self.document.add_newline()
+                        self.page.cursor.x_shift_left(-20)
             elif tag['name'] == 'span':
                 savefont = self.document.get_font()
                 font, color, variable = self.parse_atts(tag['attributes'])
@@ -165,6 +186,8 @@ class PDFHtml(object):
                 self._runlist(element['elements'])
             if 'data' in element:
                 self.document.add_newline()
+        elif element['name'] == 'blockquote':
+            self._runlist([element])
         else:
             if element['name'] != 'end':
                 self.document.add_text(char)
@@ -174,6 +197,9 @@ class PDFHtml(object):
                     self._runlist([element])
                 else:
                     pass
+            else:
+                if element['type'] == 'blockquote':
+                    self._runlist([element])
 
     def parse_atts(self, atts):
         formats = []

@@ -41,8 +41,12 @@ def HtmlTest():
                     <li>One</li>
                     <li>Two</li>
                     <li>Three</li>
+                    <li>Testing Blockquote:
+                        <blockquote>"Computers are useless, they can only give you answers"</blockquote></li>
+                    <li>After the quote</li>
                     </ol>
-                  </li>
+                    </li>
+                  <li>After the List</li>
                   </ol>
                   <p>Next week I will go to the <span class="blue coolfont" data-bind="destination"></span>.....
                   <a href="http://www.google.com">Visit Google.com!</a> I hope it's fun.
