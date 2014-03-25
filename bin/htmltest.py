@@ -18,6 +18,7 @@ def HtmlTest():
     header1 = document.set_font('helvetica', style='B', size=22)
     coolfont = document.set_font('comic sans ms', style='', size=12)
     header2 = document.set_font('helvetica', style='I', size=18)
+    document.set_font(font=normalfont)
 
     html_text = """
                   <html>
@@ -36,15 +37,16 @@ def HtmlTest():
                   <li>Museums</li>
                   <li><p>And a whole bunch of other things, that I'm not sure if I just liked it because I was a kid,
                   or because it was actually a lot of fun.</p></li>
+                  <li>Testing Unordered List</li>
                   <li>
-                    <ol>
+                    <ul>
                     <li>One</li>
                     <li>Two</li>
                     <li>Three</li>
                     <li>Testing Blockquote:
                         <blockquote>"Computers are useless, they can only give you answers"</blockquote></li>
                     <li>After the quote</li>
-                    </ol>
+                    </ul>
                     </li>
                   <li>After the List</li>
                   </ol>

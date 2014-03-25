@@ -1,4 +1,5 @@
 import os
+import re
 from pdfobjects.pdffont import PDFFont, CORE_FONTS
 from pdfobjects.pdfpage import PDFPage
 from pdfobjects.pdftext import PDFText
@@ -243,6 +244,8 @@ class PDFDocument(object):
         if cursor is None:
             cursor = self.page.cursor
 
+        text = re.sub("\s\s+" , " ", text)
+
         if '\n' in text:
             text_list = text.split('\n')
             for text in text_list:
@@ -314,10 +317,9 @@ class PDFDocument(object):
         if hasattr(htmltext, 'write'):
             htmltext = htmltext.read()
 
-        PDFHtml(self, self.session, self.page, htmltext, formats, context)
+        PDFHtml(self, self.session, htmltext, formats, context)
 
-    def add_line(self, x1=None, y1=None, x2=None, y2=None,
-                 cursor1=None, cursor2=None, style="solid"):
+    def add_line(self, x1=None, y1=None, x2=None, y2=None, cursor1=None, cursor2=None, style="solid"):
         if cursor1 is not None:
             if cursor2 is not None:
                 pass

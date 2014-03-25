@@ -17,6 +17,7 @@ from bin.justifytest import JustifyTest
 
 
 def main():
+    """
     print "Running TextTest"
     TextTest()
     print "Running TrueTypeTest"
@@ -43,12 +44,13 @@ def main():
     EllipseTest()
     print "Running TransormTest"
     TransformTest()
+    """
     print "Running HTMLTest"
     HtmlTest()
-    print "Running HTMLTest2"
-    HtmlTest2()
-    print "Running Justify Test"
-    JustifyTest()
+    #print "Running HTMLTest2"
+    #HtmlTest2()
+    #print "Running Justify Test"
+    #JustifyTest()
 
 
 if __name__ == '__main__':

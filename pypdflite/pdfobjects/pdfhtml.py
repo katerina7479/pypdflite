@@ -4,204 +4,28 @@ from pdfcolor import PDFColor
 from pdffont import PDFFont
 from pdftext import PDFText
 
-
-class PDFHTMLParser(HTMLParser):
+class Element(object):
     def __init__(self):
-        # HTMLParser is old-style class
-        HTMLParser.__init__(self)
-        self.commandlist = []
-        self.target = self.commandlist
-        self.last_target = []
-        self.datastring = ''
-        self.openlist = False
+        pass
 
-    def handle_starttag(self, tag, attrs):
-        self.datastring = self.strip(self.datastring)
-        if tag in ['ul', 'ol']:
-            self.target.append({'name': tag, 'attributes': attrs, 'elements': []})
-            self.openlist = True
-            self.last_target.append(self.target)
-            self.target = self.target[-1]['elements']
-        elif tag == 'li':
-            self.target.append({'name': tag, 'attributes': attrs, 'elements': []})
-        elif tag == 'blockquote':
-            if self.datastring != '':
-                self.target[-1]['data'] = self.datastring
-                self.datastring = ''
-            self.target.append({'name': tag, 'attributes': attrs})
-        else:
-            if self.datastring != '' and len(self.target) >= 1:
-                self.target[-1]['data'] = self.datastring
-                self.datastring = ''
-            if self.openlist:
-                self.target[-1]['elements'].append({'name': tag, 'attributes': attrs})
-            else:
-                self.target.append({'name': tag, 'attributes': attrs})
+    def save_data(self, value):
+        if hasattr(self, 'data'):
+            self.data.append(value)
 
-    def handle_data(self, data):
-        data = self.strip(data)
-        if data != '':
-            self.datastring += data
+    def add_element(self, obj):
+        if hasattr(self, 'element'):
+            self.element.append(obj)
 
-    def handle_endtag(self, tag):
-        if tag in ['span', 'a']:
-            if not self.openlist:
-                last = self.target[-2]
-                self.target.append({'name': last['name'], 'attributes': last['attributes']})
-                self.datastring = ''
-        elif tag == 'p' or tag == 'blockquote':
-            self.datastring = self.strip(self.datastring)
-            if self.datastring != '':
-                self.target[-1]['data'] = self.datastring
-                self.datastring = ''
-                self.target.append({'name': 'end', 'type': tag})
-        elif tag == 'li':
-            self.datastring = self.strip(self.datastring)
-            if self.datastring != '':
-                self.target[-1]['data'] = self.datastring
-                self.datastring = ''
-        elif tag in ['ul', 'ol']:
-            self.openlist = False
-            self.target = self.last_target[-1]
-            del self.last_target[-1]
-        else:
-            if self.datastring != '':
-                self.target[-1]['data'] = self.datastring
-                self.datastring = ''
-
-    def get_commandlist(self):
-        #for tag in self.commandlist:
-        #    print tag
-        return self.commandlist
-
-    def strip(self, mystring):
-        return re.sub("\s\s+" , " ", mystring.strip())
-
-
-class PDFHtml(object):
-    def __init__(self, parent, session, page, htmltext, formats=None, context=None):
-        self.document = parent
+    def set_dependancies(self, session, document, formats, context):
         self.session = session
-        self.page = page
-        self.htmltext = str(htmltext)
-        self.context = {}
-        if isinstance(context, dict):
-            self.context = context
-        self.formats = {}
-        if isinstance(formats, dict):
-            self.formats = formats
-        self._parsehtml()
-        self._runlist(self.commandlist)
+        self.document = document
+        self.formats = formats
+        self.context = context
 
-    def _parsehtml(self):
-        parser = PDFHTMLParser()
-        parser.feed(self.htmltext)
-        self.commandlist = parser.get_commandlist()
+    def output(self):
+        pass
 
-    def _runlist(self, mylist):
-        for tag in mylist:
-            if tag['name'] in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
-                self.document.set_font(self.formats[tag['name']])
-                self.document.add_text('%s' % tag['data'])
-                self.document.add_newline()
-            elif tag['name'] == 'p':
-                if 'data' in tag:
-                    self.document.set_font(self.formats['p'])
-                    self.document.add_text('%s' % tag['data'])
-            elif tag['name'] == 'blockquote':
-                self.document.add_newline()
-                self.page.cursor.x_shift_left(20)
-                if 'data' in tag:
-                    if 'blockquote' in self.formats:
-                        self.document.set_font(self.formats['blockquote'])
-                    else:
-                        self.document.set_font(self.formats['p'])
-                    self.document.add_text('%s' % tag['data'])
-            elif tag['name'] == 'end' or tag['name'] == 'br':
-                self.document.add_newline()
-                if 'type' in tag:
-                    if tag['type'] == 'blockquote':
-                        self.document.add_newline()
-                        self.page.cursor.x_shift_left(-20)
-            elif tag['name'] == 'span':
-                savefont = self.document.get_font()
-                font, color, variable = self.parse_atts(tag['attributes'])
-                if variable is not None:
-                    PDFText(self.session, self.page, '%s' % variable, font, color, self.page.cursor)
-                    self.document.set_font(savefont)
-            elif tag['name'] == 'ul':
-                self.page.cursor.x_shift_left(10)
-                if 'ul' in self.formats:
-                    self.document.set_font(self.formats['ul'])
-
-                char = chr(149)
-                for atts in tag['attributes']:
-                    if atts[0] == 'style':
-                        if "list-style: none" in atts[1]:
-                            char = ''
-                        if "list-style-type: circle" in atts[1]:
-                            char = chr(186)
-                        if "list-style-type: square" in atts[1]:
-                            char = chr(150)
-
-                for element in tag['elements']:
-                    self.set_list_element(element, char)
-
-                self.document.add_newline()
-                self.page.cursor.x_shift_left(-10)
-            elif tag['name'] == 'ol':
-                self.page.cursor.x_shift_left(10)
-                if 'ol' in self.formats:
-                    self.document.set_font(self.formats['ol'])
-
-                charlist = (n + 1 for n in range(0, 50))
-                for att in tag['attributes']:
-                    if att[0] == 'type':
-                        if att[1] == 'a':
-                            charlist = (chr(n) for n in range(97, 123))
-                        if att[1] == 'A':
-                            charlist = (chr(n) for n in range(65, 90))
-                        if att[1] == 'I':
-                            charlist = (self.to_Roman(n) for n in range(1, 50))
-                        if att[1] == 'i':
-                            charlist = (self.to_Roman(n).lower() for n in range(1, 50))
-
-                for element in tag['elements']:
-                    char = ''
-                    if element['name'] == 'li':
-                        char = charlist.next()
-                        char = "%s. " % char
-                    self.set_list_element(element, char)
-
-                self.document.add_newline()
-                self.page.cursor.x_shift_left(-10)
-            else:
-                pass
-
-    def set_list_element(self, element, char):
-        if element['name'] == 'li':
-            if 'data' in element:
-                self.document.add_text(char +' %s' % element['data'])
-            if element['elements']:
-                self._runlist(element['elements'])
-            if 'data' in element:
-                self.document.add_newline()
-        elif element['name'] == 'blockquote':
-            self._runlist([element])
-        else:
-            if element['name'] != 'end':
-                self.document.add_text(char)
-                if isinstance(element, list):
-                    self._runlist(element)
-                elif isinstance(element, dict):
-                    self._runlist([element])
-                else:
-                    pass
-            else:
-                if element['type'] == 'blockquote':
-                    self._runlist([element])
-
-    def parse_atts(self, atts):
+    def _parse_atts(self, atts):
         formats = []
         font = None
         color = None
@@ -221,7 +45,134 @@ class PDFHtml(object):
                     color = value
         return font, color, variable
 
-    def to_Roman(self, n):
+class Header(Element):
+    def __init__(self, name, attr=None):
+        super(Header, self).__init__()
+        self.name = name
+        self.attributes = attr
+        self.data = []
+
+    def output(self):
+        save_font = self.document.get_font()
+        self.document.set_font(self.formats[self.name])
+        for text in self.data:
+            self.document.add_text('%s' % text)
+        self.document.add_newline()
+        self.document.set_font(font=save_font)
+
+class Paragraph(Element):
+    def __init__(self, attr=None):
+        super(Paragraph, self).__init__()
+        self.name = 'p'
+        self.attributes = attr
+        self.data = []
+        self.elements = []
+
+    def output(self):
+        self.document.set_font(self.formats['p'])
+        span_index = 0
+        for text in self.data:
+            if text == '%span%':
+                span = self.elements[span_index]
+                span.set_dependancies(self.session, self.document, self.formats, self.context)
+                span.output()
+                span_index += 1
+            else:
+                self.document.add_text('%s' % text)
+        self.document.add_newline(2)
+
+class Break(Element):
+    def __init__(self):
+        super(Break, self).__init__()
+        self.name = 'br'
+
+    def output(self):
+        self.document.add_newline()
+
+class UnorderedList(Element):
+    def __init__(self, attr=None):
+        super(UnorderedList, self).__init__()
+        self.name = 'ul'
+        self.attributes = attr
+        self.elements = []
+        self.primary_list = True
+
+    def set_bullet_format(self):
+        self.char = chr(149)
+        if self.attributes is not None:
+            for atts in self.attributes:
+                if atts[0] == 'style':
+                    if "list-style: none" in atts[1]:
+                        self.char = ''
+                    if "list-style-type: circle" in atts[1]:
+                        self.char = chr(186)
+                    if "list-style-type: square" in atts[1]:
+                        self.char = chr(150)
+
+    def _output_element(self, item):
+        item.set_dependancies(self.session, self.document, self.formats, self.context)
+        item.output(self.char)
+
+    def output(self):
+        self.set_bullet_format()
+        self.document.page.cursor.x_shift_left(10)
+        if 'ul' in self.formats:
+            self.document.set_font(self.formats['ul'])
+        for item in self.elements[:-1]:
+            self._output_element(item)
+            self.document.add_newline()
+        self._output_element(self.elements[-1])
+        if self.primary_list:
+            self.document.add_newline()
+        self.document.page.cursor.x_shift_left(-10)
+
+class OrderedList(Element):
+    def __init__(self, attr=None):
+        super(OrderedList, self).__init__()
+        self.name = 'ol'
+        self.attributes = attr
+        self.elements = []
+        self.primary_list = True
+
+    def set_bullet_format(self):
+        self.charlist = (n + 1 for n in range(0, 50))
+        if self.attributes is not None:
+            for att in self.attributes:
+                if att[0] == 'type':
+                    if att[1] == 'a':
+                        self.charlist = (chr(n) for n in range(97, 123))
+                    if att[1] == 'A':
+                        self.charlist = (chr(n) for n in range(65, 90))
+                    if att[1] == 'I':
+                        self.charlist = (self._to_Roman(n) for n in range(1, 50))
+                    if att[1] == 'i':
+                        self.charlist = (self._to_Roman(n).lower() for n in range(1, 50))
+
+    def _output_element(self, item, char):
+        if char is None:
+            char = '%s. ' % self.charlist.next()
+        item.set_dependancies(self.session, self.document, self.formats, self.context)
+        char = item.output(char)
+        return char
+
+    def output(self):
+        self.document.page.cursor.x_shift_left(10)
+        if 'ol' in self.formats:
+            self.document.set_font(self.formats['ol'])
+
+        self.set_bullet_format()
+
+        self.elements[-1].last = True
+        char = None
+        for item in self.elements[:-1]:
+            char = self._output_element(item, char)
+            self.document.add_newline()
+        self._output_element(self.elements[-1], char)
+        if self.primary_list:
+            self.document.add_newline()
+        self.document.page.cursor.x_shift_left(-10)
+
+    def _to_Roman(self, n):
         digits = [(1000, 'M'), (900, 'CM'), (500, 'D'), (400, 'CD' ),
             (100, 'C'), (90, 'XC'), (50, 'L'), (40, 'XL'),
             (10, 'X'), (9, 'IX'), (5, 'V'), (4, 'IV'), (1, 'I')]
@@ -235,3 +186,196 @@ class PDFHtml(object):
                 n -= val
                 result += romn
         return result
+
+class ListElement(Element):
+    def __init__(self, attr=None):
+        super(ListElement, self).__init__()
+        self.name = 'li'
+        self.attributes = attr
+        self.elements = []
+        self.data = []
+        self.spans = []
+
+    def set_spans(self):
+        for item in self.elements:
+            if item.name == 'span':
+                self.spans.append(item)
+
+    def output(self, char):
+        self.set_spans()
+        span_index = 0
+        for text in self.data:
+            if text == '%span%':
+                span = self.spans[span_index]
+                span.set_dependancies(self.session, self.document, self.formats, self.context)
+                span.output()
+                span_index += 1
+            else:
+                if char is not None:
+                    self.document.add_text('%s' % char)
+                self.document.add_text(' %s' % text)
+                char = None
+        for element in self.elements:
+            if element.name != 'span':
+                if element.name == 'p':
+                    self.document.add_text(char)
+                    char = None
+                if element.name in ['ul', 'ol']:
+                    element.primary_list = False
+                element.set_dependancies(self.session, self.document, self.formats, self.context)
+                element.output()
+        return char
+
+class Span(Element):
+    def __init__(self, attr=None):
+        super(Span, self).__init__()
+        self.name = 'span'
+        self.attributes = attr
+
+    def output(self):
+        savefont = self.document.get_font()
+        font, color, variable = self._parse_atts(self.attributes)
+        if variable is not None:
+            PDFText(self.session, self.document.page, '%s' % variable, font, color, self.document.page.cursor)
+        self.document.set_font(font=savefont)
+
+class Blockquote(Element):
+    def __init__(self):
+        super(Blockquote, self).__init__()
+        self.name = 'blockquote'
+        self.data = []
+
+    def output(self):
+        self.document.add_newline(2)
+        self.document.page.cursor.x_shift_left(20)
+        if 'blockquote' in self.formats:
+            self.document.set_font(self.formats['blockquote'])
+        else:
+            self.document.set_font(self.formats['p'])
+        for text in self.data:
+            self.document.add_text('%s' % text)
+        self.document.page.cursor.x_shift_left(-20)
+        self.document.add_newline()
+
+class Link(Element):
+    def __init__(self, attr=None):
+        super(Link, self).__init__()
+        self.name = 'a'
+        self.attributes = attr
+
+class PDFHTMLParser(HTMLParser):
+    def __init__(self):
+        # HTMLParser is old-style class
+        HTMLParser.__init__(self)
+        self.commandlist = []
+        self.target = self.commandlist
+        self.last_target = []
+        self.data_target = None
+        self.datastring = ''
+
+    def save_target(self):
+        self.last_target.append(self.target)
+
+    def handle_starttag(self, tag, attrs):
+        if attrs == '' or attrs == []:
+            attrs = None
+        if tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+            self.reset_data()
+            header = Header(tag, attrs)
+            self.target.append(header)
+            self.data_target = header
+        if tag == 'br':
+            br = Break()
+            self.target.append(br)
+        if tag == 'p':
+            para = Paragraph(attrs)
+            self.target.append(para)
+            self.data_target = para
+            self.save_target()
+            self.target = para.elements
+        if tag == 'span':
+            span = Span(attrs)
+            self.target.append(span)
+            self.data_target.save_data('%span%')
+        if tag == 'ul':
+            unlist = UnorderedList(attrs)
+            self.target.append(unlist)
+            self.save_target()
+            self.target = unlist.elements
+        if tag == 'ol':
+            orlist = OrderedList(attrs)
+            self.target.append(orlist)
+            self.save_target()
+            self.target = orlist.elements
+        if tag == 'li':
+            listel = ListElement(attrs)
+            self.target.append(listel)
+            self.data_target = listel
+            self.save_target()
+            self.target = listel.elements
+        if tag == 'blockquote':
+            block = Blockquote()
+            self.target.append(block)
+            self.data_target = block
+        if tag == 'a':
+            link = Link()
+            self.last_data_target = self.data_target
+            self.data_target = link
+
+    def handle_data(self, data):
+        data = self.strip(data)
+        if data != '':
+            if self.data_target is not None:
+                self.data_target.save_data(data)
+
+    def reset_data(self):
+        self.datastring = ''
+
+    def handle_endtag(self, tag):
+        if tag in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+            self.data_target = None
+        if tag == 'p':
+            self.target = self.last_target.pop()
+            self.data_target = None
+        if tag == 'ul' or tag == 'ol':
+            self.target = self.last_target.pop()
+            self.data_target = None
+        if tag == 'li':
+            self.target = self.last_target.pop()
+            self.data_target = None
+        if tag == 'blockquote':
+            self.data_target = None
+        if tag == 'a':
+            self.data_target = self.last_data_target
+            self.last_data_target = None
+
+    def get_commandlist(self):
+        return self.commandlist
+
+    def strip(self, mystring):
+        return re.sub("\s\s+" , " ", mystring.strip())
+
+
+class PDFHtml(object):
+    def __init__(self, parent, session, htmltext, formats=None, context=None):
+        self.document = parent
+        self.session = session
+        self.htmltext = str(htmltext)
+        self.context = {}
+        if isinstance(context, dict):
+            self.context = context
+        self.formats = {}
+        if isinstance(formats, dict):
+            self.formats = formats
+        self._parsehtml()
+        self._runlist(self.commandlist)
+
+    def _parsehtml(self):
+        parser = PDFHTMLParser()
+        parser.feed(self.htmltext)
+        self.commandlist = parser.get_commandlist()
+
+    def _runlist(self, mylist):
+        for item in mylist:
+            item.set_dependancies(self.session, self.document, self.formats, self.context)
+            item.output()
