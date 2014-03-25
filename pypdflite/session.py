@@ -115,8 +115,13 @@ class _Session(object):
             page.
 
         """
+        save_cursor = self.parent.document.page.cursor.copy()
+        save_cursor.x_reset()
+        save_cursor.y_reset()
         self.parent.document.add_page()
+        self.parent.document.set_cursor(save_cursor)
         self.parent.document.add_text(text)
+
 
     # Strings
     @staticmethod
