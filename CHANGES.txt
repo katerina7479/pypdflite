@@ -24,3 +24,4 @@ v0.1.22, 03-21-2014 -- Merged transforms, html
 v0.1.23, 03-22-2014 -- Page Layouts, Justification
 v0.1.24, 03-23-2014 -- Fixed page layout float
 v0.1.25, 03-24-2014 -- Implemented blocks, fixed html file load
+v0.1.26, 03-25-2014 -- Refactored html, text bug fixes.
