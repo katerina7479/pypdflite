@@ -34,7 +34,7 @@ class PDFPage(object):
         # Initialize the Page Margin.
         self.margin = margin
         self.set_orientation(orientation)
-        self.set_margins()
+        self.set_margins(margin)
 
         self.orientation_change = False
         self.buffer = ""
