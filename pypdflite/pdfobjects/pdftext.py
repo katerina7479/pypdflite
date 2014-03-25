@@ -1,5 +1,5 @@
 from math import cos, tan, sin, pi
-
+import re
 
 class PDFText(object):
 
@@ -89,10 +89,13 @@ class PDFText(object):
         if test is False:
             self.session._add_page(self.text)
         else:
-            for line in line_array:
+            for line in line_array[:-1]:
                 self._set_justification(line)
                 self._text(line)
                 self._newline()
+            line = line_array[-1]
+            self._set_justification(line)
+            self._text(line)
 
     def _test_x_fit(self, value=None):
         if value is None:
@@ -106,7 +109,7 @@ class PDFText(object):
 
     def _split_into_lines(self, text):
         test_cursor = self.cursor.copy()  # Test cursor
-        text_array = text.split()
+        text_array = re.split('(\s+)', text)
         myline = ''
         line_array = []
         for word in text_array:
@@ -119,7 +122,7 @@ class PDFText(object):
                 if myline == '':
                     myline = word
                 else:
-                    myline += ' %s' % word
+                    myline += '%s' % word
         line_array.append(myline)
         return line_array
 
