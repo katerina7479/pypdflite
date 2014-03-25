@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='PyPDFLite',
-    version='0.1.26',
+    version='0.1.27',
     author='Katerina Hanson',
     author_email='katerina.hanson@gmail.com',
     packages=['pypdflite', 'pypdflite.pdfobjects'],
