@@ -303,7 +303,7 @@ class PDFLite(object):
 
         """
         if text:
-            for i, j in {"\\": "\\\\", ")": "\\)", "(": "\\("}.iteritems():
+            for i,j in [("\\","\\\\"),(")","\\)"),("(", "\\(")]:
                 text = text.replace(i, j)
             text = "(%s)" % text
         else:
