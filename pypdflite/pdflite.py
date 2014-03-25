@@ -2,6 +2,7 @@ from datetime import datetime
 from font_loader import FontLoader
 from session import _Session
 from .pdfdocument import PDFDocument
+from pdfobjects.pdftext import PDFText
 
 
 class PDFLite(object):
@@ -303,9 +304,7 @@ class PDFLite(object):
 
         """
         if text:
-            for i, j in {"\\": "\\\\", ")": "\\)", "(": "\\("}.iteritems():
-                text = text.replace(i, j)
-            text = "(%s)" % text
+            text = "(%s)" % PDFText._escape(text)
         else:
             text = 'None'
         return text
