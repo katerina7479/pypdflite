@@ -45,6 +45,12 @@ class Element(object):
                     color = value
         return font, color, variable
 
+    def _set_attr(self, font, color):
+        if font is not None:
+            self.document.set_font(font=font)
+        if color is not None:
+            self.document.set_text_color(color)
+
 class Header(Element):
     def __init__(self, name, attr=None):
         super(Header, self).__init__()
@@ -55,6 +61,9 @@ class Header(Element):
     def output(self):
         save_font = self.document.get_font()
         self.document.set_font(self.formats[self.name])
+        if self.attributes is not None:
+            font, color, variable = self._parse_atts(self.attributes)
+            self._set_attr(font, color)
         for text in self.data:
             self.document.add_text('%s' % text)
         self.document.add_newline()
@@ -70,6 +79,9 @@ class Paragraph(Element):
 
     def output(self):
         self.document.set_font(self.formats['p'])
+        if self.attributes is not None:
+            font, color, variable = self._parse_atts(self.attributes)
+            self._set_attr(font, color)
         span_index = 0
         for text in self.data:
             if text == '%span%':
@@ -118,6 +130,9 @@ class UnorderedList(Element):
         self.document.page.cursor.x_shift_left(10)
         if 'ul' in self.formats:
             self.document.set_font(self.formats['ul'])
+        if self.attributes is not None:
+            font, color, variable = self._parse_atts(self.attributes)
+            self._set_attr(font, color)
         for item in self.elements[:-1]:
             self._output_element(item)
             self.document.add_newline()
@@ -159,7 +174,9 @@ class OrderedList(Element):
         self.document.page.cursor.x_shift_left(10)
         if 'ol' in self.formats:
             self.document.set_font(self.formats['ol'])
-
+        if self.attributes is not None:
+            font, color, variable = self._parse_atts(self.attributes)
+            self._set_attr(font, color)
         self.set_bullet_format()
 
         self.elements[-1].last = True
@@ -202,6 +219,9 @@ class ListElement(Element):
                 self.spans.append(item)
 
     def output(self, char):
+        if self.attributes is not None:
+            font, color, variable = self._parse_atts(self.attributes)
+            self._set_attr(font, color)
         self.set_spans()
         span_index = 0
         for text in self.data:
