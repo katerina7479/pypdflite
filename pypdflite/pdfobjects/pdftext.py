@@ -93,8 +93,9 @@ class PDFText(object):
 
     def _write(self):
         # Move the y cursor down if it will run into the top margin
-        if (self.cursor.y - self.font.line_size) <= self.cursor.ymin:
+        if (self.cursor.y - self.font.line_size) < self.cursor.ymin:
                 self.cursor.y_plus(self.font.line_size)
+
         # Split array into lines that will fit in the x direction
         self.line_array = self._split_into_lines(self.text)
 
@@ -109,7 +110,7 @@ class PDFText(object):
             self.line_index = 0
             for line in self.line_array[:-1]:
                 if self.stale_page:
-                    # _text has added a new page, and forwarded remaining lines.
+                    #  _text has added a new page, and forwarded remaining lines.
                     break
                 self._set_justification(line)
                 self._text(line)
