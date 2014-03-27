@@ -33,11 +33,12 @@ class PDFCursor(object):
         return "(%s, %s)" % (self.x, self.y)
 
     # May be used to change boundaries, and small offsets.
-    def set_bounds(self, xmin=0, ymin=0, xmax=612, ymax=792):
+    def set_bounds(self, xmin=0, ymin=0, xmax=612, ymax=792, ymaxmax=792):
         self.xmin = xmin
         self.ymin = ymin
         self.xmax = xmax
         self.ymax = ymax
+        self.ymaxmax = ymaxmax
 
         # Setter called in case original placement
         # of cursor was out of newly set bounds
@@ -75,7 +76,7 @@ class PDFCursor(object):
 
     @property
     def y_prime(self):
-        return self.ymax - self.y
+        return self.ymaxmax - self.y
 
     def x_fit(self, test_length):
         """ Test to see if the line can has enough space for the given length. """

@@ -120,7 +120,7 @@ class PDFPage(object):
             ymin = 0 + self.margin.top
             ymax = self.size[1] - self.margin.bottom
 
-        self.cursor.set_bounds(xmin, ymin, xmax, ymax)
+        self.cursor.set_bounds(xmin, ymin, xmax, ymax, self.size[1])
 
     def _add_newline(self, font, number=1):
         self.cursor.y_plus((font.line_size * number))
