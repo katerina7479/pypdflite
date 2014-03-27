@@ -273,10 +273,12 @@ class PDFDocument(object):
 
     def start_block_indent(self, px=20):
         self.px = px
-        self.set_cursor(self.page.cursor.x + self.px, self.page.cursor.y)
+        self.page.cursor.x_plus(self.px)
+        self.page.cursor.xmin = self.page.cursor.x
 
     def end_block_indent(self):
-        self.set_cursor(self.page.cursor.x - self.px, self.page.cursor.y)
+        self.page.cursor.xmin -= self.px
+        self.page.cursor.x_plus(-self.px)
 
     def add_list(self, *args, **kwargs):
         bullet_code = 149
@@ -457,8 +459,6 @@ class PDFDocument(object):
             self.page.cursor = myimage.cursor
 
     def set_background_image(self, image):
-        margins = PDFMargin(0, 0, None, None)
-        self.page.set_margins(margins)
         background_cursor = PDFCursor(0, 0)
         myimage = self.add_image(image)
         self.draw_image(myimage, background_cursor, width=self.page.width)

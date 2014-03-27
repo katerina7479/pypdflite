@@ -7,7 +7,8 @@ class PDFText(object):
         self.session = session
         self.page = page
         self.text = text
-        self.justify=justify
+        self.justify = justify
+        self.stale_page = False
         if font is None:
             self.font = self.session.parent.document.font
         else:
@@ -17,7 +18,6 @@ class PDFText(object):
             self.cursor = page.cursor
         else:
             self.cursor = cursor
-
         if self._test_x_fit() is True:
             self._set_justification(self.text)
             self._text()
@@ -43,8 +43,16 @@ class PDFText(object):
 
         # Check to make sure it's not a blank string
         if self.text != '' and self.text is not None:
-            # Check to make sure it will fit in the y_boundary
+            # Check to make sure it is not in the top margin.
+            if (self.cursor.y - self.font.line_size) < self.cursor.ymin:
+                self.cursor.y_plus(self.font.line_size)
+
+            # Check to make sure it will fit before the bottom margin
             if not self.cursor.y_fit(self.font.line_size):
+                if hasattr(self, 'line_array'):
+                    if self.line_index < len(self.line_array):
+                        self.text = ''.join(self.line_array[self.line_index:])
+                        self.stale_page = True
                 self.session._add_page(self.text)
             else:
                 # Escape and put in ()
@@ -84,18 +92,33 @@ class PDFText(object):
             pass
 
     def _write(self):
-        line_array = self._split_into_lines(self.text)
-        test = self.cursor.y_fit(self.font.line_size * len(line_array))
-        if test is False:
+        # Move the y cursor down if it will run into the top margin
+        if (self.cursor.y - self.font.line_size) <= self.cursor.ymin:
+                self.cursor.y_plus(self.font.line_size)
+        # Split array into lines that will fit in the x direction
+        self.line_array = self._split_into_lines(self.text)
+
+        # Test length for whole paragraph
+        test_length = self.font.line_size * len(self.line_array)
+        if self.cursor.y_fit(test_length) is False and (test_length < (self.cursor.ymax - self.cursor.ymin - self.font.line_size)):
+            # If the unit won't fit on this page as a whole, but will fit on a new page,
+            # then push whole paragraph onto next page
             self.session._add_page(self.text)
         else:
-            for line in line_array[:-1]:
+            # Split up the unit into lines, and write them one by one
+            self.line_index = 0
+            for line in self.line_array[:-1]:
+                if self.stale_page:
+                    # _text has added a new page, and forwarded remaining lines.
+                    break
                 self._set_justification(line)
                 self._text(line)
+                self.line_index += 1
                 self._newline()
-            line = line_array[-1]
-            self._set_justification(line)
-            self._text(line)
+            if not self.stale_page:
+                line = self.line_array[-1]
+                self._set_justification(line)
+                self._text(line)
 
     def _test_x_fit(self, value=None):
         if value is None:
