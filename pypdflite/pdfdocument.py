@@ -460,6 +460,7 @@ class PDFDocument(object):
 
     def set_background_image(self, image):
         background_cursor = PDFCursor(0, 0)
+        background_cursor.set_bounds(xmin=0, ymin=0, xmax=self.page.width, ymax=self.page.height, ymaxmax=self.page.height)
         myimage = self.add_image(image)
         self.draw_image(myimage, background_cursor, width=self.page.width)
 
