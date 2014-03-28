@@ -28,6 +28,10 @@ class PDFTTFont(PDFFont):
                         1234567890-,.<>/?;:\'\"\\[]{}
                         =+_!@#$%^&*()~`""")
 
+    @staticmethod
+    def available_fonts():
+        return FontLoader.font_dict
+
     def _set_family(self, family):
         if family is not None:
             family = family.lower()

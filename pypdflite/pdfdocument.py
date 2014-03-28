@@ -230,6 +230,9 @@ class PDFDocument(object):
         else:
             self.font._set_size(size)
 
+    def print_available_fonts(self):
+        print PDFTTFont.available_fonts()
+
     # Writing
     def add_text(self, text, cursor=None):
         """ Input text, short or long. Writes in order, within the
