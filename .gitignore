@@ -1,1 +1,6 @@
 _site
+.idea/
+bin/
+dist/
+generated/
+pypdflite/

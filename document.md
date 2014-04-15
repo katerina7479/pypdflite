@@ -188,8 +188,8 @@ are not supported at this time.
     * 'B' for bold
     * 'I' for italic
     * 'U' for underline
-    * Concatonate for multiple styles, i.e. 'BU' is bold-underline
-    * Order of characters is irrelavant
+    * Concatenate for multiple styles, i.e. 'BU' is bold-underline
+    * Order of characters is irrelevant
     * Defaults to no style
 
 * **size (int):**
@@ -486,7 +486,7 @@ will be errors on the page.
 ## document.add\_cell\_format(data=None, font=None)
 
 * **data (dictionary):**
-    Dictionary of key value pairs specifing a cell format.
+    Dictionary of key value pairs specifying a cell format.
 
     See [Cell Formats](cellformat.html) for data values, and defaults.
 

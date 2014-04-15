@@ -23,7 +23,7 @@ Stores values for formatting each cell in a table
 
 # <a name='cellformat'></a>Cell Format Object
 
-Cell formats should be set throug the document.add_cell_format method.
+Cell formats should be set through the document.add_cell_format method.
 They contain dictionary settings for fonts, text alignment, number formatting,
 borders, fill colors, and cell padding.
 
@@ -36,7 +36,7 @@ the table.set_format methods.
 ### document.add\_cell\_format(data=None, font=None)
 
 * **data (dictionary):**
-    Dictionary of key value pairs specifing a cell format.
+    Dictionary of key value pairs specifying a cell format.
 
 * **font (PDFFont):**
     Sets font for cell. Defaults to page font.
