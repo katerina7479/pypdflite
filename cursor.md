@@ -194,3 +194,6 @@ y coordinate, then x coordinates are compared.
 
 * Resets y to y_min
 
+### cursor.x_shift_left(delta)
+
+* Adds delta to x and xmin

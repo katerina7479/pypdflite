@@ -99,3 +99,19 @@ debug the pdf in a text editor.
 Information is metadata that can be seen in the 'properties' dialog in readers.
 
 * Set with strings, in order or by keyword, use None to skip
+
+set_display_mode(zoom, layout)
+
+**Parameters**
+
+* **zoom (string or int)**
+    * "fullpage", "fullwidth", "real", "default".
+    * May be an integer 0 < zoom <= 100
+    * Describes the level of zoom for the page when it is opened. Defaults to "fullpage".
+
+* **layout(string)**
+    * "single", "continuous", "two", "default"
+    * Defaults to "continuous".
+    * Not related to page orientation
+
+

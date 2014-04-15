@@ -79,17 +79,82 @@ get_document() method on the writer class.
 
 ```
 
+## document.add\_list(*args, *kwargs)
+
+* Adds a bullet list.
+
+* **args**
+    * List arguments
+    * May be individual arguments, or a list of arguments.
+
+* **kwargs**
+    * "bullet"
+        * 1 = ASCI 149
+        * 2 = ASCI 186
+        * 3 = ASCI 150
+
+    * "force" = True (default false)
+        * Changes fonts for bullet to force showing the bullet in helvetica.
+
+## document.add\_html(htmltext, context, formats, cursor)
+
+* Parses Simple html tags to insert into the page.
+
+```
+    myred = PDFColor(name='red')
+    normalfont = document.get_font()
+    header1 = document.set_font('helvetica', style='B', size=22)
+
+    document.set_font(font=normalfont)
+
+    html_text = """
+                <html>
+                <head><title>Nothing here will output</title>
+                </head>
+                <body>
+                <h1>Test Header</h1>
+                <p>This is going to write in <span class="red" data-bind="color"></span>
+                </p>
+                </body>
+                </html>
+                """
+
+    document.add_html(html_text, context={'color' = ' red!'}, format={'h1': header1, 'red' = myred, 'p': normalfont}
+    writer.close()
+
+```
+
+* **htmltext**
+    * May be a string, file, or StringIO
+    * Will parse the following elements:
+        * <p>, <span>, <br/>, <blockquote>, <ul>, <ol>, <li>, <h*>, <a>
+
+    * Tags may have attributes.
+    * Span tags with the 'data-bind' attribute set to a 'key', will place the 'value' from the list in context
+      into the span.
+
+* **context**
+    * key-value dictionary defining any span data-bind attributes.
+
+* **formats**
+    * Dictionary defining formats by class attributes.
+
+* **cursor**
+    * Starting cursor
+
+
+## document.draw\_horizonal\_line()
+
+* Draws a horizontal line from margin to margin.
+* Does not change the page cursor
+
+
 ## document.add_indent(number)
 
 * **number (int):**
     * Adds an indent of number spaces.
     * Space width based on page font.
     * Defaults to 4 spaces.
-
-## document.draw\_horizonal\_line()
-
-* Draws a horizontal line from margin to margin.
-* Does not change the page cursor
 
 ## document.start\_block\_indent(int)
 
