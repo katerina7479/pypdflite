@@ -30,3 +30,4 @@ v0.1.28, 03-25-2014 -- Fixed page cursor bug
 v0.1.29, 03-26-2014 -- Margins, write method
 v0.1.30, 03-27-2014 -- Write method newline bug
 v0.1.31, 03-27-2014 -- Background image bug
+v0.1.32, 05-07-2014 -- Font utility functions
