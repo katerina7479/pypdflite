@@ -91,7 +91,7 @@ class Paragraph(Element):
                 span_index += 1
             else:
                 self.document.add_text('%s' % text)
-        self.document.add_newline(2)
+        self.document.add_newline(1)
 
 class Break(Element):
     def __init__(self):
@@ -219,6 +219,8 @@ class ListElement(Element):
                 self.spans.append(item)
 
     def output(self, char):
+        if 'li' in self.formats:
+            self.document.set_font(self.formats['li'])
         if self.attributes is not None:
             font, color, variable = self._parse_atts(self.attributes)
             self._set_attr(font, color)
@@ -237,9 +239,10 @@ class ListElement(Element):
                 char = None
         for element in self.elements:
             if element.name != 'span':
-                if element.name == 'p':
-                    self.document.add_text(char)
-                    char = None
+                if element.name in ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+                    if char is not None:
+                        self.document.add_text(char)
+                        char = None
                 if element.name in ['ul', 'ol']:
                     element.primary_list = False
                 element.set_dependancies(self.session, self.document, self.formats, self.context)

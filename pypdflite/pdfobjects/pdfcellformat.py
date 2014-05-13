@@ -31,9 +31,11 @@ class PDFCellFormat(object):
                                'padding_left': 2,
                                'padding_right': 2
                                }
-
-        for key, value in data.iteritems():
-            self._set_keys(key, value)
+        try:
+            for key, value in data.iteritems():
+                self._set_keys(key, value)
+        except AttributeError:
+            pass
 
         self._set_remaining()
 

@@ -78,10 +78,10 @@ class PDFText(object):
                     self.session._save_color(self.color.copy())
 
                 # Set Font for text
-                if self.font.is_set is False:
-                    fs = 'BT /F%d %.2f Tf ET' % (self.font.index, self.font.font_size)
-                    self.font.is_set = True
-                    self.session._out(fs, self.page)
+                # TODO, if font is current font, don't set it again.
+                # Need to change all other font.is_set to false, though
+                fs = 'BT /F%d %.2f Tf ET' % (self.font.index, self.font.font_size)
+                self.session._out(fs, self.page)
 
                 self.session._out(s, self.page)
                 try:
