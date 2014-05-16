@@ -52,7 +52,7 @@ class PDFTable(object):
 
     def set_format(self, row, col, format):
         cell = self.rows[row][col]
-        cell.set_format(format)
+        cell._set_format(format)
 
     def set_format_row(self, row, col_start, format):
         for c in range(col_start, self.number_of_columns):

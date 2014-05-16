@@ -1,4 +1,5 @@
 import os
+import re
 from pdfobjects.pdffont import PDFFont, CORE_FONTS
 from pdfobjects.pdfpage import PDFPage
 from pdfobjects.pdftext import PDFText
@@ -49,7 +50,7 @@ class PDFDocument(object):
         self.orientation_default = orientation
         self.layout_default = layout
         self.justification = 'left'
-
+        self.double_spacing = None
         self.diffs = []
 
         self._set_defaults()
@@ -229,6 +230,9 @@ class PDFDocument(object):
         else:
             self.font._set_size(size)
 
+    def print_available_fonts(self):
+        print PDFTTFont.available_fonts()
+
     # Writing
     def add_text(self, text, cursor=None):
         """ Input text, short or long. Writes in order, within the
@@ -243,13 +247,18 @@ class PDFDocument(object):
         if cursor is None:
             cursor = self.page.cursor
 
+        text = re.sub("\s\s+" , " ", text)
+
         if '\n' in text:
             text_list = text.split('\n')
             for text in text_list:
-                PDFText(self.session, self.page, text, self.font, self.text_color, cursor, self.justification)
+                PDFText(self.session, self.page, text, self.font, self.text_color, cursor, self.justification, self.double_spacing)
                 self.add_newline()
         else:
-            PDFText(self.session, self.page, text, self.font, self.text_color, cursor, self.justification)
+            PDFText(self.session, self.page, text, self.font, self.text_color, cursor, self.justification, self.double_spacing)
+
+    def double_space(self, multiplier=1):
+        self.double_spacing = multiplier
 
     def add_newline(self, number=1):
         """ Starts over again at the new line. If number is specified,
@@ -257,7 +266,7 @@ class PDFDocument(object):
         """
         if isinstance(number, int):
             try:
-                self.page._add_newline(self.font, number)
+                self.page._add_newline(self.font, number, self.double_spacing)
             except ValueError:
                 self.add_page()
         else:
@@ -270,10 +279,12 @@ class PDFDocument(object):
 
     def start_block_indent(self, px=20):
         self.px = px
-        self.set_cursor(self.page.cursor.x + self.px, self.page.cursor.y)
+        self.page.cursor.x_plus(self.px)
+        self.page.cursor.xmin = self.page.cursor.x
 
     def end_block_indent(self):
-        self.set_cursor(self.page.cursor.x - self.px, self.page.cursor.y)
+        self.page.cursor.xmin -= self.px
+        self.page.cursor.x_plus(-self.px)
 
     def add_list(self, *args, **kwargs):
         bullet_code = 149
@@ -314,10 +325,9 @@ class PDFDocument(object):
         if hasattr(htmltext, 'write'):
             htmltext = htmltext.read()
 
-        PDFHtml(self, self.session, self.page, htmltext, formats, context)
+        PDFHtml(self, self.session, htmltext, formats, context)
 
-    def add_line(self, x1=None, y1=None, x2=None, y2=None,
-                 cursor1=None, cursor2=None, style="solid"):
+    def add_line(self, x1=None, y1=None, x2=None, y2=None, cursor1=None, cursor2=None, style="solid"):
         if cursor1 is not None:
             if cursor2 is not None:
                 pass
@@ -455,9 +465,8 @@ class PDFDocument(object):
             self.page.cursor = myimage.cursor
 
     def set_background_image(self, image):
-        margins = PDFMargin(0, 0, None, None)
-        self.page.set_margins(margins)
         background_cursor = PDFCursor(0, 0)
+        background_cursor.set_bounds(xmin=0, ymin=0, xmax=self.page.width, ymax=self.page.height, ymaxmax=self.page.height)
         myimage = self.add_image(image)
         self.draw_image(myimage, background_cursor, width=self.page.width)
 

@@ -34,7 +34,7 @@ class PDFPage(object):
         # Initialize the Page Margin.
         self.margin = margin
         self.set_orientation(orientation)
-        self.set_margins()
+        self.set_margins(margin)
 
         self.orientation_change = False
         self.buffer = ""
@@ -120,9 +120,11 @@ class PDFPage(object):
             ymin = 0 + self.margin.top
             ymax = self.size[1] - self.margin.bottom
 
-        self.cursor.set_bounds(xmin, ymin, xmax, ymax)
+        self.cursor.set_bounds(xmin, ymin, xmax, ymax, self.size[1])
 
-    def _add_newline(self, font, number=1):
+    def _add_newline(self, font, number=1, double_spacing=None):
+        if double_spacing is not None:
+            self.cursor.y_plus((font.line_size * number * double_spacing))
         self.cursor.y_plus((font.line_size * number))
         self.cursor.x_reset()
 

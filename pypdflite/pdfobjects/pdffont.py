@@ -88,12 +88,14 @@ class PDFFont(object):
             self.font_key += '_bold'
         if 'I' in self.style:
             self.font_key += '_italic'
+        self.font_id = self.font_key
+        self.font_key += ":%s" % self.font_size
 
     def _set_name(self):
-        self.name = CORE_FONTS[self.font_key]
+        self.name = CORE_FONTS[self.font_id]
 
     def _set_character_widths(self):
-        self.character_widths = pdf_character_widths[self.font_key]
+        self.character_widths = pdf_character_widths[self.font_id]
 
     def _set_font(self, family=None, style=None, size=None):
         """Select a font; size given in points"""

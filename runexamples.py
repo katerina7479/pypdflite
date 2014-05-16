@@ -14,6 +14,7 @@ from bin.transformtest import TransformTest
 from bin.htmltest import HtmlTest
 from bin.htmltest2 import HtmlTest2
 from bin.justifytest import JustifyTest
+from bin.pdfmargintest import MarginTest
 
 
 def main():
@@ -23,6 +24,8 @@ def main():
     TrueTypeTest()
     print "Running List Test"
     ListTest()
+    print "Running Margin Test"
+    MarginTest()
     print "Running Underline Test"
     UnderlineTest()
     print "Running LandscapeTest"
