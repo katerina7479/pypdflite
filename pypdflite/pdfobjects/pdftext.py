@@ -3,11 +3,12 @@ import re
 
 class PDFText(object):
 
-    def __init__(self, session, page, text, font=None, color=None, cursor=None, justify='left'):
+    def __init__(self, session, page, text, font=None, color=None, cursor=None, justify='left', double_spacing=None):
         self.session = session
         self.page = page
         self.text = text
         self.justify = justify
+        self.double_spacing = double_spacing
         self.stale_page = False
         if font is None:
             self.font = self.session.parent.document.font
@@ -171,6 +172,8 @@ class PDFText(object):
         return s
 
     def _newline(self):
+        if self.double_spacing is not None:
+            self.cursor.y_plus(self.font.line_size * self.double_spacing)
         self.cursor.y_plus(self.font.line_size)
         self.cursor.x_reset()
 

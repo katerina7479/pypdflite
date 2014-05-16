@@ -99,6 +99,7 @@ def TextTest():
         and more recently with desktop publishing software like Aldus\
         PageMaker including versions of Lorem Ipsum.""")
     document.add_newline(2)
+    document.double_space(0.5)
     document.add_text(
         """Lorem ipsum dolor sit amet, consectetur adipiscing elit.\
         Cras et erat dolor. Nullam id aliquam neque. Vivamus nec nibh\

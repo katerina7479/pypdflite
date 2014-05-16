@@ -50,7 +50,7 @@ class PDFDocument(object):
         self.orientation_default = orientation
         self.layout_default = layout
         self.justification = 'left'
-
+        self.double_spacing = None
         self.diffs = []
 
         self._set_defaults()
@@ -252,10 +252,13 @@ class PDFDocument(object):
         if '\n' in text:
             text_list = text.split('\n')
             for text in text_list:
-                PDFText(self.session, self.page, text, self.font, self.text_color, cursor, self.justification)
+                PDFText(self.session, self.page, text, self.font, self.text_color, cursor, self.justification, self.double_spacing)
                 self.add_newline()
         else:
-            PDFText(self.session, self.page, text, self.font, self.text_color, cursor, self.justification)
+            PDFText(self.session, self.page, text, self.font, self.text_color, cursor, self.justification, self.double_spacing)
+
+    def double_space(self, multiplier=1):
+        self.double_spacing = multiplier
 
     def add_newline(self, number=1):
         """ Starts over again at the new line. If number is specified,
@@ -263,7 +266,7 @@ class PDFDocument(object):
         """
         if isinstance(number, int):
             try:
-                self.page._add_newline(self.font, number)
+                self.page._add_newline(self.font, number, self.double_spacing)
             except ValueError:
                 self.add_page()
         else:
