@@ -108,7 +108,7 @@ class PDFLite(object):
         # Catalog object
         self._put_catalog()
         # Cross-reference object
-        self._put_cross_reference()
+        #self._put_cross_reference()
         # Trailer object
         self._put_trailer()
 
@@ -267,6 +267,10 @@ class PDFLite(object):
             reference.
 
         """
+        startxref = len(self.session.buffer)
+        
+        self._put_cross_reference()
+        
         md5 = hashlib.md5()
         md5.update(datetime.now().strftime('%Y%m%d%H%M%S'))
         md5.update(self.filepath)
@@ -289,7 +293,7 @@ class PDFLite(object):
         self.session._out('/ID [ <%s> <%s>]' % (md5.hexdigest(),md5.hexdigest()))
         self.session._out('>>')
         self.session._out('startxref')
-        self.session._out(len(self.session.buffer))
+        self.session._out(startxref)
         self.session._out('%%EOF')
 
     def _output_to_file(self):
