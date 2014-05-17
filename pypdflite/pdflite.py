@@ -125,6 +125,8 @@ class PDFLite(object):
     def _put_header(self):
         """ Standard first line in a PDF. """
         self.session._out('%%PDF-%s' % self.pdf_version)
+        if self.session.compression:
+            self.session.buffer += '%' + chr(235) + chr(236) + chr(237) + chr(238) + "\n"
 
     def _put_pages(self):
         """ First, the Document object does the heavy-lifting for the
