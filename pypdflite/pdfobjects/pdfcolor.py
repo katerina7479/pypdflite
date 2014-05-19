@@ -62,7 +62,7 @@ class PDFColor(object):
             ans = False
         elif test_color.color_type != self.color_type:
             ans = False
-        elif self.name == test_color.name:
+        elif self.name is not None and self.name == test_color.name:
             ans = True
         elif (self.red == test_color.red and
               self.blue == test_color.blue and
