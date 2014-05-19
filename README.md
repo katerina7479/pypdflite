@@ -34,4 +34,4 @@ to place and size.
 
 Thanks to: Marc Angelone, Noah Abelson, and John Lockwood for support and input!
 Also: @klmitch for loading fonts on linux bug; @tjoneslo for ellipses, transforms,
-and linux font fix!
+and bug fixes!
