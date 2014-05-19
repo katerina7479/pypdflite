@@ -349,7 +349,7 @@ class PDFDocument(object):
         myline = PDFLine(self.session, self.page, cursor1, cursor2, self.draw_color, style)
         myline._draw()
 
-    def draw_horizonal_line(self):
+    def draw_horizontal_line(self):
         end_cursor = self.page.cursor.copy()
         end_cursor.x = end_cursor.xmax
 
