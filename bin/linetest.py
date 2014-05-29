@@ -25,7 +25,7 @@ def LinesTest():
     # Add Horizontal rule under text
     document.add_text("Testing")
     document.add_newline(1)
-    document.draw_horizonal_line()
+    document.draw_horizontal_line()
 
     # Create color Object, apply to fill color
     lightblue = PDFColor(name='lightblue')

@@ -71,7 +71,7 @@ class _Session(object):
             Used for overwriting the placeholder objects.
 
         """
-        self.offset += len(self.buffer)
+        self.offset = len(self.buffer)
         if flag is None:
             objnum = len(self.objects)
             obj = _PDFObject(objnum, self.offset)

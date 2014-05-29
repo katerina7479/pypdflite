@@ -2,7 +2,7 @@ from datetime import datetime
 from font_loader import FontLoader
 from session import _Session
 from .pdfdocument import PDFDocument
-
+import hashlib
 
 class PDFLite(object):
 
@@ -108,7 +108,7 @@ class PDFLite(object):
         # Catalog object
         self._put_catalog()
         # Cross-reference object
-        self._put_cross_reference()
+        #self._put_cross_reference()
         # Trailer object
         self._put_trailer()
 
@@ -125,6 +125,8 @@ class PDFLite(object):
     def _put_header(self):
         """ Standard first line in a PDF. """
         self.session._out('%%PDF-%s' % self.pdf_version)
+        if self.session.compression:
+            self.session.buffer += '%' + chr(235) + chr(236) + chr(237) + chr(238) + "\n"
 
     def _put_pages(self):
         """ First, the Document object does the heavy-lifting for the
@@ -261,19 +263,38 @@ class PDFLite(object):
                 self.session._out('%010d 00000 n ' % obj.offset)
 
     def _put_trailer(self):
-        """ Final Trailer calculations, and ebd-of-file
+        """ Final Trailer calculations, and end-of-file
             reference.
 
         """
+        startxref = len(self.session.buffer)
+        
+        self._put_cross_reference()
+        
+        md5 = hashlib.md5()
+        md5.update(datetime.now().strftime('%Y%m%d%H%M%S'))
+        md5.update(self.filepath)
+        if self.title:
+            md5.update(self.title)
+        if self.subject:
+            md5.update(self.subject)
+        if self.author:
+            md5.update(self.author)
+        if self.keywords:
+            md5.update(self.keywords)
+        if self.creator:
+            md5.update(self.creator)
+        
         objnum = len(self.session.objects)
         self.session._out('trailer')
         self.session._out('<<')
         self.session._out('/Size %s' % objnum)
         self.session._out('/Root %s 0 R' % (objnum - 1))
         self.session._out('/Info %s 0 R' % (objnum - 2))
+        self.session._out('/ID [ <%s> <%s>]' % (md5.hexdigest(),md5.hexdigest()))
         self.session._out('>>')
         self.session._out('startxref')
-        self.session._out(len(self.session.buffer))
+        self.session._out(startxref)
         self.session._out('%%EOF')
 
     def _output_to_file(self):
