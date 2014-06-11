@@ -273,7 +273,10 @@ class PDFLite(object):
         
         md5 = hashlib.md5()
         md5.update(datetime.now().strftime('%Y%m%d%H%M%S'))
-        md5.update(self.filepath)
+        try:
+            md5.update(self.filepath)
+        except TypeError:
+            pass
         if self.title:
             md5.update(self.title)
         if self.subject:
