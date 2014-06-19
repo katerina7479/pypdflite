@@ -332,15 +332,21 @@ class PDFDocument(object):
             if cursor2 is not None:
                 pass
             elif x2 is not None and y2 is not None:
-                cursor2 = PDFCursor(x2, y2)
+                cursor2 = self.page.cursor.copy()
+                cursor2.x = x2
+                cursor2.y = y2
             else:
                 raise Exception("Line not fully specified")
         elif x1 is not None and y1 is not None:
-            cursor1 = PDFCursor(x1, y1)
+            cursor1 = self.page.cursor.copy()
+            cursor1.x = x1
+            cursor1.y = y1
             if cursor2 is not None:
                 pass
             elif x2 is not None and y2 is not None:
-                cursor2 = PDFCursor(x2, y2)
+                cursor2 = self.page.cursor.copy()
+                cursor2.x = x2
+                cursor2.y = y2
             else:
                 raise Exception("Line not fully specified")
         else:
