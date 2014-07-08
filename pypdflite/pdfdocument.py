@@ -257,6 +257,12 @@ class PDFDocument(object):
         else:
             PDFText(self.session, self.page, text, self.font, self.text_color, cursor, self.justification, self.double_spacing)
 
+    def draw_text(self, *args, **kwargs):
+        self.add_text(*args, **kwargs)
+
+    def text(self, *args, **kwargs):
+        self.add_text(*args, **kwargs)
+
     def double_space(self, multiplier=1):
         self.double_spacing = multiplier
 
@@ -272,10 +278,16 @@ class PDFDocument(object):
         else:
             raise TypeError("Number of newlines must be an integer.")
 
+    def newline(self, *args, **kwargs):
+        self.add_newline(*args, **kwargs)
+
     def add_indent(self, spaces=4):
         """ Adds a standard tab of 4 spaces.
         """
         self.page._add_indent(self.font, spaces)
+
+    def indent(self, *args, **kwargs):
+        self.add_indent(*args, **kwargs)
 
     def start_block_indent(self, px=20):
         self.px = px
@@ -318,6 +330,9 @@ class PDFDocument(object):
                     self.add_text(' %s' % arg)
                     self.add_newline(2)
 
+    def list(self, *args, **kwargs):
+        self.add_list(*args, **kwargs)
+
     def add_html(self, htmltext, context=None, formats=None, cursor=None):
         if cursor is not None:
             self.set_cursor(cursor)
@@ -326,6 +341,9 @@ class PDFDocument(object):
             htmltext = htmltext.read()
 
         PDFHtml(self, self.session, htmltext, formats, context)
+
+    def html(self, *args, **kwargs):
+        self.add_html(*args, **kwargs)
 
     def add_line(self, x1=None, y1=None, x2=None, y2=None, cursor1=None, cursor2=None, style="solid"):
         if cursor1 is not None:
@@ -349,6 +367,12 @@ class PDFDocument(object):
         myline = PDFLine(self.session, self.page, cursor1, cursor2, self.draw_color, style)
         myline._draw()
 
+    def draw_line(self, *args, **kwargs):
+        self.add_line(*args, **kwargs)
+
+    def line(self, *args, **kwargs):
+        self.add_line(*args, **kwargs)
+
     def draw_horizontal_line(self):
         end_cursor = self.page.cursor.copy()
         end_cursor.x = end_cursor.xmax
@@ -356,8 +380,13 @@ class PDFDocument(object):
         myline = PDFLine(self.session, self.page, self.page.cursor, end_cursor, self.draw_color, None)
         myline._draw()
 
-    def draw_rectangle(self, x1=None, y1=None, x2=None, y2=None,
-                       width=None, height=None, cursor1=None, cursor2=None,
+    def add_horizontal_line(self):
+        self.draw_horizontal_line()
+
+    def horizontal_line(self):
+        self.draw_horizontal_line()
+
+    def draw_rectangle(self, x1=None, y1=None, x2=None, y2=None, width=None, height=None, cursor1=None, cursor2=None,
                        style='S', size=1):
         if cursor1 is not None:
             if cursor2 is not None:
@@ -390,6 +419,12 @@ class PDFDocument(object):
                                  None, style, size)
 
         rectangle._draw()
+
+    def add_rectangle(self, *args, **kwargs):
+        self.draw_rectangle(*args, **kwargs)
+
+    def rectangle(self, *args, **kwargs):
+        self.draw_rectangle(*args, **kwargs)
 
     def add_table(self, rows, columns, cursor=None):
         if cursor is None:
