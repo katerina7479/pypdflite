@@ -162,7 +162,7 @@ class PDFCursor(object):
     def copy(self):
         """ Create a copy, and return it."""
         new_cursor = self.__class__(self.x, self.y)
-        new_cursor.set_bounds(self.xmin, self.ymin, self.xmax, self.ymax)
+        new_cursor.set_bounds(self.xmin, self.ymin, self.xmax, self.ymax, self.ymaxmax)
         new_cursor.set_deltas(self.dx, self.dy)
         return new_cursor
 
