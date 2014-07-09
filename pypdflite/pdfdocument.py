@@ -15,6 +15,8 @@ from pdfobjects.pdfttfonts import PDFTTFont
 from pdfobjects.pdfmargin import PDFMargin
 from pdfobjects.pdfcellformat import PDFCellFormat
 from pdfobjects.pdfhtml import PDFHtml
+from pdfobjects.pdfellipse import PDFEllipse
+from pdfobjects.pdfarc import PDFArc
 
 
 class PDFDocument(object):
@@ -370,6 +372,7 @@ class PDFDocument(object):
         else:
             raise Exception("Line not specified")
 
+        print cursor1, cursor2
         myline = PDFLine(self.session, self.page, cursor1, cursor2, self.draw_color, style)
         myline._draw()
 
@@ -431,6 +434,36 @@ class PDFDocument(object):
 
     def rectangle(self, *args, **kwargs):
         self.draw_rectangle(*args, **kwargs)
+
+    def draw_circle(self, center_cursor, radius, border_color=None, fill_color=None, style='solid', stroke="S", size=1):
+        self.draw_ellipse(center_cursor, radius, radius, border_color, fill_color, style, stroke, size)
+
+    def draw_ellipse(self, center_cursor, x_radius, y_radius, border_color=None, fill_color=None, style='solid', stroke="S", size=1):
+        radius_cursor = PDFCursor(x_radius, y_radius)
+        if isinstance(border_color, PDFColor):
+            border_color = border_color
+        else:
+            border_color = self.draw_color
+        if isinstance(fill_color, PDFColor):
+            fill_color = fill_color
+        else:
+            fill_color = self.fill_color
+
+        circle = PDFEllipse(self.session, self.page, center_cursor, radius_cursor, border_color, fill_color, style, stroke, size)
+        circle._draw()
+
+    def draw_arc(self, center_cursor, radius, starting_angle, arc_angle, inverted=False, border_color=None, fill_color=None, style='solid', stroke='S', size=1):
+        if isinstance(border_color, PDFColor):
+            border_color = border_color
+        else:
+            border_color = self.draw_color
+        if isinstance(fill_color, PDFColor):
+            fill_color = fill_color
+        else:
+            fill_color = self.fill_color
+
+        arc = PDFArc(self.session, self.page, center_cursor, radius, starting_angle, arc_angle, inverted, border_color, fill_color, style, stroke, size)
+        arc._draw()
 
     def add_table(self, rows, columns, cursor=None):
         if cursor is None:

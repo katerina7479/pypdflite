@@ -10,15 +10,16 @@ from bin.jpgtest import JPGTest
 from bin.pagenumbertest import PageNumberTest
 from bin.pngsizetest import ImageSizeTest
 from bin.ellipsetest import EllipseTest
+from bin.circletest import CircleTest
 from bin.transformtest import TransformTest
 from bin.htmltest import HtmlTest
 from bin.htmltest2 import HtmlTest2
 from bin.justifytest import JustifyTest
 from bin.pdfmargintest import MarginTest
-
+from bin.arctest import ArcTest
 
 def main():
-    print "Running TextTest"
+    """print "Running TextTest"
     TextTest()
     print "Running TrueTypeTest"
     TrueTypeTest()
@@ -43,15 +44,19 @@ def main():
     print "Running PNGSizeTest"
     ImageSizeTest()
     print "Running EllipseTest"
-    EllipseTest()
-    print "Running TransormTest"
+    EllipseTest()"""
+    print "Running CircleTest"
+    CircleTest()
+    print "Running Arctest"
+    ArcTest()
+    """ print "Running TransormTest"
     TransformTest()
     print "Running HTMLTest"
     HtmlTest()
     print "Running HTMLTest2"
     HtmlTest2()
     print "Running Justify Test"
-    JustifyTest()
+    JustifyTest()"""
 
 
 if __name__ == '__main__':

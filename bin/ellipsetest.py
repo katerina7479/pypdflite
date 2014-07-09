@@ -44,9 +44,6 @@ def EllipseTest():
     circle._draw()
     radius.x = 10
     radius.y = 20
-    
-    color.set_color_by_name('green')
-    circle._draw()
 
     # Close Document
     writer.close()
