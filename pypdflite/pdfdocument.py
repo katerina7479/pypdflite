@@ -17,6 +17,7 @@ from pdfobjects.pdfcellformat import PDFCellFormat
 from pdfobjects.pdfhtml import PDFHtml
 from pdfobjects.pdfellipse import PDFEllipse
 from pdfobjects.pdfarc import PDFArc
+from pdfobjects.pdflinegraph import PDFLineGraph
 
 
 class PDFDocument(object):
@@ -463,6 +464,32 @@ class PDFDocument(object):
 
         arc = PDFArc(self.session, self.page, center_cursor, radius, starting_angle, arc_angle, inverted, border_color, fill_color, style, stroke, size)
         arc._draw()
+
+    def add_line_graph(self, data, cursor, width, height, axistuple, frequency, axis_labels=None, background='S', border_size=1, line_colors=None):
+        self.draw_rectangle(cursor1=cursor, width=width, height=height, style=background, size=border_size)
+
+        padding = (0.1 * width, 0.1 * height)
+        cursor.x_plus(padding[0])
+        cursor.y_plus(-padding[1] + height)
+        width = width - 2 * (padding[0])
+        height = height - 2 * (padding[1])
+
+        if axis_labels is not None:
+            label_cursor_x = PDFCursor(cursor.x + width / 2.0 - (0.05 * width), cursor.y + 0.1 * height)
+            self.add_text(axis_labels[0], label_cursor_x)
+
+            label_cursor_y = PDFCursor(cursor.x - (0.1 * width), cursor.y - (height / 2.0) - (0.08 * height))
+            text = PDFText(self.session, self.page, None, cursor=label_cursor_y)
+            text.text_rotate(-90)
+            text._text(axis_labels[1])
+
+        if line_colors is None:
+            line_colors = [PDFColor(), PDFColor(name="blue"), PDFColor(name="red")]
+        else:
+            line_colors = line_colors
+        graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, axistuple, frequency, line_colors)
+
+
 
     def add_table(self, rows, columns, cursor=None):
         if cursor is None:

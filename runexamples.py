@@ -17,6 +17,8 @@ from bin.htmltest2 import HtmlTest2
 from bin.justifytest import JustifyTest
 from bin.pdfmargintest import MarginTest
 from bin.arctest import ArcTest
+from bin.linegraphtest import LineGraphTest
+
 
 def main():
     """print "Running TextTest"
@@ -44,12 +46,12 @@ def main():
     print "Running PNGSizeTest"
     ImageSizeTest()
     print "Running EllipseTest"
-    EllipseTest()"""
+    EllipseTest()
     print "Running CircleTest"
     CircleTest()
     print "Running Arctest"
     ArcTest()
-    """ print "Running TransormTest"
+    print "Running TransformTest"
     TransformTest()
     print "Running HTMLTest"
     HtmlTest()
@@ -57,6 +59,8 @@ def main():
     HtmlTest2()
     print "Running Justify Test"
     JustifyTest()"""
+    print "Running LineGraph Test"
+    LineGraphTest()
 
 
 if __name__ == '__main__':
