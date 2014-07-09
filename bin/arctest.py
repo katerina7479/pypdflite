@@ -26,23 +26,23 @@ def ArcTest():
     black = PDFColor()
 
     center = PDFCursor(300, 300)
-    radius = 30
+    radius = 50
     document.draw_circle(center, radius, black)
 
 
     red = PDFColor(name='red')
-    starting_angle = 45
-    arc_angle = 90
+    starting_angle = 15
+    arc_angle = 135
 
-    document.draw_arc(center, radius, starting_angle, arc_angle, inverted=False, border_color=red)
+    document.draw_arc(center, radius, starting_angle, arc_angle, inverted=False, border_color=red, stroke='F')
 
-    blue = PDFColor(name="blue")
-    document.set_draw_color(blue)
-    document.draw_line(306.049, 270.61622, 286.40641373, 268.5761)
 
+    center = PDFCursor(300, 400)
+
+    document.draw_arc(center, radius, starting_angle, arc_angle, inverted=True, border_color=red)
     # Close Document
     writer.close()
 
 
 if __name__ == '__main__':
-    CircleTest()
+    ArcTest()

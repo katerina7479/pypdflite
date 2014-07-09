@@ -372,7 +372,6 @@ class PDFDocument(object):
         else:
             raise Exception("Line not specified")
 
-        print cursor1, cursor2
         myline = PDFLine(self.session, self.page, cursor1, cursor2, self.draw_color, style)
         myline._draw()
 

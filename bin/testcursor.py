@@ -6,7 +6,6 @@ def TestCursor():
     cursor2 = PDFCursor(22, 50)
 
     #print "Should be True:", cursor1 < cursor2
-    print cursor1
     print "Should be False: ", cursor1 > cursor2
     print "Should be False: ", cursor1 == cursor2
 

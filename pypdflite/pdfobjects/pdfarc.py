@@ -14,31 +14,69 @@ class PDFArc(PDFDraw):
         """Draws an arc counter-clockwise from start. Accepts angles in degrees, converts to radians """
         self.center = cursor_center
         self.radius = radius
-        self.start_angle = math.radians(start_angle)
-        self.end_angle = math.radians(arc_angle + start_angle)
-        self.magic = 0.55
-        self.l = self.magic * self.radius
+        self.inverted = inverted
+        self.get_angles(start_angle, arc_angle)
+
         self.fill_color = fill_color
-        self._get_points()
+        self.createArc()
 
-    def get_coord_from_theta(self, theta):
-        x = self.center.x + self.radius * math.cos(theta)
-        y = self.center.y - self.radius * math.sin(theta)
-        return PDFCursor(x, y)
+    def get_angles(self, start_angle, arc_angle):
+        if self.inverted:
+            self.start_angle = math.radians(start_angle + arc_angle)
+            self.end_angle = math.radians(start_angle)
+        else:
+            self.start_angle = math.radians(start_angle)
+            self.end_angle = math.radians(start_angle + arc_angle)
 
-    def get_coord_from_beta(self, beta):
-        hyp = math.sqrt(self.radius ** 2 + self.l ** 2)
-        x = self.center.x - hyp * math.sin(beta)
-        y = self.center.y + hyp * math.cos(beta)
-        return PDFCursor(x, y)
+    def createArc(self):
+        TWO_PI = math.pi * 2
+        PI_OVER_TWO = math.pi / 2.0
 
-    def _get_points(self):
-        self.start = self.get_coord_from_theta(self.start_angle)
-        self.end = self.get_coord_from_theta(self.end_angle)
-        theta2 = math.asin(self.magic)
+        self._start_angle = self.start_angle % TWO_PI
+        self._end_angle = self.end_angle % TWO_PI
 
-        self.p1 = self.get_coord_from_theta(theta2 + self.start_angle)
-        self.p2 = self.get_coord_from_beta(180 - self.end_angle + theta2)
+        self.curves = []
+
+        a1 = self._start_angle
+        if self.inverted:
+            totalAngle = min(TWO_PI, TWO_PI - abs(self._end_angle - self._start_angle))
+        else:
+            totalAngle = min(TWO_PI, abs(self._end_angle - self._start_angle))
+        while totalAngle > 0.01:
+            a2 = a1 + min(totalAngle, PI_OVER_TWO)
+            self.curves.append(self.createSmallArc(self.radius, a1, a2))
+            totalAngle -= abs(a2-a1)
+            a1 = a2
+
+
+    def createSmallArc(self, radius, a1, a2):
+        a = (a2 - a1) / 2.0
+        x4 = radius * math.cos(a)
+        y4 = radius * math.sin(a)
+        x1 = x4
+        y1 = -y4
+
+        q1 = x1**2 + y1**2
+        q2 = q1 + x1*x4 + y1*y4
+        k2 = (4.0/3.0) * (math.sqrt(2 * q1 * q2) - q2) / (x1 * y4 - y1 * x4)
+
+        x2 = x1 - k2 * y1
+        y2 = y1 + k2 * x1
+        x3 = x2
+        y3 = -y2
+
+        ar = a + a1
+        cos_ar = math.cos(ar)
+        sin_ar = math.sin(ar)
+
+        return {
+            "p0": PDFCursor(self.center.x + (radius * math.cos(a1)), self.center.y - radius * math.sin(a1)),
+            "p1": PDFCursor(self.center.x + (x2 * cos_ar - y2 * sin_ar), self.center.y - (x2 * sin_ar + y2 * cos_ar)),
+
+            "p2": PDFCursor(self.center.x + (x3 * cos_ar - y3 * sin_ar), self.center.y - (x3 * sin_ar + y3 * cos_ar)),
+            "p3": PDFCursor(self.center.x + (radius * math.cos(a2)), self.center.y - (radius * math.sin(a2)))
+        }
+
 
     def _draw(self):
         self._draw_colors()
@@ -47,19 +85,12 @@ class PDFArc(PDFDraw):
         # Starting point
         s = '%.2f %.2f m' % (self.center.x, self.center.y_prime)
         self.session._out(s, self.page)
-        s = '%.2f %.2f l' % (self.start.x, self.start.y_prime)
+        s = '%.2f %.2f l' % (self.curves[0]["p0"].x, self.curves[0]["p0"].y_prime)
         self.session._out(s, self.page)
 
-        print self.p1.x, self.p1.y, self.p2.x, self.p2.y
-
-        s = '%.2f %.2f %.2f %.2f %.2f %.2f c' % (self.p1.x, self.p1.y, self.p2.x, self.p2.y, self.end.x, self.end.y_prime)
-        self.session._out(s, self.page)
-        #s = '%.2f %.2f %.2f %.2f %.2f %.2f c' % (x+xmagic, y+yradius, x+xradius, y+ymagic, x+xradius, y)
-        #self.session._out(s, self.page)
-        #s = '%.2f %.2f %.2f %.2f %.2f %.2f c' % (x+xradius, y-ymagic, x+xmagic, y-yradius, x, y-yradius)
-        #self.session._out(s, self.page)
-        #s = '%.2f %.2f %.2f %.2f %.2f %.2f c' % (x-xmagic, y-yradius, x-xradius, y-ymagic, x-xradius, y)
-        #self.session._out(s, self.page)
+        for curve in self.curves:
+            s = '%.2f %.2f %.2f %.2f %.2f %.2f c' % (curve["p1"].x, curve["p1"].y_prime, curve["p2"].x, curve["p2"].y_prime, curve["p3"].x, curve["p3"].y_prime)
+            self.session._out(s, self.page)
 
         self.session._out(" h", self.page)
 
