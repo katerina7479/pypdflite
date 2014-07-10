@@ -6,7 +6,6 @@ class PDFArc(PDFDraw):
     """
     Draw an arc using the Bezier Cubic Splines
     present in the PDF primitives.
-    See: http://www.tinaja.com/glib/ellipse4.pdf
     """
 
     def __init__(self, session, page, cursor_center, radius, start_angle, arc_angle, inverted, end_angle=None, border_color=None, fill_color=None, style=None, stroke=None, size=1):

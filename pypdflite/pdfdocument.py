@@ -478,48 +478,8 @@ class PDFDocument(object):
         arc = PDFArc(self.session, self.page, center_cursor, radius, starting_angle, arc_angle, inverted, end_angle, border_color, fill_color, style, stroke, size)
         arc._draw()
 
-    def add_line_graph(self, data, cursor, width, height, axistuple=None, frequency=None, axis_titles=None, axis_labels=None, background='S', background_color=None, border_size=1, line_colors=None, axis_font_size=None):
-        # Draw background rectangle
-        if background is not None:
-            save_fill = self.fill_color
-            if background_color is not None:
-                self.set_fill_color(background_color)
-            self.draw_rectangle(cursor1=cursor, width=width, height=height, style=background, size=border_size)
-            self.set_fill_color(save_fill)
-
-        padding = (0.1 * width, 0.1 * height)
-        cursor.x_plus(padding[0])
-        cursor.y_plus(-padding[1] + height)
-        width = width - 2 * (padding[0])
-        height = height - 2 * (padding[1])
-
-        if axistuple is None:
-            axislist = [0, 10, 0, 10]
-            for series in data:
-                series = series.values()[0]
-                for pair in series:
-                    if pair[0] < axislist[0]:
-                        axislist[0] = pair[0]
-                    elif pair[0] > axislist[1]:
-                        axislist[1] = pair[0]
-                    else: pass
-                    if pair[1] < axislist[2]:
-                        axislist[2] = pair[1]
-                    elif pair[1] > axislist[3]:
-                        axislist[3] = pair[1]
-            axistuple = tuple(axislist)
-
-        if frequency is None:
-            frequency = ((axistuple[1] - axistuple[0]) / 10.0, (axistuple[3] - axistuple[2]) / 10.0)
-
-        if axis_titles is not None:
-            label_cursor_x = PDFCursor(cursor.x + width / 2.0 - (padding[0] / 2.0), cursor.y + 0.8 * padding[1])
-            self.add_text(axis_titles[0], label_cursor_x)
-
-            label_cursor_y = PDFCursor(cursor.x - 0.8 * padding[0], cursor.y - (height / 2.0) - 0.8 * padding[1])
-            text = PDFText(self.session, self.page, None, cursor=label_cursor_y)
-            text.text_rotate(-90)
-            text._text(axis_titles[1])
+    def add_line_graph(self, data, cursor, width, height, x_axis_limits=None, y_axis_limits=None, frequency=None, axis_titles=None, axis_labels=None,
+                       background='S', background_color=None, border_size=1, line_colors=None, axis_font_size=None, padding=0.1):
 
         save_font_size = self.get_font_size()
         if axis_font_size is None:
@@ -531,9 +491,12 @@ class PDFDocument(object):
             line_colors = [PDFColor(), PDFColor(name="blue"), PDFColor(name="red"), PDFColor(name="green"), PDFColor(name="orange")]
         else:
             line_colors = line_colors
-        graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, axistuple, frequency, axis_labels, line_colors)
 
+        graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, padding)
         self.set_font_size(save_font_size)
+
+    def add_simple_bar_chart(self, data, cursor, width, height, axis_labels=None, y_limits="Auto", background="S"):
+        pass
 
     def add_pie_chart(self, data, cursor, width, height, fill_colors=None, data_type="raw", background='S', background_color=None, border_size=1, labels=False):
         """ Data type may be "raw" or "percent" """

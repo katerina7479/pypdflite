@@ -3,30 +3,30 @@ from pypdflite.pdfobjects.pdfcolor import PDFColor
 from pypdflite.pdfobjects.pdfcursor import PDFCursor
 
 
-def LineGraphTest():
+def BarChartTest():
     """
     Functional test for drawing eclipses
     """
     # Create PDFLite object
-    writer = PDFLite("generated/LineGraph.pdf")
+    writer = PDFLite("generated/BarChart.pdf")
 
     # Set compression defaults to False
     writer.set_compression(False)
 
     # Set document metadata
-    writer.set_information(title="Testing Line Graphs")  # set optional information
+    writer.set_information(title="Testing Bar Chart")  # set optional information
 
     # Get document object
     document = writer.get_document()
     cursor = PDFCursor(100, 300)
-    data = [{"series1": [(0, 100), (3600, 300), (7200, 550), (10800, 425), (17000, 825)]},
-           {"series2": [(0, 50), (3600, 240), (7200, 675), (10800, 800), (14400, 980)]}]
+    data = [("Sunday", 11.5), ("Monday", 13.9), ("Tuesday", 15.1), ("Wednesday", 15.2), ("Thursday", 16.3),
+            ("Friday", 18.0), ("Saturday", 12.1)]
 
-    document.add_line_graph(data, cursor, 400, 300, None, None, (3600, 50), ("time (s)", "count"), "Auto", "S", padding=0.11)
+    document.add_simple_bar_chart(data, cursor, 400, 300, ("day", "percent chance of retweet"), (11, 19), "S")
 
     # Close Document
     writer.close()
 
 
 if __name__ == '__main__':
-    LineGraphTest()
+    BarChartTest()

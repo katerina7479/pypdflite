@@ -19,7 +19,7 @@ from bin.pdfmargintest import MarginTest
 from bin.arctest import ArcTest
 from bin.linegraphtest import LineGraphTest
 from bin.piecharttest import PieChartTest
-
+from bin.barcharttest import BarChartTest
 
 def main():
     """print "Running TextTest"
@@ -59,11 +59,13 @@ def main():
     print "Running HTMLTest2"
     HtmlTest2()
     print "Running Justify Test"
-    JustifyTest()
+    JustifyTest() """
     print "Running LineGraph Test"
-    LineGraphTest()"""
+    LineGraphTest()
     print "Running PieChart Test"
     PieChartTest()
+    print "Running BarChart Test"
+    BarChartTest()
 
 
 if __name__ == '__main__':
