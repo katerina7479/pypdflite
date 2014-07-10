@@ -24,10 +24,10 @@ def LineGraphTest():
     # Get document object
     document = writer.get_document()
     cursor = PDFCursor(100, 300)
-    data = [{"series1": [(0, 100), (3600, 300), (7200, 550), (10800, 425), (14400, 825)]},
+    data = [{"series1": [(0, 100), (3600, 300), (7200, 550), (10800, 425), (17000, 825)]},
            {"series2": [(0, 50), (3600, 240), (7200, 675), (10800, 800), (14400, 980)]}]
 
-    document.add_line_graph(data, cursor, 400, 300, (0, 14400, 0, 1000), (3600, 100), ("time", "count"), "S")
+    document.add_line_graph(data, cursor, 400, 300, None, (3600, 100), ("time (s)", "count"), "Auto", "S")
 
     # Close Document
     writer.close()

@@ -242,6 +242,9 @@ class PDFDocument(object):
         else:
             self.font._set_size(size)
 
+    def get_font_size(self):
+        return self.font.font_size
+
     def print_available_fonts(self):
         print PDFTTFont.available_fonts()
 
@@ -474,7 +477,7 @@ class PDFDocument(object):
         arc = PDFArc(self.session, self.page, center_cursor, radius, starting_angle, arc_angle, inverted, border_color, fill_color, style, stroke, size)
         arc._draw()
 
-    def add_line_graph(self, data, cursor, width, height, axistuple=None, frequency=None, axis_titles=None, background='S', background_color=None, border_size=1, line_colors=None):
+    def add_line_graph(self, data, cursor, width, height, axistuple=None, frequency=None, axis_titles=None, axis_labels=None, background='S', background_color=None, border_size=1, line_colors=None, axis_font_size=None):
         # Draw background rectangle
         if background is not None:
             save_fill = self.fill_color
@@ -490,8 +493,10 @@ class PDFDocument(object):
         height = height - 2 * (padding[1])
 
         if axistuple is None:
+            print "It's None!"
             axislist = [0, 10, 0, 10]
             for series in data:
+                series = series.values()[0]
                 for pair in series:
                     if pair[0] < axislist[0]:
                         axislist[0] = pair[0]
@@ -501,8 +506,9 @@ class PDFDocument(object):
                     if pair[1] < axislist[2]:
                         axislist[2] = pair[1]
                     elif pair[1] > axislist[3]:
-                        axislist[3] = pair[3]
+                        axislist[3] = pair[1]
             axistuple = tuple(axislist)
+            print axistuple
 
         if frequency is None:
             frequency = ((axistuple[1] - axistuple[0]) / 10.0, (axistuple[3] - axistuple[2]) / 10.0)
@@ -516,11 +522,19 @@ class PDFDocument(object):
             text.text_rotate(-90)
             text._text(axis_titles[1])
 
+        save_font_size = self.get_font_size()
+        if axis_font_size is None:
+            self.set_font_size(8)
+        else:
+            self.set_font_size(axis_font_size)
+
         if line_colors is None:
             line_colors = [PDFColor(), PDFColor(name="blue"), PDFColor(name="red"), PDFColor(name="green"), PDFColor(name="orange")]
         else:
             line_colors = line_colors
-        graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, axistuple, frequency, line_colors)
+        graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, axistuple, frequency, axis_labels, line_colors)
+
+        self.set_font_size(save_font_size)
 
     def add_table(self, rows, columns, cursor=None):
         if cursor is None:
