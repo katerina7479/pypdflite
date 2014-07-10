@@ -53,7 +53,6 @@ class PDFLineGraph(object):
             tick_y -= y_delta
             self.y_array.append((j, tick_y))
             self.draw_tick(self.origin.x, tick_y, self.origin.x - x_delta, tick_y)
-        print self.x_array
 
 
     def draw_tick(self, x1, y1, x2, y2):
@@ -64,18 +63,19 @@ class PDFLineGraph(object):
 
     def draw_data(self):
         i = 0
-        for series, values in self.data.iteritems():
-            self._set_color(i+1)
-            self._set_line_size()
+        for series in self.data:
+            for values in series.itervalues():
+                self._set_color(i+1)
+                self._set_line_size()
 
-            cursor = self.get_coord(values[0])
-            s = '%.2f %.2f m' % (cursor.x, cursor.y_prime)
-            self.session._out(s, self.page)
-            for pair in values[1:]:
-                cursor = self.get_coord(pair)
-                self.session._out('%.2f %.2f l' % (cursor.x, cursor.y_prime), self.page)
-            self.session._out('%s ' % self.stroke, self.page)
-            i += 1
+                cursor = self.get_coord(values[0])
+                s = '%.2f %.2f m' % (cursor.x, cursor.y_prime)
+                self.session._out(s, self.page)
+                for pair in values[1:]:
+                    cursor = self.get_coord(pair)
+                    self.session._out('%.2f %.2f l' % (cursor.x, cursor.y_prime), self.page)
+                self.session._out('%s ' % self.stroke, self.page)
+                i += 1
 
     def get_coord(self, tuple):
         x = self.interpolate(tuple[0], self.x_array)
@@ -93,7 +93,8 @@ class PDFLineGraph(object):
     def _set_line_size(self):
         pass
 
-    def interpolate(self, item, tuplelist):
+    @classmethod
+    def interpolate(cls, item, tuplelist):
         index_high = 0
         keys = [i[0] for i in tuplelist]
         values = [i[1] for i in tuplelist]
@@ -102,6 +103,6 @@ class PDFLineGraph(object):
                 index_high = keys.index(key)
                 break
         index_low = index_high - 1
-        ratio = (item - keys[index_low]) / (keys[index_high] - keys[index_low])
+        ratio = (item - keys[index_low]) / float((keys[index_high] - keys[index_low]))
         value = ratio * (values[index_high] - values[index_low]) + values[index_low]
         return value

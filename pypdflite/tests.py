@@ -5,6 +5,7 @@ from pdfobjects.pdfpage import PDFPage
 from session import _Session
 from pdfobjects.pdfcursor import PDFCursor
 from pdfobjects.pdfcolor import PDFColor
+from pdfobjects.pdflinegraph import PDFLineGraph
 import math
 
 
@@ -48,6 +49,18 @@ class TestPDFArc(unittest.TestCase):
         arc = PDFArc(self.session, self.page, center, 40, start_angle, arc_angle, True)
         self.assertEqual(round(math.degrees(arc._start_angle)), 60.0)
         self.assertEqual(round(math.degrees(arc._end_angle)), 15.0)
+
+
+class TestLineGraphInterpolate(unittest.TestCase):
+    def test_interpolate(self):
+        result = PDFLineGraph.interpolate(2.0, [(0, 0), (4, 6), (7, 8)])
+        self.assertEqual(result, 3)
+
+        result = PDFLineGraph.interpolate(50, [(0, 100), (100, 300)])
+        self.assertEqual(result, 200)
+
+
+
 
 if __name__ == '__main__':
     unittest.main()

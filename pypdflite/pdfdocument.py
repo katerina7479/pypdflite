@@ -85,13 +85,22 @@ class PDFDocument(object):
         self.text_color = text_color
 
     def set_text_color(self, color):
-        self.text_color = color
+        if isinstance(color, PDFColor):
+            self.text_color = color
+        else:
+            raise ValueError("Not a PDFColor instance")
 
     def set_fill_color(self, color):
-        self.fill_color = color
+        if isinstance(color, PDFColor):
+            self.fill_color = color
+        else:
+            raise ValueError("Not a PDFColor instance")
 
     def set_draw_color(self, color):
-        self.draw_color = color
+        if isinstance(color, PDFColor):
+            self.draw_color = color
+        else:
+            raise ValueError("Not a PDFColor instance")
 
     def _set_default_font(self):
         """ Internal method to set the
@@ -465,8 +474,14 @@ class PDFDocument(object):
         arc = PDFArc(self.session, self.page, center_cursor, radius, starting_angle, arc_angle, inverted, border_color, fill_color, style, stroke, size)
         arc._draw()
 
-    def add_line_graph(self, data, cursor, width, height, axistuple, frequency, axis_labels=None, background='S', border_size=1, line_colors=None):
-        self.draw_rectangle(cursor1=cursor, width=width, height=height, style=background, size=border_size)
+    def add_line_graph(self, data, cursor, width, height, axistuple=None, frequency=None, axis_titles=None, background='S', background_color=None, border_size=1, line_colors=None):
+        # Draw background rectangle
+        if background is not None:
+            save_fill = self.fill_color
+            if background_color is not None:
+                self.set_fill_color(background_color)
+            self.draw_rectangle(cursor1=cursor, width=width, height=height, style=background, size=border_size)
+            self.set_fill_color(save_fill)
 
         padding = (0.1 * width, 0.1 * height)
         cursor.x_plus(padding[0])
@@ -474,22 +489,38 @@ class PDFDocument(object):
         width = width - 2 * (padding[0])
         height = height - 2 * (padding[1])
 
-        if axis_labels is not None:
-            label_cursor_x = PDFCursor(cursor.x + width / 2.0 - (0.05 * width), cursor.y + 0.1 * height)
-            self.add_text(axis_labels[0], label_cursor_x)
+        if axistuple is None:
+            axislist = [0, 10, 0, 10]
+            for series in data:
+                for pair in series:
+                    if pair[0] < axislist[0]:
+                        axislist[0] = pair[0]
+                    elif pair[0] > axislist[1]:
+                        axislist[1] = pair[0]
+                    else: pass
+                    if pair[1] < axislist[2]:
+                        axislist[2] = pair[1]
+                    elif pair[1] > axislist[3]:
+                        axislist[3] = pair[3]
+            axistuple = tuple(axislist)
 
-            label_cursor_y = PDFCursor(cursor.x - (0.1 * width), cursor.y - (height / 2.0) - (0.08 * height))
+        if frequency is None:
+            frequency = ((axistuple[1] - axistuple[0]) / 10.0, (axistuple[3] - axistuple[2]) / 10.0)
+
+        if axis_titles is not None:
+            label_cursor_x = PDFCursor(cursor.x + width / 2.0 - (padding[0] / 2.0), cursor.y + 0.8 * padding[1])
+            self.add_text(axis_titles[0], label_cursor_x)
+
+            label_cursor_y = PDFCursor(cursor.x - 0.8 * padding[0], cursor.y - (height / 2.0) - 0.8 * padding[1])
             text = PDFText(self.session, self.page, None, cursor=label_cursor_y)
             text.text_rotate(-90)
-            text._text(axis_labels[1])
+            text._text(axis_titles[1])
 
         if line_colors is None:
-            line_colors = [PDFColor(), PDFColor(name="blue"), PDFColor(name="red")]
+            line_colors = [PDFColor(), PDFColor(name="blue"), PDFColor(name="red"), PDFColor(name="green"), PDFColor(name="orange")]
         else:
             line_colors = line_colors
         graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, axistuple, frequency, line_colors)
-
-
 
     def add_table(self, rows, columns, cursor=None):
         if cursor is None:
