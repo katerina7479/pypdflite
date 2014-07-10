@@ -493,7 +493,6 @@ class PDFDocument(object):
         height = height - 2 * (padding[1])
 
         if axistuple is None:
-            print "It's None!"
             axislist = [0, 10, 0, 10]
             for series in data:
                 series = series.values()[0]
@@ -508,7 +507,6 @@ class PDFDocument(object):
                     elif pair[1] > axislist[3]:
                         axislist[3] = pair[1]
             axistuple = tuple(axislist)
-            print axistuple
 
         if frequency is None:
             frequency = ((axistuple[1] - axistuple[0]) / 10.0, (axistuple[3] - axistuple[2]) / 10.0)
@@ -535,6 +533,9 @@ class PDFDocument(object):
         graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, axistuple, frequency, axis_labels, line_colors)
 
         self.set_font_size(save_font_size)
+
+    def add_pie_chart(self, data, cursor, width, height, border_colors=None, fill_colors=None):
+        pass
 
     def add_table(self, rows, columns, cursor=None):
         if cursor is None:

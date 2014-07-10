@@ -1,8 +1,3 @@
-"""
-Created on Mar 15, 2014
-
-@author: tjoneslo
-"""
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcolor import PDFColor
 from pypdflite.pdfobjects.pdfcursor import PDFCursor

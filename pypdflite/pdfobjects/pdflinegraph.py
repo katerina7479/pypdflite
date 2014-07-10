@@ -28,7 +28,7 @@ class PDFLineGraph(object):
         self.draw_data()
 
     def make_axis(self):
-        # Draw axis ticks
+        # Draw x axis ticks
         self.x_array = [(0, self.origin.x)]
         x_delta = self.width / (float(self.x_range[1] - self.x_range[0]) / float(self.frequency[0]))
         y_delta = 3
@@ -43,6 +43,7 @@ class PDFLineGraph(object):
             self.draw_x_label(i, k, tick_x, self.origin.y)
             k += 1
 
+        # Draw y axis ticks
         self.y_array = [(0, self.origin.y)]
         y_delta = self.height / (float(self.y_range[1] - self.y_range[0]) / float(self.frequency[1]))
         x_delta = 3
@@ -65,7 +66,6 @@ class PDFLineGraph(object):
         cursor2 = PDFCursor(tick_x, self.origin.y)
         xaxis = PDFLine(self.session, self.page, self.origin, cursor2, self.line_colors[0], style="solid")
         xaxis._draw()
-
 
     def draw_tick(self, x1, y1, x2, y2):
         x = PDFCursor(x1, y1)
@@ -94,8 +94,6 @@ class PDFLineGraph(object):
 
         cursor = PDFCursor(x1 - self.font._string_width(text) - 1, y1 + 2)
         label = PDFText(self.session, self.page, '%s' % text, cursor=cursor)
-
-
 
     def draw_data(self):
         i = 0
