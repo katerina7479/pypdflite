@@ -465,7 +465,7 @@ class PDFDocument(object):
         circle = PDFEllipse(self.session, self.page, center_cursor, radius_cursor, border_color, fill_color, style, stroke, size)
         circle._draw()
 
-    def draw_arc(self, center_cursor, radius, starting_angle, arc_angle, inverted=False, border_color=None, fill_color=None, style='solid', stroke='S', size=1):
+    def draw_arc(self, center_cursor, radius, starting_angle, arc_angle, inverted=False, end_angle=None, border_color=None, fill_color=None, style='solid', stroke='S', size=1):
         if isinstance(border_color, PDFColor):
             border_color = border_color
         else:
@@ -475,7 +475,7 @@ class PDFDocument(object):
         else:
             fill_color = self.fill_color
 
-        arc = PDFArc(self.session, self.page, center_cursor, radius, starting_angle, arc_angle, inverted, border_color, fill_color, style, stroke, size)
+        arc = PDFArc(self.session, self.page, center_cursor, radius, starting_angle, arc_angle, inverted, end_angle, border_color, fill_color, style, stroke, size)
         arc._draw()
 
     def add_line_graph(self, data, cursor, width, height, axistuple=None, frequency=None, axis_titles=None, axis_labels=None, background='S', background_color=None, border_size=1, line_colors=None, axis_font_size=None):
@@ -535,7 +535,7 @@ class PDFDocument(object):
 
         self.set_font_size(save_font_size)
 
-    def add_pie_chart(self, data, cursor, width, height, border_colors=None, fill_colors=None, data_type="raw", background='S', background_color=None, border_size=1, labels=False):
+    def add_pie_chart(self, data, cursor, width, height, fill_colors=None, data_type="raw", background='S', background_color=None, border_size=1, labels=False):
         """ Data type may be "raw" or "percent" """
         # Draw background rectangle
         if background is not None:
@@ -570,10 +570,10 @@ class PDFDocument(object):
         sorted_data = sorted(formatted_data, key=lambda x: x[1], reverse=True)
 
         center_cursor = PDFCursor(cursor.x + width / 2.0, cursor.y - height / 2.0)
-        radius = min(width, height)
+        radius = min(width, height) / 2.0
 
 
-        chart = PDFPieChart(self.session, self.page, data, center_cursor, radius, border_colors, fill_colors, labels)
+        chart = PDFPieChart(self.session, self.page, sorted_data, center_cursor, radius, fill_colors, labels)
 
 
 

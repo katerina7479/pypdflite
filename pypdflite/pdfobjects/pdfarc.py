@@ -9,24 +9,34 @@ class PDFArc(PDFDraw):
     See: http://www.tinaja.com/glib/ellipse4.pdf
     """
 
-    def __init__(self, session, page, cursor_center, radius, start_angle, arc_angle, inverted, border_color=None, fill_color=None, style=None, stroke=None, size=1):
+    def __init__(self, session, page, cursor_center, radius, start_angle, arc_angle, inverted, end_angle=None, border_color=None, fill_color=None, style=None, stroke=None, size=1):
         super(PDFArc, self).__init__(session, page, border_color, style, stroke, size)
         """Draws an arc counter-clockwise from start. Accepts angles in degrees, converts to radians """
         self.center = cursor_center
         self.radius = radius
         self.inverted = inverted
-        self.get_angles(start_angle, arc_angle)
+        self.get_angles(start_angle, arc_angle, end_angle)
 
         self.fill_color = fill_color
         self.createArc()
 
-    def get_angles(self, start_angle, arc_angle):
-        if self.inverted:
-            self.start_angle = math.radians(start_angle + arc_angle)
-            self.end_angle = math.radians(start_angle)
-        else:
+    def get_angles(self, start_angle, arc_angle, end_angle):
+        if end_angle is not None:
             self.start_angle = math.radians(start_angle)
-            self.end_angle = math.radians(start_angle + arc_angle)
+            self.end_angle = math.radians(end_angle)
+            if self.inverted:
+                self.start_angle = math.radians(start_angle)
+                self.end_angle = math.radians(end_angle)
+        else:
+            if self.inverted:
+                self.start_angle = math.radians(start_angle + arc_angle)
+                self.end_angle = math.radians(start_angle)
+            else:
+                self.start_angle = math.radians(start_angle)
+                self.end_angle = math.radians(start_angle + arc_angle)
+        if self.end_angle == math.pi * 2:
+            self.end_angle = math.pi * 2 - 0.001
+
 
     def createArc(self):
         TWO_PI = math.pi * 2
