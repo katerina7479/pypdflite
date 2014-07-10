@@ -25,7 +25,7 @@ def PieChartTest():
             ("Japanese", 99182000), ("Portuguese", 82586600), ("German", 75422674),
             ("Korean", 39440000)]
 
-    document.add_pie_chart(data, cursor, 400, 300)
+    document.add_pie_chart(data, cursor, 400, 300, labels=True)
 
     # Close Document
     writer.close()

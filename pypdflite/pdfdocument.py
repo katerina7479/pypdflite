@@ -572,7 +572,6 @@ class PDFDocument(object):
         center_cursor = PDFCursor(cursor.x + width / 2.0, cursor.y - height / 2.0)
         radius = min(width, height) / 2.0
 
-
         chart = PDFPieChart(self.session, self.page, sorted_data, center_cursor, radius, fill_colors, labels)
 
 
