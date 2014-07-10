@@ -18,6 +18,7 @@ from pdfobjects.pdfhtml import PDFHtml
 from pdfobjects.pdfellipse import PDFEllipse
 from pdfobjects.pdfarc import PDFArc
 from pdfobjects.pdflinegraph import PDFLineGraph
+from pdfobjects.pdfpiechart import PDFPieChart
 
 
 class PDFDocument(object):
@@ -534,8 +535,47 @@ class PDFDocument(object):
 
         self.set_font_size(save_font_size)
 
-    def add_pie_chart(self, data, cursor, width, height, border_colors=None, fill_colors=None):
-        pass
+    def add_pie_chart(self, data, cursor, width, height, border_colors=None, fill_colors=None, data_type="raw", background='S', background_color=None, border_size=1, labels=False):
+        """ Data type may be "raw" or "percent" """
+        # Draw background rectangle
+        if background is not None:
+            save_fill = self.fill_color
+            if background_color is not None:
+                self.set_fill_color(background_color)
+            self.draw_rectangle(cursor1=cursor, width=width, height=height, style=background, size=border_size)
+            self.set_fill_color(save_fill)
+
+        padding = (0.1 * width, 0.1 * height)
+        cursor.x_plus(padding[0])
+        cursor.y_plus(-padding[1] + height)
+        width = width - 2 * (padding[0])
+        height = height - 2 * (padding[1])
+
+        # Convert raw to percent
+        if data_type == "raw":
+            total = 0
+            for pair in data:
+                total += pair[1]
+            percent_data = []
+            for pair in data:
+                percent_data.append((pair[0], (pair[1] / float(total)) * 100))
+            data = percent_data
+
+        # Add formatting
+        formatted_data = []
+        for pair in data:
+            formatted_data.append((pair[0], pair[1], "%.1f%%" % pair[1]))
+
+        # Sort
+        sorted_data = sorted(formatted_data, key=lambda x: x[1], reverse=True)
+
+        center_cursor = PDFCursor(cursor.x + width / 2.0, cursor.y - height / 2.0)
+        radius = min(width, height)
+
+
+        chart = PDFPieChart(self.session, self.page, data, center_cursor, radius, border_colors, fill_colors, labels)
+
+
 
     def add_table(self, rows, columns, cursor=None):
         if cursor is None:
