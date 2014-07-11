@@ -1,17 +1,22 @@
 from pdfgraph import PDFGraph
 from pdfcolor import PDFColor
 from pdfcursor import PDFCursor
+from pdftext import PDFText
+from pdfrectangle import PDFRectangle
 
 
 class PDFBarChart(PDFGraph):
-    def __init__(self, session, page, data, cursor, width, height, axis_titles=None, y_axis_limits=None, y_axis_frequency=None, bar_style="S", bar_padding=0, bar_border_colors=None, bar_fill_colors=None,
+    def __init__(self, session, page, data, cursor, width, height, axis_titles=None, y_axis_limits=None, y_axis_frequency=None, bar_style="F", bar_padding=0, bar_border_colors=None, bar_fill_colors=None,
                  background_style="S", background_size=1, background_border_color=None, background_fill_color=None):
         super(PDFBarChart, self).__init__(session, page, cursor, width, height, background_style, background_size, background_border_color, background_fill_color)
         self.data = data
         self.bar_style = bar_style
+        self.bar_padding = bar_padding
         self.axis_labels = "Auto"
         self.set_colors(bar_border_colors, bar_fill_colors)
-        self.make_axis(y_axis_limits, y_axis_frequency)
+        self.make_y_axis(y_axis_limits, y_axis_frequency)
+        self.make_x_axis()
+        self.draw_bars()
 
     def set_colors(self, border_colors, fill_colors):
         if self.bar_style == "S":
@@ -34,16 +39,16 @@ class PDFBarChart(PDFGraph):
             if border_colors is None:
                 self.bar_border_colors = []
                 for color in self.default_color_list:
-                    r = max(int(color.red * 1.25), 255)
-                    g = max(int(color.green * 1.25), 255)
-                    b = max(int(color.blue * 1.25), 255)
+                    r = min(int(color.red * 0.75), 255)
+                    g = min(int(color.green * 0.75), 255)
+                    b = min(int(color.blue * 0.75), 255)
                     self.bar_border_colors.append(PDFColor(r, g, b))
 
         if self.bar_fill_colors is not None:
             for color in self.bar_fill_colors:
                 color._set_type('f')
 
-    def make_axis(self, y_axis_limits, y_axis_frequency):
+    def make_y_axis(self, y_axis_limits, y_axis_frequency):
         if y_axis_limits is None:
             y_data = []
             for pair in self.data:
@@ -56,6 +61,38 @@ class PDFBarChart(PDFGraph):
             y = self.get_frequency(self.y_range)
         else:
             y = y_axis_frequency
-        self.frequency = (None, y)
+        self.frequency = (1, y)
 
         self.draw_y_axis()
+
+
+    def make_x_axis(self):
+        self.x_range = (0, len(self.data))
+        self.draw_x_axis(zero=False)
+
+    def draw_x_label(self, i, k, x1, y1):
+        text = self.data[k][0]
+        cursor = PDFCursor(x1 - (self.x_delta + self.font._string_width(text)) / 2.0, y1 + 9)
+        label = PDFText(self.session, self.page,'%s' % text, cursor=cursor)
+
+    def draw_bars(self):
+        x_space = int(self.bar_padding * self.x_delta)
+        i = 0
+        for pair in self.data:
+            draw, fill = self._get_colors(i)
+            cursor1 = PDFCursor(self.x_array[i][1] + x_space, self.interpolate(pair[1], self.y_array))
+            cursor2 = PDFCursor(self.x_array[i][1] + self.x_delta - x_space, self.origin.y)
+            rect = PDFRectangle(self.session, self.page, cursor1, cursor2, draw, fill, "solid", self.bar_style)
+            rect._draw()
+            i += 1
+
+    def _get_colors(self, index):
+        if self.bar_fill_colors:
+            fill_color = self.bar_fill_colors[index]
+        else:
+            fill_color = None
+        if self.bar_border_colors:
+            draw_color = self.bar_border_colors[index]
+        else:
+            draw_color = None
+        return draw_color, fill_color

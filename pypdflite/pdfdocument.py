@@ -488,15 +488,10 @@ class PDFDocument(object):
         else:
             self.set_font_size(axis_font_size)
 
-        if line_colors is None:
-            line_colors = [PDFColor(), PDFColor(name="blue"), PDFColor(name="red"), PDFColor(name="green"), PDFColor(name="orange")]
-        else:
-            line_colors = line_colors
-
         graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, padding)
         self.set_font_size(save_font_size)
 
-    def add_simple_bar_chart(self, data, cursor, width, height, axis_titles=None, axis_font_size=None, y_axis_limits=None, y_axis_frequency=None, bar_style="S", bar_padding=0, bar_border_colors=None, bar_fill_colors=None, background_style="S", background_size=1, background_border_color=None, background_fill_color=None):
+    def add_simple_bar_chart(self, data, cursor, width, height, axis_titles=None, axis_font_size=None, y_axis_limits=None, y_axis_frequency=None, bar_style="B", bar_padding=.1, bar_border_colors=None, bar_fill_colors=None, background_style="S", background_size=1, background_border_color=None, background_fill_color=None):
         save_font_size = self.get_font_size()
         if axis_font_size is None:
             self.set_font_size(8)

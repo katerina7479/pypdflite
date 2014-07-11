@@ -69,16 +69,18 @@ class PDFGraph(object):
             text.text_rotate(-90)
             text._text(y_title)
 
-    def draw_x_axis(self):
+    def draw_x_axis(self, zero=True):
         # Draw x axis ticks
         self.x_array = [(0, self.origin.x)]
         x_delta = self.width / (float(self.x_range[1] - self.x_range[0]) / float(self.frequency[0]))
+        self.x_delta = x_delta
         y_delta = 3
         tick_x = self.origin.x
         i = self.x_range[0]
         k = 0
         self.draw_tick(tick_x, self.origin.y, tick_x, self.origin.y + y_delta)
-        self.draw_x_label(i, k, tick_x, self.origin.y)
+        if zero:
+            self.draw_x_label(i, k, tick_x, self.origin.y)
         while i < self.x_range[1]:
             i += self.frequency[0]
             tick_x += x_delta
@@ -91,16 +93,17 @@ class PDFGraph(object):
         xaxis = PDFLine(self.session, self.page, self.origin, cursor2, self.base_color, style="solid")
         xaxis._draw()
 
-    def draw_y_axis(self):
+    def draw_y_axis(self, zero=True):
         # Draw y axis ticks
-        self.y_array = [(0, self.origin.y)]
+        self.y_array = [(self.y_range[0], self.origin.y)]
         y_delta = self.height / (float(self.y_range[1] - self.y_range[0]) / float(self.frequency[1]))
         x_delta = 3
         tick_y = self.origin.y
         j = self.y_range[0]
         k = 0
         self.draw_tick(self.origin.x, tick_y, self.origin.x - x_delta, tick_y)
-        self.draw_y_label(j, k, self.origin.x - x_delta, tick_y)
+        if zero:
+            self.draw_y_label(j, k, self.origin.x - x_delta, tick_y)
         while j < self.y_range[1]:
             j += self.frequency[1]
             tick_y -= y_delta
@@ -141,3 +144,17 @@ class PDFGraph(object):
 
         cursor = PDFCursor(x1 - self.font._string_width(text) - 1, y1 + 2)
         label = PDFText(self.session, self.page, '%s' % text, cursor=cursor)
+
+    @classmethod
+    def interpolate(cls, item, tuplelist):
+        index_high = 0
+        keys = [i[0] for i in tuplelist]
+        values = [i[1] for i in tuplelist]
+        for key in keys:
+            if item < key:
+                index_high = keys.index(key)
+                break
+        index_low = index_high - 1
+        ratio = (item - keys[index_low]) / float((keys[index_high] - keys[index_low]))
+        value = ratio * (values[index_high] - values[index_low]) + values[index_low]
+        return value

@@ -8,7 +8,7 @@ class PDFLineGraph(PDFGraph):
         super(PDFLineGraph, self).__init__(session, page, cursor, width, height, background_style, background_size, background_border_color, background_fill_color)
         self.data = data
         self.stroke = "S"
-        self.line_colors = line_colors
+        self._set_colors(line_colors)
         self._set_range(x_axis_limits, y_axis_limits)
         self._set_frequency(frequency)
         self.draw_axis_titles(axis_titles[0], axis_titles[1])
@@ -16,6 +16,12 @@ class PDFLineGraph(PDFGraph):
         self.draw_x_axis()
         self.draw_y_axis()
         self.draw_data()
+
+    def _set_colors(self, line_colors):
+        if line_colors is not None:
+            self.line_colors = line_colors
+        else:
+            self.line_colors = self.default_color_list
 
     def _set_range(self, x_axis_limits, y_axis_limits):
         x_data = None
@@ -44,7 +50,7 @@ class PDFLineGraph(PDFGraph):
         i = 0
         for series in self.data:
             for values in series.itervalues():
-                self._set_color(i+1)
+                self._set_color(i)
                 self._set_line_size()
 
                 cursor = self.get_coord(values[0])
@@ -72,16 +78,3 @@ class PDFLineGraph(PDFGraph):
     def _set_line_size(self):
         pass
 
-    @classmethod
-    def interpolate(cls, item, tuplelist):
-        index_high = 0
-        keys = [i[0] for i in tuplelist]
-        values = [i[1] for i in tuplelist]
-        for key in keys:
-            if item < key:
-                index_high = keys.index(key)
-                break
-        index_low = index_high - 1
-        ratio = (item - keys[index_low]) / float((keys[index_high] - keys[index_low]))
-        value = ratio * (values[index_high] - values[index_low]) + values[index_low]
-        return value
