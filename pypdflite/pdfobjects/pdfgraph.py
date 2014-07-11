@@ -6,21 +6,29 @@ from pdfline import PDFLine
 
 
 class PDFGraph(object):
-    def __init__(self, session, page, cursor, width, height, background_style="S", background_size=1, background_border_color=None, background_fill_color=None, padding=0.1):
+    def __init__(self, session, page, cursor, width, height, title=None, background_style="S", background_size=1, background_border_color=None, background_fill_color=None, padding=0.1):
         self.session = session
         self.page = page
         self.font = self.session.parent.document.font
         self.origin = cursor
         self.axis_labels = None
         self.base_color = PDFColor(77, 77, 77)
-        self.padding = (padding * width, padding * height)
+        self._set_title(title, padding, width, height)
         self._draw_background(width, height, background_style, background_size, background_border_color, background_fill_color)
         self._pad(width, height)
+        self._draw_title()
 
         self.default_color_list = [PDFColor(79, 129, 189), PDFColor(192, 80, 77), PDFColor(55, 187, 89),
                                 PDFColor(128, 100, 162), PDFColor(72, 172, 198), PDFColor(247, 150, 70),
                                 PDFColor(208, 146, 167), PDFColor(162, 200, 22), PDFColor(231, 188, 41),
                                 PDFColor(156, 133, 192), PDFColor(243, 164, 71), PDFColor(128, 158, 194)]
+
+    def _set_title(self, title, padding, width, height):
+        self.title = title
+        if title is None:
+            self.padding = (padding * width, padding * height)
+        else:
+            self.padding = (padding * width, (padding * 1.2 * height))
 
     def _draw_background(self, width, height, style, size, border_color, fill_color):
         cursor_end = PDFCursor(self.origin.x + width, self.origin.y - height)
@@ -32,6 +40,14 @@ class PDFGraph(object):
         self.origin.y_plus(-self.padding[1] + height)
         self.width = width - 2 * self.padding[0]
         self.height = height - 2 * self.padding[1]
+
+    def _draw_title(self):
+        if self.title is not None:
+            save_font = self.font
+            self.session.parent.document.set_font(save_font.family, "b", save_font.font_size * 1.2)
+            title_cursor = PDFCursor(self.origin.x + (self.width - self.session.parent.document.font._string_width(self.title))/ 2.0, self.origin.y - self.height - (self.padding[1] * 0.4))
+            title = PDFText(self.session, self.page, self.title, cursor=title_cursor)
+            self.session.parent.document.set_font(font=save_font)
 
     def _get_limits_from_data(self, data):
         axis_list = [data[0], data[0]]

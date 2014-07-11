@@ -1,5 +1,5 @@
 from fontref import pdf_character_widths
-
+import copy
 
 CORE_FONTS = {
     'courier': 'Courier',
@@ -28,7 +28,12 @@ class PDFFont(object):
         self.type = 'Core'
 
     def __repr__(self):
-        return self.family
+        return self.font_key
+
+    def _copy(self):
+        new_font = copy.deepcopy(self)
+        new_font.is_set = False
+        return new_font
 
     def _set_family(self, family):
         if family is not None:

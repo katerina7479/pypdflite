@@ -6,9 +6,9 @@ from pdfrectangle import PDFRectangle
 
 
 class PDFBarChart(PDFGraph):
-    def __init__(self, session, page, data, cursor, width, height, axis_titles=None, y_axis_limits=None, y_axis_frequency=None, bar_style="F", bar_padding=0, bar_border_colors=None, bar_fill_colors=None,
+    def __init__(self, session, page, data, cursor, width, height, title=None, axis_titles=None, y_axis_limits=None, y_axis_frequency=None, bar_style="F", bar_padding=0, bar_border_colors=None, bar_fill_colors=None,
                  background_style="S", background_size=1, background_border_color=None, background_fill_color=None):
-        super(PDFBarChart, self).__init__(session, page, cursor, width, height, background_style, background_size, background_border_color, background_fill_color)
+        super(PDFBarChart, self).__init__(session, page, cursor, width, height, title, background_style, background_size, background_border_color, background_fill_color)
         self.data = data
         self.bar_style = bar_style
         self.bar_padding = bar_padding

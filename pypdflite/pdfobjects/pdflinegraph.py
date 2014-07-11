@@ -4,8 +4,8 @@ from pdfcursor import PDFCursor
 
 
 class PDFLineGraph(PDFGraph):
-    def __init__(self, session, page, cursor, data, width, height, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, background_style="S", background_size=1, background_border_color=None, background_fill_color=None):
-        super(PDFLineGraph, self).__init__(session, page, cursor, width, height, background_style, background_size, background_border_color, background_fill_color)
+    def __init__(self, session, page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, background_style="S", background_size=1, background_border_color=None, background_fill_color=None):
+        super(PDFLineGraph, self).__init__(session, page, cursor, width, height, title, background_style, background_size, background_border_color, background_fill_color)
         self.data = data
         self.stroke = "S"
         self._set_colors(line_colors)

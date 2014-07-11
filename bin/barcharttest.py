@@ -22,7 +22,7 @@ def BarChartTest():
     data = [("Sunday", 11.5), ("Monday", 13.9), ("Tuesday", 15.1), ("Wednesday", 15.2), ("Thursday", 16.3),
             ("Friday", 18.0), ("Saturday", 12.1)]
 
-    document.add_simple_bar_chart(data, cursor, 400, 300, axis_titles=("day", "percent chance of retweet"), y_axis_limits=(11, 19), y_axis_frequency=1)
+    document.add_simple_bar_chart(data, cursor, 400, 300, "Blog Re-tweets By Day of the Week", axis_titles=("day", "percent chance of re-tweet"), y_axis_limits=(11, 19), y_axis_frequency=1)
 
     # Close Document
     writer.close()

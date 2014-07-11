@@ -22,7 +22,7 @@ def LineGraphTest():
     data = [{"series1": [(0, 100), (3600, 300), (7200, 550), (10800, 425), (17000, 825)]},
            {"series2": [(0, 50), (3600, 240), (7200, 675), (10800, 800), (14400, 980)]}]
 
-    document.add_line_graph(data, cursor, 400, 300, None, None, (3600, 50), ("time (s)", "count"), "Auto", "S", padding=0.11)
+    document.add_line_graph(data, cursor, 400, 300, "Hits over Time", None, None, (3600, 50), ("time (s)", "count"), "Auto", "S", padding=0.11)
 
     # Close Document
     writer.close()
