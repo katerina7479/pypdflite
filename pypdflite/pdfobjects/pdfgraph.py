@@ -1,4 +1,5 @@
 from pdfrectangle import PDFRectangle
+from pdfcolor import PDFColor
 from pdfcursor import PDFCursor
 from pdftext import PDFText
 from pdfline import PDFLine
@@ -13,6 +14,11 @@ class PDFGraph(object):
         self.padding = (padding * width, padding * height)
         self._draw_background(width, height, background_style, background_size, background_border_color, background_fill_color)
         self._pad(width, height)
+
+        self.default_color_list = [PDFColor(79, 129, 189), PDFColor(192, 80, 77), PDFColor(55, 187, 89),
+                                PDFColor(128, 100, 162), PDFColor(72, 172, 198), PDFColor(247, 150, 70),
+                                PDFColor(208, 146, 167), PDFColor(162, 200, 22), PDFColor(231, 188, 41),
+                                PDFColor(156, 133, 192), PDFColor(243, 164, 71), PDFColor(128, 158, 194)]
 
     def _draw_background(self, width, height, style, size, border_color, fill_color):
         cursor_end = PDFCursor(self.origin.x + width, self.origin.y - height)

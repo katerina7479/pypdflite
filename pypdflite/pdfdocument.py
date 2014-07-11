@@ -19,6 +19,7 @@ from pdfobjects.pdfellipse import PDFEllipse
 from pdfobjects.pdfarc import PDFArc
 from pdfobjects.pdflinegraph import PDFLineGraph
 from pdfobjects.pdfpiechart import PDFPieChart
+from pdfobjects.pdfbarchart import PDFBarChart
 
 
 class PDFDocument(object):
@@ -495,47 +496,14 @@ class PDFDocument(object):
         graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, padding)
         self.set_font_size(save_font_size)
 
-    def add_simple_bar_chart(self, data, cursor, width, height, axis_labels=None, y_limits="Auto", background="S"):
-        pass
+    def add_simple_bar_chart(self, data, cursor, width, height, axis_titles=None, bar_style="S", bar_padding=0, bar_border_colors=None, bar_fill_colors=None, background_style="S", background_size=1, background_border_color=None, background_fill_color=None):
 
-    def add_pie_chart(self, data, cursor, width, height, fill_colors=None, data_type="raw", background='S', background_color=None, border_size=1, labels=False):
+        graph = PDFBarChart(self.session, self.page, data, cursor, width, height, axis_titles, bar_style, bar_padding, bar_border_colors, bar_fill_colors, background_style, background_size, background_border_color, background_fill_color)
+
+    def add_pie_chart(self, data, cursor, width, height, data_type="raw", fill_colors=None, labels=False, background_style='S', background_border_color=None, background_fill_color=None, background_size=1):
         """ Data type may be "raw" or "percent" """
-        # Draw background rectangle
-        if background is not None:
-            save_fill = self.fill_color
-            if background_color is not None:
-                self.set_fill_color(background_color)
-            self.draw_rectangle(cursor1=cursor, width=width, height=height, style=background, size=border_size)
-            self.set_fill_color(save_fill)
 
-        padding = (0.1 * width, 0.1 * height)
-        cursor.x_plus(padding[0])
-        cursor.y_plus(-padding[1] + height)
-        width = width - 2 * (padding[0])
-        height = height - 2 * (padding[1])
-
-        # Convert raw to percent
-        if data_type == "raw":
-            total = 0
-            for pair in data:
-                total += pair[1]
-            percent_data = []
-            for pair in data:
-                percent_data.append((pair[0], (pair[1] / float(total)) * 100))
-            data = percent_data
-
-        # Add formatting
-        formatted_data = []
-        for pair in data:
-            formatted_data.append((pair[0], pair[1], "%.1f%%" % pair[1]))
-
-        # Sort
-        sorted_data = sorted(formatted_data, key=lambda x: x[1], reverse=True)
-
-        center_cursor = PDFCursor(cursor.x + width / 2.0, cursor.y - height / 2.0)
-        radius = min(width, height) / 2.0
-
-        chart = PDFPieChart(self.session, self.page, sorted_data, center_cursor, radius, fill_colors, labels)
+        chart = PDFPieChart(self.session, self.page, data, cursor, width, height, data_type, fill_colors, labels, background_style, background_size, background_border_color, background_fill_color)
 
 
 

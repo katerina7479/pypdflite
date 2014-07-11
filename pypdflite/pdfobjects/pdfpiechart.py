@@ -4,19 +4,18 @@ import math
 from pdftext import PDFText
 from pdfarc import PDFArc
 from pdfellipse import PDFEllipse
+from pdfgraph import PDFGraph
 
 
-class PDFPieChart(object):
+class PDFPieChart(PDFGraph):
     """
     Create a pie chart from data dict(series labels)
 
     """
-    def __init__(self, session, page, data, center_cursor, radius, fill_colors=None, labels=False):
-        self.session = session
-        self.page = page
-        self.data = data
-        self.center_cursor = center_cursor
-        self.radius = radius
+    def __init__(self, session, page, data, cursor, width, height, data_type="raw", fill_colors=None, labels=False, background_style="S", background_size=1, background_border_color=None, background_fill_color=None):
+        super(PDFPieChart, self).__init__(session, page, cursor, width, height, background_style, background_size, background_border_color, background_fill_color)
+        self._parse_data(data, data_type)
+        self._set_center()
         self.stroke = "S"
         self.fill_colors = fill_colors
         self.labels = labels
@@ -26,12 +25,34 @@ class PDFPieChart(object):
         self.draw_base_circle()
         self.draw_data()
 
+    def _parse_data(self, data, data_type):
+        if data_type == "raw":
+            total = 0
+            for pair in data:
+                total += pair[1]
+            percent_data = []
+            for pair in data:
+                percent_data.append((pair[0], (pair[1] / float(total)) * 100))
+            data = percent_data
+        elif data_type == "percent":
+            pass
+        else:
+            raise ValueError("Data must be raw or percent")
+
+        formatted_data = []
+        for pair in data:
+            formatted_data.append((pair[0], pair[1], "%.1f%%" % pair[1]))
+
+        # Sort
+        self.data = sorted(formatted_data, key=lambda x: x[1], reverse=True)
+
+    def _set_center(self):
+        self.center_cursor = PDFCursor(self.origin.x + self.width / 2.0, self.origin.y - self.height / 2.0)
+        self.radius = min(self.width, self.height) / 2.0
+
     def get_colors(self):
         if self.fill_colors is None:
-            self.fill_colors = [PDFColor(79, 129, 189), PDFColor(192, 80, 77), PDFColor(55, 187, 89),
-                                PDFColor(128, 100, 162), PDFColor(72, 172, 198), PDFColor(247, 150, 70),
-                                PDFColor(208, 146, 167), PDFColor(162, 200, 22), PDFColor(231, 188, 41),
-                                PDFColor(156, 133, 192), PDFColor(243, 164, 71), PDFColor(128, 158, 194)]
+            self.fill_colors = self.default_color_list
 
         for color in self.fill_colors:
             color._set_type("f")

@@ -1,9 +1,6 @@
 from pdfgraph import PDFGraph
 from pdfcolor import PDFColor
 from pdfcursor import PDFCursor
-from pdfline import PDFLine
-from pdftext import PDFText
-
 
 
 class PDFLineGraph(PDFGraph):
