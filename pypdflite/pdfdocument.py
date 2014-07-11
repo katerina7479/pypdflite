@@ -496,16 +496,20 @@ class PDFDocument(object):
         graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, padding)
         self.set_font_size(save_font_size)
 
-    def add_simple_bar_chart(self, data, cursor, width, height, axis_titles=None, bar_style="S", bar_padding=0, bar_border_colors=None, bar_fill_colors=None, background_style="S", background_size=1, background_border_color=None, background_fill_color=None):
+    def add_simple_bar_chart(self, data, cursor, width, height, axis_titles=None, axis_font_size=None, y_axis_limits=None, y_axis_frequency=None, bar_style="S", bar_padding=0, bar_border_colors=None, bar_fill_colors=None, background_style="S", background_size=1, background_border_color=None, background_fill_color=None):
+        save_font_size = self.get_font_size()
+        if axis_font_size is None:
+            self.set_font_size(8)
+        else:
+            self.set_font_size(axis_font_size)
 
-        graph = PDFBarChart(self.session, self.page, data, cursor, width, height, axis_titles, bar_style, bar_padding, bar_border_colors, bar_fill_colors, background_style, background_size, background_border_color, background_fill_color)
+        graph = PDFBarChart(self.session, self.page, data, cursor, width, height, axis_titles, y_axis_limits, y_axis_frequency, bar_style, bar_padding, bar_border_colors, bar_fill_colors, background_style, background_size, background_border_color, background_fill_color)
+        self.set_font_size(save_font_size)
 
     def add_pie_chart(self, data, cursor, width, height, data_type="raw", fill_colors=None, labels=False, background_style='S', background_border_color=None, background_fill_color=None, background_size=1):
         """ Data type may be "raw" or "percent" """
 
         chart = PDFPieChart(self.session, self.page, data, cursor, width, height, data_type, fill_colors, labels, background_style, background_size, background_border_color, background_fill_color)
-
-
 
     def add_table(self, rows, columns, cursor=None):
         if cursor is None:

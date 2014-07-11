@@ -11,6 +11,8 @@ class PDFGraph(object):
         self.page = page
         self.font = self.session.parent.document.font
         self.origin = cursor
+        self.axis_labels = None
+        self.base_color = PDFColor(77, 77, 77)
         self.padding = (padding * width, padding * height)
         self._draw_background(width, height, background_style, background_size, background_border_color, background_fill_color)
         self._pad(width, height)
@@ -75,6 +77,8 @@ class PDFGraph(object):
         tick_x = self.origin.x
         i = self.x_range[0]
         k = 0
+        self.draw_tick(tick_x, self.origin.y, tick_x, self.origin.y + y_delta)
+        self.draw_x_label(i, k, tick_x, self.origin.y)
         while i < self.x_range[1]:
             i += self.frequency[0]
             tick_x += x_delta
@@ -84,7 +88,7 @@ class PDFGraph(object):
             k += 1
 
         cursor2 = PDFCursor(tick_x, self.origin.y)
-        xaxis = PDFLine(self.session, self.page, self.origin, cursor2, self.line_colors[0], style="solid")
+        xaxis = PDFLine(self.session, self.page, self.origin, cursor2, self.base_color, style="solid")
         xaxis._draw()
 
     def draw_y_axis(self):
@@ -95,6 +99,8 @@ class PDFGraph(object):
         tick_y = self.origin.y
         j = self.y_range[0]
         k = 0
+        self.draw_tick(self.origin.x, tick_y, self.origin.x - x_delta, tick_y)
+        self.draw_y_label(j, k, self.origin.x - x_delta, tick_y)
         while j < self.y_range[1]:
             j += self.frequency[1]
             tick_y -= y_delta
@@ -105,13 +111,13 @@ class PDFGraph(object):
 
         # Draw axis lines
         cursor1 = PDFCursor(self.origin.x, tick_y)
-        yaxis = PDFLine(self.session, self.page, cursor1, self.origin, self.line_colors[0], style="solid")
+        yaxis = PDFLine(self.session, self.page, cursor1, self.origin, self.base_color, style="solid")
         yaxis._draw()
 
     def draw_tick(self, x1, y1, x2, y2):
         x = PDFCursor(x1, y1)
         y = PDFCursor(x2, y2)
-        tick = PDFLine(self.session, self.page, x, y, self.line_colors[0], "solid")
+        tick = PDFLine(self.session, self.page, x, y, self.base_color, "solid")
         tick._draw()
 
     def draw_x_label(self, i, k, x1, y1):
