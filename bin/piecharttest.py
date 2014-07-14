@@ -19,16 +19,15 @@ def PieChartTest():
 
     # Get document object
     document = writer.get_document()
-    cursor = PDFCursor(100, 300)
+    cursor = PDFCursor(100, 50)
     data = [("English", 565004126), ("Chinese", 509965013), ("Spanish", 164968742),
             ("Arabic", 65365400), ("French", 59779525), ("Russian", 59700000),
             ("Japanese", 99182000), ("Portuguese", 82586600), ("German", 75422674),
             ("Korean", 39440000)]
 
-    document.add_pie_chart(data, cursor, 400, 300, title="Languages Spoken on the Internet", legend="right")
+    document.add_pie_chart(data, cursor, 400, 300, title="Languages Spoken on the Internet")
 
-    document.add_page()
-    cursor = PDFCursor(100, 300)
+    cursor = PDFCursor(100, 400)
     document.add_pie_chart(data, cursor, 400, 300, title="Languages Spoken on the Internet", labels=True)
 
     # Close Document

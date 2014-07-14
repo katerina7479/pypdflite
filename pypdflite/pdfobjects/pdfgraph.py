@@ -34,10 +34,11 @@ class PDFGraph(object):
             self.padding = (self.padding[0] * 0.7, self.padding[1])
         else:
             self.legend = None
-        print self.padding
 
     def _draw_background(self, width, height, style, size, border_color, fill_color):
-        cursor_end = PDFCursor(self.origin.x + width, self.origin.y - height)
+        if border_color is None:
+            border_color = self.base_color
+        cursor_end = PDFCursor(self.origin.x + width, self.origin.y + height)
         rectangle = PDFRectangle(self.session, self.page, self.origin, cursor_end, border_color, fill_color, style, "solid", size)
         rectangle._draw()
 
@@ -58,7 +59,7 @@ class PDFGraph(object):
             save_font = self.font
             self.session.parent.document.set_font(save_font.family, "b", save_font.font_size * 1.2)
             title_cursor = PDFCursor(self.origin.x + (self.width - self.session.parent.document.font._string_width(self.title))/ 2.0, self.origin.y - self.height - (self.padding[1] * 0.4))
-            title = PDFText(self.session, self.page, self.title, cursor=title_cursor)
+            title = PDFText(self.session, self.page, self.title, cursor=title_cursor, color=self.base_color)
             self.session.parent.document.set_font(font=save_font)
 
     def _get_limits_from_data(self, data):
