@@ -6,15 +6,15 @@ from pdfline import PDFLine
 
 
 class PDFGraph(object):
-    def __init__(self, session, page, cursor, width, height, title=None, background_style="S", background_size=1, background_border_color=None, background_fill_color=None, padding=0.1, key=False):
+    def __init__(self, session, page, cursor, width, height, title=None, background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
         self.session = session
         self.page = page
         self.font = self.session.parent.document.font
         self.origin = cursor
         self.axis_labels = None
         self.base_color = PDFColor(77, 77, 77)
-        self._set_accessories(title, key, padding, width, height)
-        self._draw_background(width, height, background_style, background_size, background_border_color, background_fill_color)
+        self._set_accessories(title, legend, padding, width, height)
+        self._draw_background(width, height, background_style, border_size, background_border_color, background_fill_color)
         self._pad(width, height)
         self._draw_title()
 
@@ -23,15 +23,18 @@ class PDFGraph(object):
                                 PDFColor(208, 146, 167), PDFColor(162, 200, 22), PDFColor(231, 188, 41),
                                 PDFColor(156, 133, 192), PDFColor(243, 164, 71), PDFColor(128, 158, 194)]
 
-    def _set_accessories(self, title, key, padding, width, height):
+    def _set_accessories(self, title, legend, padding, width, height):
         self.title = title
-        self.key = key
         if title is None:
             self.padding = (padding * width, padding * height)
         else:
             self.padding = (padding * width, (padding * 1.2 * height))
-        if key is True:
+        if legend is not None:
+            self.legend = legend.lower()
             self.padding = (self.padding[0] * 0.7, self.padding[1])
+        else:
+            self.legend = None
+        print self.padding
 
     def _draw_background(self, width, height, style, size, border_color, fill_color):
         cursor_end = PDFCursor(self.origin.x + width, self.origin.y - height)
@@ -39,10 +42,16 @@ class PDFGraph(object):
         rectangle._draw()
 
     def _pad(self, width, height):
-        self.origin.x_plus(self.padding[0])
-        self.origin.y_plus(-self.padding[1] + height)
-        self.width = width - 2 * self.padding[0]
-        self.height = height - 2 * self.padding[1]
+        if self.legend == "right":
+            self.origin.x_plus(self.padding[0])
+            self.origin.y_plus(-self.padding[1] + height)
+            self.width = width - 2 * self.padding[0]
+            self.height = height - 2 * self.padding[1]
+        else:
+            self.origin.x_plus(self.padding[0])
+            self.origin.y_plus(-self.padding[1] + height)
+            self.width = width - 2 * self.padding[0]
+            self.height = height - 2 * self.padding[1]
 
     def _draw_title(self):
         if self.title is not None:

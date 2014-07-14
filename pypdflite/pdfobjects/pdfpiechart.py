@@ -12,8 +12,9 @@ class PDFPieChart(PDFGraph):
     Create a pie chart from data dict(series labels)
 
     """
-    def __init__(self, session, page, data, cursor, width, height, title, data_type="raw", fill_colors=None, labels=False, background_style="S", background_size=1, background_border_color=None, background_fill_color=None):
-        super(PDFPieChart, self).__init__(session, page, cursor, width, height, title, background_style, background_size, background_border_color, background_fill_color)
+    def __init__(self, session, page, data, cursor, width, height, title, data_type="raw", fill_colors=None, labels=False,
+                 background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
+        super(PDFPieChart, self).__init__(session, page, cursor, width, height, title, background_style, border_size, background_border_color, background_fill_color, padding, legend)
         self._parse_data(data, data_type)
         self._set_center()
         self.stroke = "S"

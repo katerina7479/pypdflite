@@ -25,6 +25,10 @@ def PieChartTest():
             ("Japanese", 99182000), ("Portuguese", 82586600), ("German", 75422674),
             ("Korean", 39440000)]
 
+    document.add_pie_chart(data, cursor, 400, 300, title="Languages Spoken on the Internet", legend="right")
+
+    document.add_page()
+    cursor = PDFCursor(100, 300)
     document.add_pie_chart(data, cursor, 400, 300, title="Languages Spoken on the Internet", labels=True)
 
     # Close Document
