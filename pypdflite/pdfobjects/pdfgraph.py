@@ -12,28 +12,24 @@ class PDFGraph(object):
         self.font = self.session.parent.document.font
         self.origin = cursor
         self.axis_labels = None
+        self.legend = legend
         self.base_color = PDFColor(77, 77, 77)
-        self._set_accessories(title, legend, padding, width, height)
+        self._set_accessories(title, padding, width, height)
         self._draw_background(width, height, background_style, border_size, background_border_color, background_fill_color)
         self._pad(width, height)
         self._draw_title()
 
         self.default_color_list = [PDFColor(79, 129, 189), PDFColor(192, 80, 77), PDFColor(55, 187, 89),
-                                PDFColor(128, 100, 162), PDFColor(72, 172, 198), PDFColor(247, 150, 70),
-                                PDFColor(208, 146, 167), PDFColor(162, 200, 22), PDFColor(231, 188, 41),
-                                PDFColor(156, 133, 192), PDFColor(243, 164, 71), PDFColor(128, 158, 194)]
+                                   PDFColor(128, 100, 162), PDFColor(72, 172, 198), PDFColor(247, 150, 70),
+                                   PDFColor(208, 146, 167), PDFColor(162, 200, 22), PDFColor(231, 188, 41),
+                                   PDFColor(156, 133, 192), PDFColor(243, 164, 71), PDFColor(128, 158, 194)]
 
-    def _set_accessories(self, title, legend, padding, width, height):
+    def _set_accessories(self, title, padding, width, height):
         self.title = title
         if title is None:
             self.padding = (padding * width, padding * height)
         else:
             self.padding = (padding * width, (padding * 1.2 * height))
-        if legend is not None:
-            self.legend = legend.lower()
-            self.padding = (self.padding[0] * 0.7, self.padding[1])
-        else:
-            self.legend = None
 
     def _draw_background(self, width, height, style, size, border_color, fill_color):
         if border_color is None:
@@ -43,14 +39,15 @@ class PDFGraph(object):
         rectangle._draw()
 
     def _pad(self, width, height):
+        self.origin.x_plus(self.padding[0])
+        self.origin.y_plus(-self.padding[1] + height)
         if self.legend == "right":
-            self.origin.x_plus(self.padding[0])
-            self.origin.y_plus(-self.padding[1] + height)
-            self.width = width - 2 * self.padding[0]
+            self.width = (0.8 * width) - (2 * self.padding[0])
+            self.legend_width = 0.2 * width - (self.padding[0] * 0.2)
             self.height = height - 2 * self.padding[1]
+            self.legend_height = self.height
+            self.legend_start_cursor = PDFCursor(self.origin.x + self.width + self.padding[0], self.origin.y - self.height)
         else:
-            self.origin.x_plus(self.padding[0])
-            self.origin.y_plus(-self.padding[1] + height)
             self.width = width - 2 * self.padding[0]
             self.height = height - 2 * self.padding[1]
 
@@ -61,6 +58,19 @@ class PDFGraph(object):
             title_cursor = PDFCursor(self.origin.x + (self.width - self.session.parent.document.font._string_width(self.title))/ 2.0, self.origin.y - self.height - (self.padding[1] * 0.4))
             title = PDFText(self.session, self.page, self.title, cursor=title_cursor, color=self.base_color)
             self.session.parent.document.set_font(font=save_font)
+
+    def _draw_legend_title(self, legend_title="Legend"):
+        text_width = self.session.parent.document.font._string_width(legend_title)
+        text_height = self.session.parent.document.font.font_size
+        text_cursor = PDFCursor(self.legend_start_cursor.x + (self.legend_width - text_width) / 2.0, self.legend_start_cursor.y + 1.2 * text_height)
+        legend_title = PDFText(self.session, self.page, "Legend", cursor=text_cursor)
+
+        self.legend_data_start = PDFCursor(self.legend_start_cursor.x + 10, self.legend_start_cursor.y + 3 * text_height)
+
+    def _draw_legend_box(self):
+        end_cursor = PDFCursor(self.legend_start_cursor.x + self.legend_width, self.legend_data_start.y + 1.2 * self.session.parent.document.font.font_size)
+        legend_box = PDFRectangle(self.session, self.page, self.legend_start_cursor, end_cursor, self.base_color)
+        legend_box._draw()
 
     def _get_limits_from_data(self, data):
         axis_list = [data[0], data[0]]

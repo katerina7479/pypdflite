@@ -5,6 +5,7 @@ from pdftext import PDFText
 from pdfarc import PDFArc
 from pdfellipse import PDFEllipse
 from pdfgraph import PDFGraph
+from pdfrectangle import PDFRectangle
 
 
 class PDFPieChart(PDFGraph):
@@ -81,9 +82,17 @@ class PDFPieChart(PDFGraph):
         PDFText(self.session, self.page, text, color=self.base_color, cursor=self.point_cursor)
 
     def draw_data(self):
+        if self.legend is not None:
+            print self.padding
+            self._legend_line_height = self.session.parent.document.font.font_size
+            self.legend_start_cursor.x_plus(-self.padding[0] * 0.5)
+            self.legend_width += self.padding[0] * 0.55
+            self._draw_legend_title()
         start_angle = 0
         i = 0
         for pair in self.data:
+            if self.legend is not None:
+                self._draw_legend_line(i, pair[0])
             arc_angle = round(360 * (pair[1] / 100.0), 2)
             arc = PDFArc(self.session, self.page, self.center_cursor, self.radius, start_angle, arc_angle, False, None, None, self.fill_colors[i], "solid", "F", 1)
             if self.labels:
@@ -91,8 +100,20 @@ class PDFPieChart(PDFGraph):
                 self.test_angle = start_angle
             start_angle = math.degrees(arc.end_angle)
             arc._draw()
-            if self.labels:
+            if self.labels and self.legend is None:
                 self.draw_label(pair[0])
             i += 1
             if i > len(self.fill_colors):
                 i = 0
+        if self.legend is not None:
+            self.legend_data_start.y_plus(-1.75 * self._legend_line_height)
+            self._draw_legend_box()
+
+    def _draw_legend_line(self, index, series_name):
+
+        end = PDFCursor(self.legend_data_start.x + 10, self.legend_data_start.y + 10)
+        box = PDFRectangle(self.session, self.page, self.legend_data_start, end, None, self.fill_colors[index], style="solid", stroke="F")
+        box._draw()
+        end.x_plus(10)
+        text = PDFText(self.session, self.page, series_name, cursor=end, color=self.base_color)
+        self.legend_data_start.y_plus(1.75 * self._legend_line_height)

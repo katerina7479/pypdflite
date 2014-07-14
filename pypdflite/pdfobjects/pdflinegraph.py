@@ -1,6 +1,8 @@
 from pdfgraph import PDFGraph
 from pdfcolor import PDFColor
 from pdfcursor import PDFCursor
+from pdfline import PDFLine
+from pdftext import PDFText
 
 
 class PDFLineGraph(PDFGraph):
@@ -25,14 +27,14 @@ class PDFLineGraph(PDFGraph):
             self.line_colors = self.default_color_list
 
     def _set_range(self, x_axis_limits, y_axis_limits):
-        x_data = None
+        x_data = x_axis_limits
         if x_axis_limits == "Auto" or x_axis_limits is None:
             x_data = []
             for series in self.data:
                 mylist = series.values()[0]
                 for pair in mylist:
                     x_data.append(pair[0])
-        y_data = None
+        y_data = y_axis_limits
         if y_axis_limits == "Auto" or y_axis_limits is None:
             y_data = []
             for series in self.data:
@@ -48,12 +50,16 @@ class PDFLineGraph(PDFGraph):
             self.frequency = frequency
 
     def draw_data(self):
+        if self.legend is not None:
+            self._draw_legend_title()
         i = 0
         for series in self.data:
-            for values in series.itervalues():
-                self._set_color(i)
-                self._set_line_size()
+            self._set_color(i)
+            self._set_line_size()
+            if self.legend is not None:
+                self._draw_legend_line(i, series.keys()[0])
 
+            for values in series.itervalues():
                 cursor = self.get_coord(values[0])
                 s = '%.2f %.2f m' % (cursor.x, cursor.y_prime)
                 self.session._out(s, self.page)
@@ -62,6 +68,8 @@ class PDFLineGraph(PDFGraph):
                     self.session._out('%.2f %.2f l' % (cursor.x, cursor.y_prime), self.page)
                 self.session._out('%s ' % self.stroke, self.page)
                 i += 1
+        if self.legend is not None:
+            self._draw_legend_box()
 
     def get_coord(self, tuple):
         x = self.interpolate(tuple[0], self.x_array)
@@ -78,4 +86,14 @@ class PDFLineGraph(PDFGraph):
 
     def _set_line_size(self):
         pass
+
+    def _draw_legend_line(self, index, series_name):
+        line_height = self.session.parent.document.font.font_size
+        end = PDFCursor(self.legend_data_start.x + 15, self.legend_data_start.y)
+        line = PDFLine(self.session, self.page, self.legend_data_start, end, color=self.line_colors[index])
+        line._draw()
+        end.x_plus(10)
+        end.y_plus(0.25 * line_height)
+        text = PDFText(self.session, self.page, series_name, cursor=end)
+        self.legend_data_start.y_plus(1.75 * line_height)
 
