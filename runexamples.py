@@ -25,7 +25,7 @@ from bin.multibartest import MultiBarChartTest
 
 
 def main():
-    """print "Running TextTest"
+    print "Running TextTest"
     TextTest()
     print "Running TrueTypeTest"
     TrueTypeTest()
@@ -62,18 +62,17 @@ def main():
     print "Running HTMLTest2"
     HtmlTest2()
     print "Running Justify Test"
-    JustifyTest()"""
-    #print "Running LineGraph Test"
-    #LineGraphTest()
+    JustifyTest()
+    print "Running LineGraph Test"
+    LineGraphTest()
     print "Running XYScatter Test"
     XYScatterPlotTest()
-    """
     print "Running PieChart Test"
     PieChartTest()
     print "Running BarChart Test"
     BarChartTest()
     print "Running MultiBarChart Test"
-    MultiBarChartTest()"""
+    MultiBarChartTest()
 
 
 if __name__ == '__main__':

@@ -69,7 +69,6 @@ class PDFBarChart(PDFGraph):
 
         self.draw_y_axis()
 
-
     def make_x_axis(self):
         self.x_range = (0, len(self.data))
         self.draw_x_axis(zero=False)

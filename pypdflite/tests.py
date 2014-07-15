@@ -1,12 +1,11 @@
 import unittest
-from mock import Mock
-from pdfobjects.pdfarc import PDFArc
-from pdfobjects.pdfpage import PDFPage
-from session import _Session
-from pdfobjects.pdfcursor import PDFCursor
-from pdfobjects.pdfcolor import PDFColor
-from pdfobjects.pdflinegraph import PDFLineGraph
 import math
+from mock import Mock
+from session import _Session
+from pdfobjects.pdfarc import PDFArc
+from pdfobjects.pdfcursor import PDFCursor
+from pdfobjects.pdflinegraph import PDFLineGraph
+from pdfobjects.pdfpage import PDFPage
 
 
 class TestPDFArc(unittest.TestCase):
@@ -58,8 +57,6 @@ class TestLineGraphInterpolate(unittest.TestCase):
 
         result = PDFLineGraph.interpolate(50, [(0, 100), (100, 300)])
         self.assertEqual(result, 200)
-
-
 
 
 if __name__ == '__main__':

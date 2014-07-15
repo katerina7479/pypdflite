@@ -13,16 +13,18 @@ class PDFXYScatter(PDFLineGraph):
         self.linear_regression = linear_regression
         self.linear_regression_equation = linear_regression_equation
         super(PDFXYScatter, self).__init__(session, page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors,
-                 background_style, border_size, background_border_color, background_fill_color, padding, legend, dots)
+                                           background_style, border_size, background_border_color, background_fill_color, padding, legend, dots)
 
     def draw_data(self):
         if self.legend is not None:
             self._draw_legend_title()
+
         i = 0
         for series in self.data:
             self._set_color(i)
             if self.legend is not None:
                 self._draw_legend_line(i, series.keys()[0])
+                i += 1
 
             for values in series.itervalues():
                 cursors = []
@@ -30,11 +32,9 @@ class PDFXYScatter(PDFLineGraph):
                     cursor = self.get_coord(pair)
                     cursors.append(cursor)
                 self._draw_dots(cursors)
-                i += 1
 
         if self.legend is not None:
             self._draw_legend_box()
-
 
     def _draw_legend_line(self, index, series_name):
         line_height = self.session.parent.document.font.font_size
@@ -67,7 +67,6 @@ class PDFXYScatter(PDFLineGraph):
                     x = cursor2.x + (-text_width)
                     y = self.linear_regression_line._get_y_at_x(x) + text_height
                     text = PDFText(self.session, self.page, text, cursor=PDFCursor(x, y))
-
 
     def _set_color(self, index):
         color = self.line_colors[index]

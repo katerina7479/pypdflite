@@ -28,7 +28,6 @@ class PDFCursor(object):
         self.x = x
         self.y = y
 
-
     def __repr__(self):
         return "(%s, %s)" % (self.x, self.y)
 
@@ -61,7 +60,6 @@ class PDFCursor(object):
             self._x = self.xmin
         else:
             self._x = value
-
 
     @property
     def y(self):

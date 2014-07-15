@@ -77,11 +77,9 @@ class PDFCell(object):
             self.padding_left = self.format['padding_left']
             self.padding_bottom = self.format['padding_bottom']
 
-        self.width = (self.text_width +
-                      self.padding_right + self.padding_left)
+        self.width = (self.text_width + self.padding_right + self.padding_left)
 
-        self.height = (self.line_size + self.padding_top +
-                       self.padding_bottom)
+        self.height = (self.line_size + self.padding_top + self.padding_bottom)
 
     # Format
     def _set_format(self, format):
@@ -110,13 +108,10 @@ class PDFCell(object):
         # cursor start is NW point
         self.point_sw.y_plus(self.max_height)
         self.point_ne.x_plus(self.max_width)
-
         self.point_se.x_plus(self.max_width)
         self.point_se.y_plus(self.max_height)
 
         self.border_cursor = self.point_ne
-
-        #print "Points, sw, se, nw, ne", self.point_sw, self.point_se, self.point_nw, self.point_ne
 
     def _get_border_formats(self):
         self.style = {}
@@ -165,9 +160,7 @@ class PDFCell(object):
     def _draw_fill(self):
         if self.format['fill_color'] is not None:
             if isinstance(self.format['fill_color'], PDFColor):
-                rect = PDFRectangle(self.table.session, self.table.page,
-                                    self.point_nw, self.point_se,
-                                    fill_color=self.format['fill_color'], stroke='F')
+                rect = PDFRectangle(self.table.session, self.table.page, self.point_nw, self.point_se, fill_color=self.format['fill_color'], stroke='F')
                 rect._draw()
             else:
                 raise Exception("Color %s is not a PDFColor" % self.format['fill_color'])

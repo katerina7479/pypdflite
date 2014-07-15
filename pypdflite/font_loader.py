@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import string
 from sys import platform as _platform
@@ -58,7 +59,11 @@ class FontLoader(object):
                         else:
                             families.append(name)
                         font_dict[name] = source
-
+                    else:
+                        source = os.path.join(dirName, item)
+                        name = root.lower().replace('_', ' ')
+                        font_dict[name] = source
+                        families.append(name)
         self.font_dict = font_dict
         self.families = families
 

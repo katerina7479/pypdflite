@@ -1,6 +1,7 @@
+import math
 from pdfdraw import PDFDraw
 from pdfcursor import PDFCursor
-import math
+
 
 class PDFArc(PDFDraw):
     """
@@ -36,7 +37,6 @@ class PDFArc(PDFDraw):
         if self.end_angle == math.pi * 2:
             self.end_angle = math.pi * 2 - 0.001
 
-
     def createArc(self):
         TWO_PI = math.pi * 2
         PI_OVER_TWO = math.pi / 2.0
@@ -56,7 +56,6 @@ class PDFArc(PDFDraw):
             self.curves.append(self.createSmallArc(self.radius, a1, a2))
             totalAngle -= abs(a2-a1)
             a1 = a2
-
 
     def createSmallArc(self, radius, a1, a2):
         a = (a2 - a1) / 2.0
@@ -85,7 +84,6 @@ class PDFArc(PDFDraw):
             "p2": PDFCursor(self.center.x + (x3 * cos_ar - y3 * sin_ar), self.center.y - (x3 * sin_ar + y3 * cos_ar)),
             "p3": PDFCursor(self.center.x + (radius * math.cos(a2)), self.center.y - (radius * math.sin(a2)))
         }
-
 
     def _draw(self):
         self._draw_colors()

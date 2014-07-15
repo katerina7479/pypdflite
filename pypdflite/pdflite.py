@@ -1,8 +1,9 @@
+import hashlib
 from datetime import datetime
 from font_loader import FontLoader
 from session import _Session
-from .pdfdocument import PDFDocument
-import hashlib
+from pdfdocument import PDFDocument
+
 
 class PDFLite(object):
 
@@ -57,15 +58,9 @@ class PDFLite(object):
     def get_document(self):
         return self.document
 
-    def set_information(self, title=None, subject=None, author=None,
-                        keywords=None, creator=None):
-        """ Convenience function to add property info, can set any
-            attribute and leave the others blank, it won't over-write
-            previously set items, but to delete, you must set the attribute
-            directly to None. (It is expected that there should be only
-            rare need to delete set data.)
-
-        """
+    def set_information(self, title=None, subject=None, author=None, keywords=None, creator=None):
+        """ Convenience function to add property info, can set any attribute and leave the others blank, it won't over-write
+            previously set items. """
         info_dict = {"title": title, "subject": subject,
                      "author": author, "keywords": keywords,
                      "creator": creator}
@@ -78,9 +73,7 @@ class PDFLite(object):
                 setattr(self, att, None)
 
     def set_display_mode(self, zoom='fullpage', layout='continuous'):
-        """ Set the default viewing options.
-
-        """
+        """ Set the default viewing options. """
         self.zoom_options = ["fullpage", "fullwidth", "real", "default"]
         self.layout_options = ["single", "continuous", "two", "default"]
 
@@ -95,9 +88,7 @@ class PDFLite(object):
             raise Exception('Incorrect layout display mode: ' + layout)
 
     def close(self):
-        """ Prompt the objects to output pdf code, and save to file.
-
-        """
+        """ Prompt the objects to output pdf code, and save to file. """
         self.document._set_page_numbers()
         # Places header, pages, page content first.
         self._put_header()

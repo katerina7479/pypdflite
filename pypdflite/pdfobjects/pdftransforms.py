@@ -35,8 +35,6 @@ class PDFTransform(object):
             ...
             canvas.restoreState()
             # if the save/restore pairs match then font is Helvetica 20 again.
-        
-        
         """
         self.session._out('q', self.page)
 

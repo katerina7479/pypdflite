@@ -30,7 +30,7 @@ def CircleTest():
     document.draw_circle(center, 20, black, green, stroke='B', style="dotted")
 
     center = PDFCursor(350, 400)
-    document.draw_ellipse(center, 30, 40, None, size=2)
+    document.draw_circle(center, 30, None, None, size=2)
 
     # Close Document
     writer.close()
