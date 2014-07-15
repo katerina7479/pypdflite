@@ -23,6 +23,9 @@ def XYScatterPlotTest():
 
     document.add_xy_scatter(data, cursor, 400, 200, "Ice Cream Sales vs Temperature", None, None, None, ("temperature", "sales"), "Auto", padding=0.11, dots=1)
 
+    cursor = PDFCursor(100, 400)
+    document.add_xy_scatter(data, cursor, 400, 200, "Ice Cream Sales vs Temperature", None, None, None, ("temperature", "sales"), "Auto", padding=0.11, dots=1, linear_regression=True, linear_regression_equation=True)
+
     # Close Document
     writer.close()
 
