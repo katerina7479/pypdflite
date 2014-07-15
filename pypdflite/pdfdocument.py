@@ -24,7 +24,6 @@ from pdfobjects.pdfbarchart import PDFBarChart, PDFMultiBarChart
 
 
 class PDFDocument(object):
-
     """ The Document object is the base class that
         is used to add and manage the content of the
         pdf file.
@@ -70,9 +69,7 @@ class PDFDocument(object):
 
     def _set_color_scheme(self, draw_color=None, fill_color=None, text_color=None):
         """ Default color object is black letters
-            & black lines.
-
-        """
+            & black lines."""
         if draw_color is None:
             draw_color = PDFColor()
             draw_color._set_type('d')
@@ -106,11 +103,8 @@ class PDFDocument(object):
             raise ValueError("Not a PDFColor instance")
 
     def _set_default_font(self):
-        """ Internal method to set the
-            initial default font. Change
-            the font using set_font method.
-
-        """
+        """ Internal method to set the initial default font. Change
+            the font using set_font method."""
         self.font = PDFFont(self.session)
         self.font._set_index()
         self.fonts.append(self.font)
@@ -123,11 +117,8 @@ class PDFDocument(object):
     # Public methods, main interface
     # Pages
     def add_page(self, page=None):
-        """ May generate and add a PDFPage
-            separately, or use this to generate
-            a default page.
-
-        """
+        """ May generate and add a PDFPage separately, or use this to generate
+            a default page."""
         if page is None:
             self.page = PDFPage(self.orientation_default, self.layout_default, self.margins)
         else:
@@ -185,15 +176,8 @@ class PDFDocument(object):
 
     # Font
     def set_font(self, family=None, style='', size=None, font=None):
-        """ Set the document font object, size given in points.
-            If family, style, and/or size is given, generates
-            a new Font object, checks to see if it is already
-            in use, and selects it.
-
-            May also use the font keyword to add an already
-            instantiated PDFFont object.
-
-        """
+        """ Set the document font object, size given in points. If family, style, and/or size is given, generates
+            a new Font object, checks to see if it is already in use, and selects it. """
         if font:
             testfont = font
         elif isinstance(family, PDFFont):
@@ -233,9 +217,7 @@ class PDFDocument(object):
 
     def get_font(self):
         """ Get the current font object. Useful for storing
-            in variables, and switching between styles.
-
-        """
+            in variables, and switching between styles. """
         return self.font
 
     def set_font_size(self, size):
@@ -253,15 +235,8 @@ class PDFDocument(object):
 
     # Writing
     def add_text(self, text, cursor=None):
-        """ Input text, short or long. Writes in order, within the
-            pre-defined page boundaries. Use add_newline as a return
-            character. Sequential add_text commands will print without
-            additional whitespace.
-
-            Currently all "left-justified", although that may change in
-            future version.
-
-        """
+        """ Input text, short or long. Writes in order, within the defined page boundaries. Sequential add_text commands will print without
+            additional whitespace. """
         if cursor is None:
             cursor = self.page.cursor
 
@@ -286,8 +261,7 @@ class PDFDocument(object):
 
     def add_newline(self, number=1):
         """ Starts over again at the new line. If number is specified,
-            it will leave multiple lines.
-        """
+            it will leave multiple lines."""
         if isinstance(number, int):
             try:
                 self.page._add_newline(self.font, number, self.double_spacing)
@@ -551,7 +525,6 @@ class PDFDocument(object):
         self.set_draw_color(save_draw_color)
         self.set_fill_color(save_fill_color)
 
-
     def add_pie_chart(self, data, cursor, width, height, title=None, data_type="raw", fill_colors=None, labels=False, background_style='S', border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
         """ Data type may be "raw" or "percent" """
         save_draw_color = self.draw_color
@@ -652,9 +625,7 @@ class PDFDocument(object):
 
     def _output_pages(self):
         """ Called by the PDFLite object to prompt creating
-            the page objects.
-
-        """
+            the page objects."""
         if self.orientation_changes is None:
             self._get_orientation_changes()
         else:
@@ -722,9 +693,7 @@ class PDFDocument(object):
 
     def _get_orientation_changes(self):
         """ Returns a list of the pages that have
-            orientation changes.
-
-        """
+            orientation changes."""
         self.orientation_changes = []
         for page in self.pages:
             if page.orientation_change is True:
@@ -747,9 +716,7 @@ class PDFDocument(object):
 
     def _output_fonts(self):
         """ Called by the PDFLite object to prompt creating
-            the font objects.
-
-        """
+            the font objects."""
         self.session._save_object_number()
         self._output_encoding_diffs()
         self._output_font_files()
@@ -778,9 +745,7 @@ class PDFDocument(object):
 
     def _output_images(self):
         """ Creates reference images, that can be
-            drawn throughout the document.
-
-        """
+            drawn throughout the document."""
         for image in self.images:
             obj = self.session._add_object()
             image._set_number(obj.id)
