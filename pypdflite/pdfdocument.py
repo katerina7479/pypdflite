@@ -19,7 +19,7 @@ from pdfobjects.pdfellipse import PDFEllipse
 from pdfobjects.pdfarc import PDFArc
 from pdfobjects.pdflinegraph import PDFLineGraph
 from pdfobjects.pdfpiechart import PDFPieChart
-from pdfobjects.pdfbarchart import PDFBarChart
+from pdfobjects.pdfbarchart import PDFBarChart, PDFMultiBarChart
 
 
 class PDFDocument(object):
@@ -496,8 +496,8 @@ class PDFDocument(object):
         self.set_draw_color(save_draw_color)
         self.set_fill_color(save_fill_color)
 
-    def add_simple_bar_chart(self, data, cursor, width, height, title=None, axis_titles=None, axis_font_size=None, y_axis_limits=None, y_axis_frequency=None, bar_style="B", bar_padding=.1, bar_border_colors=None, bar_fill_colors=None,
-                             background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
+    def add_simple_bar_chart(self, data, cursor, width, height, title=None, axis_titles=None, axis_font_size=None, y_axis_limits=None, y_axis_frequency=None, bar_style="B", bar_padding=0.1, bar_border_colors=None, bar_fill_colors=None,
+                             background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1):
 
         save_draw_color = self.draw_color
         save_fill_color = self.fill_color
@@ -509,11 +509,30 @@ class PDFDocument(object):
             self.set_font_size(axis_font_size)
 
         graph = PDFBarChart(self.session, self.page, data, cursor, width, height, title, axis_titles, y_axis_limits, y_axis_frequency, bar_style, bar_padding, bar_border_colors, bar_fill_colors,
-                            background_style, border_size, background_border_color, background_fill_color, padding, legend)
+                            background_style, border_size, background_border_color, background_fill_color, padding)
 
         self.set_font_size(save_font_size)
         self.set_draw_color(save_draw_color)
         self.set_fill_color(save_fill_color)
+
+    def add_multi_bar_chart(self, data, cursor, width, height, title=None, axis_titles=None, axis_font_size=None, y_axis_limits=None, y_axis_frequency=None, bar_style="B", bar_padding=0.1, bar_border_colors=None, bar_fill_colors=None,
+                            background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
+        save_draw_color = self.draw_color
+        save_fill_color = self.fill_color
+        save_font_size = self.get_font_size()
+
+        if axis_font_size is None:
+            self.set_font_size(8)
+        else:
+            self.set_font_size(axis_font_size)
+
+        graph = PDFMultiBarChart(self.session, self.page, data, cursor, width, height, title, axis_titles, y_axis_limits, y_axis_frequency, bar_style, bar_padding, bar_border_colors, bar_fill_colors,
+                            background_style, border_size, background_border_color, background_fill_color, padding)
+
+        self.set_font_size(save_font_size)
+        self.set_draw_color(save_draw_color)
+        self.set_fill_color(save_fill_color)
+
 
     def add_pie_chart(self, data, cursor, width, height, title=None, data_type="raw", fill_colors=None, labels=False, background_style='S', border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
         """ Data type may be "raw" or "percent" """

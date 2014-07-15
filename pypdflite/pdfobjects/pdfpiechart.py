@@ -83,7 +83,6 @@ class PDFPieChart(PDFGraph):
 
     def draw_data(self):
         if self.legend is not None:
-            print self.padding
             self._legend_line_height = self.session.parent.document.font.font_size
             self.legend_start_cursor.x_plus(-self.padding[0] * 0.5)
             self.legend_width += self.padding[0] * 0.55
