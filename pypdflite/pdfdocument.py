@@ -527,7 +527,7 @@ class PDFDocument(object):
             self.set_font_size(axis_font_size)
 
         graph = PDFMultiBarChart(self.session, self.page, data, cursor, width, height, title, axis_titles, y_axis_limits, y_axis_frequency, bar_style, bar_padding, bar_border_colors, bar_fill_colors,
-                            background_style, border_size, background_border_color, background_fill_color, padding)
+                            background_style, border_size, background_border_color, background_fill_color, padding, legend)
 
         self.set_font_size(save_font_size)
         self.set_draw_color(save_draw_color)

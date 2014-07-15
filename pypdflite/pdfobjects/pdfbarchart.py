@@ -13,8 +13,8 @@ class PDFBarChart(PDFGraph):
         self.bar_style = bar_style
         self.bar_padding = bar_padding
         self.axis_labels = "Auto"
+        self.draw_axis_titles(axis_titles[0], axis_titles[1])
         self.set_colors(bar_border_colors, bar_fill_colors)
-        print "Barchart init", y_axis_limits
         self.make_y_axis(y_axis_limits, y_axis_frequency)
         self.make_x_axis()
         self.draw_bars()
@@ -164,12 +164,10 @@ class PDFMultiBarChart(PDFBarChart):
         self.draw_x_axis(zero=False)
 
     def make_y_axis(self, y_axis_limits, y_axis_frequency):
-        print "Y axis limits", y_axis_limits
         if y_axis_limits is None:
             y_data = []
             for series in self.data:
                 for pair in series.values()[0]:
-                    print pair
                     y_data.append(pair[1])
                 _, self.y_range = self.get_axis_limits(None, y_data)
         else:

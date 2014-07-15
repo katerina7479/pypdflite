@@ -109,7 +109,6 @@ class PDFGraph(object):
             text._text(y_title)
 
     def draw_x_axis(self, zero=True):
-        print "Drawing x axis"
         # Draw x axis ticks
         self.x_array = [(0, self.origin.x)]
         x_delta = self.width / (float(self.x_range[1] - self.x_range[0]) / float(self.frequency[0]))

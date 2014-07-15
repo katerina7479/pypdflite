@@ -26,6 +26,9 @@ def MultiBarChartTest():
 
     document.add_multi_bar_chart(data, cursor, 400, 300, "Candidate Polls", axis_titles=("day", "percent vote"), y_axis_limits=(35, 50), y_axis_frequency=2)
 
+    cursor = PDFCursor(100, 400)
+    document.add_multi_bar_chart(data, cursor, 400, 300, "Candidate Polls", ("day", "percent of votes"), y_axis_limits=(35, 50), y_axis_frequency=2, legend="right")
+
     # Close Document
     writer.close()
 
