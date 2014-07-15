@@ -3,14 +3,16 @@ from pdfcolor import PDFColor
 from pdfcursor import PDFCursor
 from pdfline import PDFLine
 from pdftext import PDFText
+from pdfellipse import PDFEllipse
 
 
 class PDFLineGraph(PDFGraph):
     def __init__(self, session, page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors,
-                 background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
+                 background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None, dots=None):
         super(PDFLineGraph, self).__init__(session, page, cursor, width, height, title, background_style, border_size, background_border_color, background_fill_color, padding, legend)
         self.data = data
         self.stroke = "S"
+        self.dots = dots
         self._set_colors(line_colors)
         self._set_range(x_axis_limits, y_axis_limits)
         self._set_frequency(frequency)
@@ -63,10 +65,13 @@ class PDFLineGraph(PDFGraph):
                 cursor = self.get_coord(values[0])
                 s = '%.2f %.2f m' % (cursor.x, cursor.y_prime)
                 self.session._out(s, self.page)
+                cursors = []
                 for pair in values[1:]:
                     cursor = self.get_coord(pair)
                     self.session._out('%.2f %.2f l' % (cursor.x, cursor.y_prime), self.page)
+                    cursors.append(cursor)
                 self.session._out('%s ' % self.stroke, self.page)
+                self._draw_dots(cursors)
                 i += 1
         if self.legend is not None:
             self._draw_legend_box()
@@ -97,3 +102,8 @@ class PDFLineGraph(PDFGraph):
         text = PDFText(self.session, self.page, series_name, cursor=end)
         self.legend_data_start.y_plus(1.75 * line_height)
 
+    def _draw_dots(self, cursors):
+        if self.dots is not None:
+            for cursor in cursors:
+                dot = PDFEllipse(self.session, self.page, cursor, PDFCursor(self.dots, self.dots))
+                dot._draw()

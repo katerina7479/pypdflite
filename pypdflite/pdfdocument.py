@@ -18,6 +18,7 @@ from pdfobjects.pdfhtml import PDFHtml
 from pdfobjects.pdfellipse import PDFEllipse
 from pdfobjects.pdfarc import PDFArc
 from pdfobjects.pdflinegraph import PDFLineGraph
+from pdfobjects.pdfxyscatter import PDFXYScatter
 from pdfobjects.pdfpiechart import PDFPieChart
 from pdfobjects.pdfbarchart import PDFBarChart, PDFMultiBarChart
 
@@ -480,7 +481,7 @@ class PDFDocument(object):
         arc._draw()
 
     def add_line_graph(self, data, cursor, width, height, title=None, x_axis_limits=None, y_axis_limits=None, frequency=None, axis_titles=None, axis_labels=None, axis_font_size=None, line_colors=None,
-                       background_style='S', border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
+                       background_style='S', border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None, dots=None):
 
         save_draw_color = self.draw_color
         save_fill_color = self.fill_color
@@ -490,7 +491,24 @@ class PDFDocument(object):
         else:
             self.set_font_size(axis_font_size)
 
-        graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, background_style, border_size, background_border_color, background_fill_color, padding, legend)
+        graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, background_style, border_size, background_border_color, background_fill_color, padding, legend, dots)
+
+        self.set_font_size(save_font_size)
+        self.set_draw_color(save_draw_color)
+        self.set_fill_color(save_fill_color)
+
+    def add_xy_scatter(self, data, cursor, width, height, title=None, x_axis_limits=None, y_axis_limits=None, frequency=None, axis_titles=None, axis_labels=None, axis_font_size=None, line_colors=None,
+                       background_style='S', border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None, dots=None):
+
+        save_draw_color = self.draw_color
+        save_fill_color = self.fill_color
+        save_font_size = self.get_font_size()
+        if axis_font_size is None:
+            self.set_font_size(8)
+        else:
+            self.set_font_size(axis_font_size)
+
+        graph = PDFXYScatter(self.session, self.page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, background_style, border_size, background_border_color, background_fill_color, padding, legend, dots)
 
         self.set_font_size(save_font_size)
         self.set_draw_color(save_draw_color)

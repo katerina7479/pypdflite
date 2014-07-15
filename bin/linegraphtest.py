@@ -25,7 +25,7 @@ def LineGraphTest():
     document.add_line_graph(data, cursor, 400, 200, "Hits over Time", (0, 18000), (0, 1100), (3600, 100), ("time (s)", "count"), "Auto", padding=0.11, legend="right")
 
     cursor = PDFCursor(100, 400)
-    document.add_line_graph(data, cursor, 400, 300, "Hits over Time", None, None, (3600, 50), ("time (s)", "count"), "Auto", padding=0.11)
+    document.add_line_graph(data, cursor, 400, 300, "Hits over Time", None, None, (3600, 50), ("time (s)", "count"), "Auto", padding=0.11, dots=1)
 
     # Close Document
     writer.close()
