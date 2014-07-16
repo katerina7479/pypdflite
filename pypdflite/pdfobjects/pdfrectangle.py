@@ -3,8 +3,7 @@ from pdfdraw import PDFDraw
 
 class PDFRectangle(PDFDraw):
 
-    def __init__(self, session, page, cursor_start, cursor_end, border_color=None, fill_color=None,
-                 style=None, stroke=None, size=1):
+    def __init__(self, session, page, cursor_start, cursor_end, border_color=None, fill_color=None, style=None, stroke=None, size=1):
         super(PDFRectangle, self).__init__(session, page, border_color, style, stroke, size)
 
         self.fill_color = fill_color
@@ -22,5 +21,5 @@ class PDFRectangle(PDFDraw):
         self._draw_line_size()
         s = '%.2f %.2f %.2f %.2f re %s' % (
             self.corner.x, self.corner.y_prime,
-            self.width, -self.height, self.stroke)
+            self.width, -self.height, self._style)
         self.session._out(s, self.page)

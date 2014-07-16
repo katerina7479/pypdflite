@@ -22,6 +22,7 @@ from bin.xyscatterplot import XYScatterPlotTest
 from bin.piecharttest import PieChartTest
 from bin.barcharttest import BarChartTest
 from bin.multibartest import MultiBarChartTest
+from bin.graphbackgrounds import GraphBackgroundTest
 
 
 def main():
@@ -73,6 +74,8 @@ def main():
     BarChartTest()
     print "Running MultiBarChart Test"
     MultiBarChartTest()
+    print "Running GraphBackgrounds Test"
+    GraphBackgroundTest()
 
 
 if __name__ == '__main__':

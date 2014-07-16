@@ -34,7 +34,7 @@ def EllipseTest():
     
     center.x = 200
     center.y = 200
-    circle = PDFEllipse(document.session, document.page, center, radius, color, stroke='F')
+    circle = PDFEllipse(document.session, document.page, center, radius, color, style='F')
     circle._draw()
     
     center.x = 100

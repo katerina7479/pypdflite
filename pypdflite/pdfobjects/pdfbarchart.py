@@ -7,8 +7,8 @@ from pdfrectangle import PDFRectangle
 
 class PDFBarChart(PDFGraph):
     def __init__(self, session, page, data, cursor, width, height, title=None, axis_titles=None, y_axis_limits=None, y_axis_frequency=None, bar_style="F", bar_padding=0, bar_border_colors=None, bar_fill_colors=None,
-                 background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
-        super(PDFBarChart, self).__init__(session, page, cursor, width, height, title, background_style, border_size, background_border_color, background_fill_color, padding, legend)
+                 background=None, legend=None):
+        super(PDFBarChart, self).__init__(session, page, cursor, width, height, title, background, legend)
         self.data = data
         self.bar_style = bar_style
         self.bar_padding = bar_padding
@@ -24,22 +24,22 @@ class PDFBarChart(PDFGraph):
             self.bar_border_colors = border_colors
             self.bar_fill_colors = None
             if border_colors is None:
-                self.bar_border_colors = self.default_color_list
+                self.bar_border_colors = self.background.default_color_list
 
         if self.bar_style == "F":
             self.bar_border_colors = None
             self.bar_fill_colors = fill_colors
             if fill_colors is None:
-                self.bar_fill_colors = self.default_color_list
+                self.bar_fill_colors = self.background.default_color_list
 
         if self.bar_style == "B":
             self.bar_border_colors = border_colors
             self.bar_fill_colors = fill_colors
             if fill_colors is None:
-                self.bar_fill_colors = self.default_color_list
+                self.bar_fill_colors = self.background.default_color_list
             if border_colors is None:
                 self.bar_border_colors = []
-                for color in self.default_color_list:
+                for color in self.background.default_color_list:
                     r = min(int(color.red * 0.75), 255)
                     g = min(int(color.green * 0.75), 255)
                     b = min(int(color.blue * 0.75), 255)
@@ -85,7 +85,7 @@ class PDFBarChart(PDFGraph):
             draw, fill = self._get_colors(i)
             cursor1 = PDFCursor(self.x_array[i][1] + x_space, self.interpolate(pair[1], self.y_array))
             cursor2 = PDFCursor(self.x_array[i][1] + self.x_delta - x_space, self.origin.y)
-            rect = PDFRectangle(self.session, self.page, cursor1, cursor2, draw, fill, "solid", self.bar_style)
+            rect = PDFRectangle(self.session, self.page, cursor1, cursor2, draw, fill, self.bar_style, "solid")
             rect._draw()
             i += 1
 
@@ -107,8 +107,8 @@ class PDFBarChart(PDFGraph):
 
 
 class PDFMultiBarChart(PDFBarChart):
-    def __init__(self, session, page, data, cursor, width, height, title=None, axis_titles=None, y_axis_limits=None, y_axis_frequency=None, bar_style="F", bar_padding=0, bar_border_colors=None, bar_fill_colors=None, background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
-        super(PDFMultiBarChart, self).__init__(session, page, data, cursor, width, height, title, axis_titles, y_axis_limits, y_axis_frequency, bar_style, bar_padding, bar_border_colors, bar_fill_colors, background_style, border_size, background_border_color, background_fill_color, padding, legend)
+    def __init__(self, session, page, data, cursor, width, height, title=None, axis_titles=None, y_axis_limits=None, y_axis_frequency=None, bar_style="F", bar_padding=0, bar_border_colors=None, bar_fill_colors=None, background=None, legend=None):
+        super(PDFMultiBarChart, self).__init__(session, page, data, cursor, width, height, title, axis_titles, y_axis_limits, y_axis_frequency, bar_style, bar_padding, bar_border_colors, bar_fill_colors, background, legend)
 
     def draw_bars(self):
         x_space = int(self.bar_padding * self.x_delta)
@@ -141,7 +141,7 @@ class PDFMultiBarChart(PDFBarChart):
             for pair in values_list:
                 cursor1 = PDFCursor(self.new_x_array[j][i][1], self.interpolate(pair[1], self.y_array))
                 cursor2 = PDFCursor(self.new_x_array[j][i][1] + new_x_delta - x_space, self.origin.y)
-                rect = PDFRectangle(self.session, self.page, cursor1, cursor2, draw, fill, "solid", self.bar_style)
+                rect = PDFRectangle(self.session, self.page, cursor1, cursor2, draw, fill, self.bar_style, "solid")
                 rect._draw()
                 i += 1
             j += 1
@@ -181,7 +181,7 @@ class PDFMultiBarChart(PDFBarChart):
 
     def _draw_legend_line(self, index, series_name):
         end = PDFCursor(self.legend_data_start.x + 10, self.legend_data_start.y + 10)
-        box = PDFRectangle(self.session, self.page, self.legend_data_start, end, None, self.bar_fill_colors[index], style="solid", stroke="F")
+        box = PDFRectangle(self.session, self.page, self.legend_data_start, end, None, self.bar_fill_colors[index], style="F", stroke="solid")
         box._draw()
         end.x_plus(10)
         text = PDFText(self.session, self.page, series_name, cursor=end, color=self.base_color)

@@ -23,11 +23,11 @@ def CircleTest():
     red = PDFColor(name='red')
     center = PDFCursor(100, 100)
 
-    document.draw_circle(center, 10, black, red, stroke='F')
+    document.draw_circle(center, 10, black, red, style='F')
 
     green = PDFColor(name='green')
     center = PDFCursor(300, 300)
-    document.draw_circle(center, 20, black, green, stroke='B', style="dotted")
+    document.draw_circle(center, 20, black, green, style='B', stroke="dotted")
 
     center = PDFCursor(350, 400)
     document.draw_circle(center, 30, None, None, size=2)

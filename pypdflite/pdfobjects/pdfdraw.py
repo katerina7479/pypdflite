@@ -10,11 +10,10 @@ class PDFDraw(object):
     """
     Base class for the drawing classes: PDFLine, PDFRectangle, PDFEllipse
     """
-
     def __init__(self, session, page, color=None, style=None, stroke=None, size=1):
         # S is plain, B is filled with border, F is filled no border.
-        self.stroke_list = ['S', 'B', 'F']
-        self.style_list = ['solid', 'dashed', 'dots']
+        self.style_list = ['S', 'B', 'F']
+        self.stroke_list = ['solid', 'dashed', 'dots']
 
         self.session = session
         self.page = page
@@ -28,17 +27,21 @@ class PDFDraw(object):
         self.line_size = line_size
 
     def _set_style(self, style=None):
-        if style == "dashed" or style == 1:
-            self.style = "dashed"
-        elif style == 'dots' or style == 2:
-            self.style = 'dots'
-        else:
-            self.style = "solid"
+        if style in self.stroke_list:
+            raise Exception("Style in stroke list : %s" % style)
+        style = style.upper() if style is not None else 'S'
+        self._style = style if style in self.style_list else 'S'
 
-    def _set_stroke(self, stroke='S'):
-        stroke = stroke.upper() if stroke is not None else 'S'
-        self.stroke = stroke if stroke in self.stroke_list else 'S'
-        
+    def _set_stroke(self, stroke='solid'):
+        if stroke in self.style_list:
+            raise Exception("Stroke in style list : %s" % stroke)
+        if stroke == "dashed" or stroke == 1:
+            self._stroke = "dashed"
+        elif stroke == 'dots' or stroke == 2:
+            self._stroke = 'dots'
+        else:
+            self._stroke = "solid"
+
     def _draw_color(self):
         if isinstance(self.color, PDFColor):
             self.color._set_type('d')
@@ -54,12 +57,12 @@ class PDFDraw(object):
                 self.session._out(self.fill_color._get_color_string(), self.page)
                 self.session._save_color(self.fill_color.copy())
 
-    def _draw_style(self):
-        if self.style == "dashed":
+    def _draw_stroke(self):
+        if self._stroke == "dashed":
             self.session._out('[%s] %s d' % (3, 0), self.page)
-        elif self.style == "solid":
+        elif self._stroke == "solid":
             self.session._out('[] 0 d', self.page)
-        elif self.style == 'dots':
+        elif self._stroke == 'dots':
             self.session._out('[%s] %s d' % (1, 1), self.page)
 
     def _draw_line_size(self):
@@ -67,3 +70,4 @@ class PDFDraw(object):
 
     def _draw(self):
         raise NotImplementedError
+

@@ -160,7 +160,7 @@ class PDFCell(object):
     def _draw_fill(self):
         if self.format['fill_color'] is not None:
             if isinstance(self.format['fill_color'], PDFColor):
-                rect = PDFRectangle(self.table.session, self.table.page, self.point_nw, self.point_se, fill_color=self.format['fill_color'], stroke='F')
+                rect = PDFRectangle(self.table.session, self.table.page, self.point_nw, self.point_se, fill_color=self.format['fill_color'], style='F')
                 rect._draw()
             else:
                 raise Exception("Color %s is not a PDFColor" % self.format['fill_color'])

@@ -1,4 +1,3 @@
-from pdfgraph import PDFGraph
 from pdfcolor import PDFColor
 from pdfcursor import PDFCursor
 from pdfline import PDFLine
@@ -9,11 +8,11 @@ from pdflinegraph import PDFLineGraph
 
 class PDFXYScatter(PDFLineGraph):
     def __init__(self, session, page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors,
-                 background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None, dots=None, linear_regression=None, linear_regression_equation=None):
+                 background=None, legend=None, dots=None, linear_regression=None, linear_regression_equation=None):
         self.linear_regression = linear_regression
         self.linear_regression_equation = linear_regression_equation
         super(PDFXYScatter, self).__init__(session, page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors,
-                                           background_style, border_size, background_border_color, background_fill_color, padding, legend, dots)
+                                           background, legend, dots)
 
     def draw_data(self):
         if self.legend is not None:
@@ -64,7 +63,7 @@ class PDFXYScatter(PDFLineGraph):
     def _draw_dots(self, cursors):
         if self.dots is not None:
             for cursor in cursors:
-                dot = PDFEllipse(self.session, self.page, cursor, PDFCursor(self.dots, self.dots), stroke="F")
+                dot = PDFEllipse(self.session, self.page, cursor, PDFCursor(self.dots, self.dots), style="F")
                 dot._draw()
 
     def _set_color(self, index):

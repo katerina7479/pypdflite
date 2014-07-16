@@ -41,5 +41,5 @@ class PDFEllipse(PDFDraw):
         self.session._out(s, self.page)
         s = '%.2f %.2f %.2f %.2f %.2f %.2f c' % (x-xmagic, y-yradius, x-xradius, y-ymagic, x-xradius, y)
         self.session._out(s, self.page)
-        s = '%s' % self.stroke
+        s = '%s' % self._style
         self.session._out(s, self.page)

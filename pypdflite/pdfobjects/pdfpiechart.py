@@ -1,6 +1,6 @@
+import math
 from pdfcolor import PDFColor
 from pdfcursor import PDFCursor
-import math
 from pdftext import PDFText
 from pdfarc import PDFArc
 from pdfellipse import PDFEllipse
@@ -14,11 +14,11 @@ class PDFPieChart(PDFGraph):
 
     """
     def __init__(self, session, page, data, cursor, width, height, title, data_type="raw", fill_colors=None, labels=False,
-                 background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
-        super(PDFPieChart, self).__init__(session, page, cursor, width, height, title, background_style, border_size, background_border_color, background_fill_color, padding, legend)
+                 background=None, legend=None):
+        super(PDFPieChart, self).__init__(session, page, cursor, width, height, title, background, legend)
         self._parse_data(data, data_type)
         self._set_center()
-        self.stroke = "S"
+        self.style = "S"
         self.fill_colors = fill_colors
         self.labels = labels
         self.base_color = PDFColor(77, 77, 77)
@@ -54,13 +54,13 @@ class PDFPieChart(PDFGraph):
 
     def get_colors(self):
         if self.fill_colors is None:
-            self.fill_colors = self.default_color_list
+            self.fill_colors = self.background.default_color_list
 
         for color in self.fill_colors:
             color._set_type("f")
 
     def draw_base_circle(self):
-        circle = PDFEllipse(self.session, self.page, self.center_cursor, PDFCursor(self.radius, self.radius), self.base_color, None, "solid", "S", 1)
+        circle = PDFEllipse(self.session, self.page, self.center_cursor, PDFCursor(self.radius, self.radius), self.base_color, None, style="S", stroke="solid", size=1)
         circle._draw()
 
     def draw_label(self, text):
@@ -89,11 +89,12 @@ class PDFPieChart(PDFGraph):
             self._draw_legend_title()
         start_angle = 0
         i = 0
+        self.max_x = 0
         for pair in self.data:
             if self.legend is not None:
                 self._draw_legend_line(i, pair[0])
             arc_angle = round(360 * (pair[1] / 100.0), 2)
-            arc = PDFArc(self.session, self.page, self.center_cursor, self.radius, start_angle, arc_angle, False, None, None, self.fill_colors[i], "solid", "F", 1)
+            arc = PDFArc(self.session, self.page, self.center_cursor, self.radius, start_angle, arc_angle, False, None, None, self.fill_colors[i], "F", "solid", 1)
             if self.labels:
                 self.point_cursor = arc.curves[0]["p1"].copy()
                 self.test_angle = start_angle
@@ -109,10 +110,17 @@ class PDFPieChart(PDFGraph):
             self._draw_legend_box()
 
     def _draw_legend_line(self, index, series_name):
-
         end = PDFCursor(self.legend_data_start.x + 10, self.legend_data_start.y + 10)
-        box = PDFRectangle(self.session, self.page, self.legend_data_start, end, None, self.fill_colors[index], style="solid", stroke="F")
+        box = PDFRectangle(self.session, self.page, self.legend_data_start, end, None, self.fill_colors[index], style="F", stroke="solid")
         box._draw()
         end.x_plus(10)
         text = PDFText(self.session, self.page, series_name, cursor=end, color=self.base_color)
+        w = end.x + 4
+        if w > self.max_x:
+            self.max_x = w
         self.legend_data_start.y_plus(1.75 * self._legend_line_height)
+
+    def _draw_legend_box(self):
+        end_cursor = PDFCursor(self.max_x, self.legend_data_start.y + 1.2 * self.session.parent.document.font.font_size)
+        legend_box = PDFRectangle(self.session, self.page, self.legend_start_cursor, end_cursor, self.base_color)
+        legend_box._draw()
