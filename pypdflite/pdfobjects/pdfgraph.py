@@ -29,7 +29,7 @@ class PDFGraph(object):
         if title is None:
             self.padding = (self.background.padding * width, self.background.padding * height)
         else:
-            self.padding = (self.background.padding * width, (self.background.padding * 1.2 * height))
+            self.padding = (self.background.padding * width, (self.background.padding * height + 0.13 * height))
 
     def _draw_background(self, width, height):
         if self.background.exists:
@@ -102,6 +102,8 @@ class PDFGraph(object):
             PDFText(self.session, self.page, x_title, cursor=label_cursor_x)
 
         if y_title is not None:
+            if self.padding[0] == 0:
+                self.padding = (self.width * 0.12, self.padding[1])
             label_cursor_y = PDFCursor(self.origin.x - 0.8 * self.padding[0], self.origin.y - (self.height / 2.0) - 0.8 * self.padding[1])
             text = PDFText(self.session, self.page, None, cursor=label_cursor_y)
             text.text_rotate(-90)

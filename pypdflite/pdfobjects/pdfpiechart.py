@@ -89,6 +89,7 @@ class PDFPieChart(PDFGraph):
             self._draw_legend_title()
         start_angle = 0
         i = 0
+        self.max_x = 0
         for pair in self.data:
             if self.legend is not None:
                 self._draw_legend_line(i, pair[0])
@@ -114,4 +115,12 @@ class PDFPieChart(PDFGraph):
         box._draw()
         end.x_plus(10)
         text = PDFText(self.session, self.page, series_name, cursor=end, color=self.base_color)
+        w = end.x + 4
+        if w > self.max_x:
+            self.max_x = w
         self.legend_data_start.y_plus(1.75 * self._legend_line_height)
+
+    def _draw_legend_box(self):
+        end_cursor = PDFCursor(self.max_x, self.legend_data_start.y + 1.2 * self.session.parent.document.font.font_size)
+        legend_box = PDFRectangle(self.session, self.page, self.legend_start_cursor, end_cursor, self.base_color)
+        legend_box._draw()
