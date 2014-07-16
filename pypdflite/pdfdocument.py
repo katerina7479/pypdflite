@@ -337,6 +337,7 @@ class PDFDocument(object):
     def html(self, *args, **kwargs):
         self.add_html(*args, **kwargs)
 
+    # Shapes
     def add_line(self, x1=None, y1=None, x2=None, y2=None, cursor1=None, cursor2=None, stroke="solid"):
         if cursor1 is not None:
             if cursor2 is not None:
@@ -451,9 +452,9 @@ class PDFDocument(object):
         arc = PDFArc(self.session, self.page, center_cursor, radius, starting_angle, arc_angle, inverted, end_angle, border_color, fill_color, style, stroke, size)
         arc._draw()
 
+    # Graphs
     def add_line_graph(self, data, cursor, width, height, title=None, x_axis_limits=None, y_axis_limits=None, frequency=None, axis_titles=None, axis_labels=None, axis_font_size=None, line_colors=None,
-                       background_style='S', border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None, dots=None):
-
+                       background=None, legend=None, dots=None):
         save_draw_color = self.draw_color
         save_fill_color = self.fill_color
         save_font_size = self.get_font_size()
@@ -462,14 +463,14 @@ class PDFDocument(object):
         else:
             self.set_font_size(axis_font_size)
 
-        graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, background_style, border_size, background_border_color, background_fill_color, padding, legend, dots)
+        graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, background, legend, dots)
 
         self.set_font_size(save_font_size)
         self.set_draw_color(save_draw_color)
         self.set_fill_color(save_fill_color)
 
     def add_xy_scatter(self, data, cursor, width, height, title=None, x_axis_limits=None, y_axis_limits=None, frequency=None, axis_titles=None, axis_labels=None, axis_font_size=None, line_colors=None,
-                       background_style='S', border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None, dots=None, linear_regression=None, linear_regression_equation=None):
+                       background=None, legend=None, dots=None, linear_regression=None, linear_regression_equation=None):
 
         save_draw_color = self.draw_color
         save_fill_color = self.fill_color
@@ -479,14 +480,14 @@ class PDFDocument(object):
         else:
             self.set_font_size(axis_font_size)
 
-        graph = PDFXYScatter(self.session, self.page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, background_style, border_size, background_border_color, background_fill_color, padding, legend, dots, linear_regression, linear_regression_equation)
+        graph = PDFXYScatter(self.session, self.page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, background, legend, dots, linear_regression, linear_regression_equation)
 
         self.set_font_size(save_font_size)
         self.set_draw_color(save_draw_color)
         self.set_fill_color(save_fill_color)
 
     def add_simple_bar_chart(self, data, cursor, width, height, title=None, axis_titles=None, axis_font_size=None, y_axis_limits=None, y_axis_frequency=None, bar_style="B", bar_padding=0.1, bar_border_colors=None, bar_fill_colors=None,
-                             background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1):
+                             background=None):
 
         save_draw_color = self.draw_color
         save_fill_color = self.fill_color
@@ -498,14 +499,14 @@ class PDFDocument(object):
             self.set_font_size(axis_font_size)
 
         graph = PDFBarChart(self.session, self.page, data, cursor, width, height, title, axis_titles, y_axis_limits, y_axis_frequency, bar_style, bar_padding, bar_border_colors, bar_fill_colors,
-                            background_style, border_size, background_border_color, background_fill_color, padding)
+                            background)
 
         self.set_font_size(save_font_size)
         self.set_draw_color(save_draw_color)
         self.set_fill_color(save_fill_color)
 
     def add_multi_bar_chart(self, data, cursor, width, height, title=None, axis_titles=None, axis_font_size=None, y_axis_limits=None, y_axis_frequency=None, bar_style="B", bar_padding=0.1, bar_border_colors=None, bar_fill_colors=None,
-                            background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
+                            background=None, legend=None):
         save_draw_color = self.draw_color
         save_fill_color = self.fill_color
         save_font_size = self.get_font_size()
@@ -516,22 +517,23 @@ class PDFDocument(object):
             self.set_font_size(axis_font_size)
 
         graph = PDFMultiBarChart(self.session, self.page, data, cursor, width, height, title, axis_titles, y_axis_limits, y_axis_frequency, bar_style, bar_padding, bar_border_colors, bar_fill_colors,
-                                 background_style, border_size, background_border_color, background_fill_color, padding, legend)
+                                 background, legend)
 
         self.set_font_size(save_font_size)
         self.set_draw_color(save_draw_color)
         self.set_fill_color(save_fill_color)
 
-    def add_pie_chart(self, data, cursor, width, height, title=None, data_type="raw", fill_colors=None, labels=False, background_style='S', border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
+    def add_pie_chart(self, data, cursor, width, height, title=None, data_type="raw", fill_colors=None, labels=False, background=None, legend=None):
         """ Data type may be "raw" or "percent" """
         save_draw_color = self.draw_color
         save_fill_color = self.fill_color
 
-        chart = PDFPieChart(self.session, self.page, data, cursor, width, height, title, data_type, fill_colors, labels, background_style, border_size, background_border_color, background_fill_color, padding, legend)
+        chart = PDFPieChart(self.session, self.page, data, cursor, width, height, title, data_type, fill_colors, labels, background, legend)
 
         self.set_draw_color(save_draw_color)
         self.set_fill_color(save_fill_color)
 
+    # Tables
     def add_table(self, rows, columns, cursor=None):
         if cursor is None:
             cursor = self.page.cursor
@@ -555,6 +557,7 @@ class PDFDocument(object):
         format = PDFCellFormat(data, cell_font)
         return format
 
+    # Images
     def add_image(self, image, name=None):
         if isinstance(image, PDFImage):  # It's an image object
             myimage = self._get_image(image.name)

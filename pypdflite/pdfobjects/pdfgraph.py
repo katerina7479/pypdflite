@@ -3,10 +3,11 @@ from pdfcolor import PDFColor
 from pdfcursor import PDFCursor
 from pdftext import PDFText
 from pdfline import PDFLine
+from pdfgraphformat import PDFGraphBackground
 
 
 class PDFGraph(object):
-    def __init__(self, session, page, cursor, width, height, title=None, background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
+    def __init__(self, session, page, cursor, width, height, title=None, background=None, legend=None):
         self.session = session
         self.page = page
         self.font = self.session.parent.document.font
@@ -14,29 +15,27 @@ class PDFGraph(object):
         self.axis_labels = None
         self.legend = legend
         self.base_color = PDFColor(77, 77, 77)
-        self._set_accessories(title, padding, width, height)
-        self._draw_background(width, height, background_style, border_size, background_border_color, background_fill_color)
+        if background is None:
+            self.background = PDFGraphBackground()
+        else:
+            self.background = background
+        self._set_accessories(title, width, height)
+        self._draw_background(width, height)
         self._pad(width, height)
         self._draw_title()
 
-        self.default_color_list = [PDFColor(79, 129, 189), PDFColor(192, 80, 77), PDFColor(55, 187, 89),
-                                   PDFColor(128, 100, 162), PDFColor(72, 172, 198), PDFColor(247, 150, 70),
-                                   PDFColor(208, 146, 167), PDFColor(162, 200, 22), PDFColor(231, 188, 41),
-                                   PDFColor(156, 133, 192), PDFColor(243, 164, 71), PDFColor(128, 158, 194)]
-
-    def _set_accessories(self, title, padding, width, height):
+    def _set_accessories(self, title, width, height):
         self.title = title
         if title is None:
-            self.padding = (padding * width, padding * height)
+            self.padding = (self.background.padding * width, self.background.padding * height)
         else:
-            self.padding = (padding * width, (padding * 1.2 * height))
+            self.padding = (self.background.padding * width, (self.background.padding * 1.2 * height))
 
-    def _draw_background(self, width, height, style, size, border_color, fill_color):
-        if border_color is None:
-            border_color = self.base_color
-        cursor_end = PDFCursor(self.origin.x + width, self.origin.y + height)
-        rectangle = PDFRectangle(self.session, self.page, self.origin, cursor_end, border_color, fill_color, style, "solid", size)
-        rectangle._draw()
+    def _draw_background(self, width, height):
+        if self.background.exists:
+            cursor_end = PDFCursor(self.origin.x + width, self.origin.y + height)
+            rectangle = PDFRectangle(self.session, self.page, self.origin, cursor_end, self.background.border_color, self.background.fill_color, self.background.style, self.background.stroke, self.background.size)
+            rectangle._draw()
 
     def _pad(self, width, height):
         self.origin.x_plus(self.padding[0])

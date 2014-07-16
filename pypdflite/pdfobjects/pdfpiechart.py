@@ -14,8 +14,8 @@ class PDFPieChart(PDFGraph):
 
     """
     def __init__(self, session, page, data, cursor, width, height, title, data_type="raw", fill_colors=None, labels=False,
-                 background_style="S", border_size=1, background_border_color=None, background_fill_color=None, padding=0.1, legend=None):
-        super(PDFPieChart, self).__init__(session, page, cursor, width, height, title, background_style, border_size, background_border_color, background_fill_color, padding, legend)
+                 background=None, legend=None):
+        super(PDFPieChart, self).__init__(session, page, cursor, width, height, title, background, legend)
         self._parse_data(data, data_type)
         self._set_center()
         self.style = "S"
@@ -54,7 +54,7 @@ class PDFPieChart(PDFGraph):
 
     def get_colors(self):
         if self.fill_colors is None:
-            self.fill_colors = self.default_color_list
+            self.fill_colors = self.background.default_color_list
 
         for color in self.fill_colors:
             color._set_type("f")
