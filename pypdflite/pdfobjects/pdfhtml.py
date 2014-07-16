@@ -4,6 +4,7 @@ from pdfcolor import PDFColor
 from pdffont import PDFFont
 from pdftext import PDFText
 
+
 class Element(object):
     def __init__(self):
         pass
@@ -51,6 +52,7 @@ class Element(object):
         if color is not None:
             self.document.set_text_color(color)
 
+
 class Header(Element):
     def __init__(self, name, attr=None):
         super(Header, self).__init__()
@@ -68,6 +70,7 @@ class Header(Element):
             self.document.add_text('%s' % text)
         self.document.add_newline()
         self.document.set_font(font=save_font)
+
 
 class Paragraph(Element):
     def __init__(self, attr=None):
@@ -93,6 +96,7 @@ class Paragraph(Element):
                 self.document.add_text('%s' % text)
         self.document.add_newline(1)
 
+
 class Break(Element):
     def __init__(self):
         super(Break, self).__init__()
@@ -100,6 +104,7 @@ class Break(Element):
 
     def output(self):
         self.document.add_newline()
+
 
 class UnorderedList(Element):
     def __init__(self, attr=None):
@@ -140,6 +145,7 @@ class UnorderedList(Element):
         if self.primary_list:
             self.document.add_newline()
         self.document.page.cursor.x_shift_left(-10)
+
 
 class OrderedList(Element):
     def __init__(self, attr=None):
@@ -204,6 +210,7 @@ class OrderedList(Element):
                 result += romn
         return result
 
+
 class ListElement(Element):
     def __init__(self, attr=None):
         super(ListElement, self).__init__()
@@ -249,6 +256,7 @@ class ListElement(Element):
                 element.output()
         return char
 
+
 class Span(Element):
     def __init__(self, attr=None):
         super(Span, self).__init__()
@@ -261,6 +269,7 @@ class Span(Element):
         if variable is not None:
             PDFText(self.session, self.document.page, '%s' % variable, font, color, self.document.page.cursor)
         self.document.set_font(font=savefont)
+
 
 class Blockquote(Element):
     def __init__(self):
@@ -280,11 +289,13 @@ class Blockquote(Element):
         self.document.page.cursor.x_shift_left(-20)
         self.document.add_newline()
 
+
 class Link(Element):
     def __init__(self, attr=None):
         super(Link, self).__init__()
         self.name = 'a'
         self.attributes = attr
+
 
 class PDFHTMLParser(HTMLParser):
     def __init__(self):

@@ -1,6 +1,6 @@
+import math
 from pdfcolor import PDFColor
 from pdfcursor import PDFCursor
-import math
 from pdftext import PDFText
 from pdfarc import PDFArc
 from pdfellipse import PDFEllipse

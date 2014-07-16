@@ -1,4 +1,3 @@
-from pdfgraph import PDFGraph
 from pdfcolor import PDFColor
 from pdfcursor import PDFCursor
 from pdfline import PDFLine

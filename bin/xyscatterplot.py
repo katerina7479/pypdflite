@@ -1,5 +1,4 @@
 from pypdflite.pdflite import PDFLite
-from pypdflite.pdfobjects.pdfcolor import PDFColor
 from pypdflite.pdfobjects.pdfcursor import PDFCursor
 from pypdflite.pdfobjects.pdfgraphformat import BasicBackground
 

@@ -1,4 +1,5 @@
 
+
 class PDFMargin(object):
 
     def __init__(self, left=20, top=None, right=None, bottom=None):
