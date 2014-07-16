@@ -22,10 +22,11 @@ from bin.xyscatterplot import XYScatterPlotTest
 from bin.piecharttest import PieChartTest
 from bin.barcharttest import BarChartTest
 from bin.multibartest import MultiBarChartTest
+from bin.graphbackgrounds import GraphBackgroundTest
 
 
 def main():
-    print "Running TextTest"
+    """print "Running TextTest"
     TextTest()
     print "Running TrueTypeTest"
     TrueTypeTest()
@@ -62,7 +63,7 @@ def main():
     print "Running HTMLTest2"
     HtmlTest2()
     print "Running Justify Test"
-    JustifyTest()
+    JustifyTest() """
     print "Running LineGraph Test"
     LineGraphTest()
     print "Running XYScatter Test"
@@ -73,6 +74,8 @@ def main():
     BarChartTest()
     print "Running MultiBarChart Test"
     MultiBarChartTest()
+    print "Running GraphBackgrounds Test"
+    GraphBackgroundTest()
 
 
 if __name__ == '__main__':
