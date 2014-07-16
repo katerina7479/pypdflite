@@ -51,7 +51,7 @@ class PDFXYScatter(PDFLineGraph):
             self.linear_regression_line = LinearRegressionLine()
         if self.dots is not None:
             for cursor in cursors:
-                dot = PDFEllipse(self.session, self.page, cursor, PDFCursor(self.dots, self.dots), stroke="F")
+                dot = PDFEllipse(self.session, self.page, cursor, PDFCursor(self.dots, self.dots), style="F")
                 dot._draw()
                 if self.linear_regression:
                     self.linear_regression_line.add_coord(cursor)

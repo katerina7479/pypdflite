@@ -337,7 +337,7 @@ class PDFDocument(object):
     def html(self, *args, **kwargs):
         self.add_html(*args, **kwargs)
 
-    def add_line(self, x1=None, y1=None, x2=None, y2=None, cursor1=None, cursor2=None, style="solid"):
+    def add_line(self, x1=None, y1=None, x2=None, y2=None, cursor1=None, cursor2=None, stroke="solid"):
         if cursor1 is not None:
             if cursor2 is not None:
                 pass
@@ -362,7 +362,7 @@ class PDFDocument(object):
         else:
             raise Exception("Line not specified")
 
-        myline = PDFLine(self.session, self.page, cursor1, cursor2, self.draw_color, style)
+        myline = PDFLine(self.session, self.page, cursor1, cursor2, self.draw_color, stroke)
         myline._draw()
 
     def draw_line(self, *args, **kwargs):
@@ -385,7 +385,7 @@ class PDFDocument(object):
         self.draw_horizontal_line()
 
     def draw_rectangle(self, x1=None, y1=None, x2=None, y2=None, width=None, height=None, cursor1=None, cursor2=None,
-                       style='S', size=1):
+                       style='S', stroke="solid", size=1):
         if cursor1 is not None:
             if cursor2 is not None:
                 pass
@@ -411,10 +411,7 @@ class PDFDocument(object):
             else:
                 raise Exception("Rectangle not defined")
 
-        rectangle = PDFRectangle(self.session, self.page,
-                                 cursor1, cursor2,
-                                 self.draw_color, self.fill_color,
-                                 None, style, size)
+        rectangle = PDFRectangle(self.session, self.page, cursor1, cursor2, self.draw_color, self.fill_color, style, stroke, size)
 
         rectangle._draw()
 
@@ -424,10 +421,10 @@ class PDFDocument(object):
     def rectangle(self, *args, **kwargs):
         self.draw_rectangle(*args, **kwargs)
 
-    def draw_circle(self, center_cursor, radius, border_color=None, fill_color=None, style='solid', stroke="S", size=1):
+    def draw_circle(self, center_cursor, radius, border_color=None, fill_color=None, style="S", stroke='solid', size=1):
         self.draw_ellipse(center_cursor, radius, radius, border_color, fill_color, style, stroke, size)
 
-    def draw_ellipse(self, center_cursor, x_radius, y_radius, border_color=None, fill_color=None, style='solid', stroke="S", size=1):
+    def draw_ellipse(self, center_cursor, x_radius, y_radius, border_color=None, fill_color=None, style="S", stroke='solid', size=1):
         radius_cursor = PDFCursor(x_radius, y_radius)
         if isinstance(border_color, PDFColor):
             border_color = border_color
@@ -441,7 +438,7 @@ class PDFDocument(object):
         circle = PDFEllipse(self.session, self.page, center_cursor, radius_cursor, border_color, fill_color, style, stroke, size)
         circle._draw()
 
-    def draw_arc(self, center_cursor, radius, starting_angle, arc_angle, inverted=False, end_angle=None, border_color=None, fill_color=None, style='solid', stroke='S', size=1):
+    def draw_arc(self, center_cursor, radius, starting_angle, arc_angle, inverted=False, end_angle=None, border_color=None, fill_color=None, style='S', stroke='solid', size=1):
         if isinstance(border_color, PDFColor):
             border_color = border_color
         else:
@@ -519,7 +516,7 @@ class PDFDocument(object):
             self.set_font_size(axis_font_size)
 
         graph = PDFMultiBarChart(self.session, self.page, data, cursor, width, height, title, axis_titles, y_axis_limits, y_axis_frequency, bar_style, bar_padding, bar_border_colors, bar_fill_colors,
-                            background_style, border_size, background_border_color, background_fill_color, padding, legend)
+                                 background_style, border_size, background_border_color, background_fill_color, padding, legend)
 
         self.set_font_size(save_font_size)
         self.set_draw_color(save_draw_color)

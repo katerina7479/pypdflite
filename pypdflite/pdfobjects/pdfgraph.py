@@ -129,7 +129,7 @@ class PDFGraph(object):
             k += 1
 
         cursor2 = PDFCursor(tick_x, self.origin.y)
-        xaxis = PDFLine(self.session, self.page, self.origin, cursor2, self.base_color, style="solid")
+        xaxis = PDFLine(self.session, self.page, self.origin, cursor2, self.base_color, stroke="solid")
         xaxis._draw()
 
     def draw_y_axis(self, zero=True):
@@ -153,7 +153,7 @@ class PDFGraph(object):
 
         # Draw axis lines
         cursor1 = PDFCursor(self.origin.x, tick_y)
-        yaxis = PDFLine(self.session, self.page, cursor1, self.origin, self.base_color, style="solid")
+        yaxis = PDFLine(self.session, self.page, cursor1, self.origin, self.base_color, stroke="solid")
         yaxis._draw()
 
     def draw_tick(self, x1, y1, x2, y2):

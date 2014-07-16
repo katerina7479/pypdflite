@@ -26,7 +26,7 @@ from bin.graphbackgrounds import GraphBackgroundTest
 
 
 def main():
-    """print "Running TextTest"
+    print "Running TextTest"
     TextTest()
     print "Running TrueTypeTest"
     TrueTypeTest()
@@ -63,7 +63,7 @@ def main():
     print "Running HTMLTest2"
     HtmlTest2()
     print "Running Justify Test"
-    JustifyTest() """
+    JustifyTest()
     print "Running LineGraph Test"
     LineGraphTest()
     print "Running XYScatter Test"

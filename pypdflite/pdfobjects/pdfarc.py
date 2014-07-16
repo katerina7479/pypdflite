@@ -101,5 +101,5 @@ class PDFArc(PDFDraw):
 
         self.session._out(" h", self.page)
 
-        s = '%s' % self.stroke
+        s = '%s' % self._style
         self.session._out(s, self.page)

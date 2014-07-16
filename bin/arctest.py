@@ -29,7 +29,7 @@ def ArcTest():
     starting_angle = 15
     arc_angle = 135
 
-    document.draw_arc(center, radius, starting_angle, arc_angle, inverted=False, border_color=red, stroke='F')
+    document.draw_arc(center, radius, starting_angle, arc_angle, inverted=False, border_color=red, style='F')
 
 
     center = PDFCursor(300, 400)
