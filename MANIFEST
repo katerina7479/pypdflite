@@ -8,9 +8,12 @@ pypdflite/font_loader.py
 pypdflite/pdfdocument.py
 pypdflite/pdflite.py
 pypdflite/session.py
+pypdflite/tests.py
 pypdflite/pdfobjects/__init__.py
 pypdflite/pdfobjects/colorref.py
 pypdflite/pdfobjects/fontref.py
+pypdflite/pdfobjects/pdfarc.py
+pypdflite/pdfobjects/pdfbarchart.py
 pypdflite/pdfobjects/pdfcell.py
 pypdflite/pdfobjects/pdfcellformat.py
 pypdflite/pdfobjects/pdfcolor.py
@@ -19,13 +22,17 @@ pypdflite/pdfobjects/pdfcursor.py
 pypdflite/pdfobjects/pdfdraw.py
 pypdflite/pdfobjects/pdfellipse.py
 pypdflite/pdfobjects/pdffont.py
+pypdflite/pdfobjects/pdfgraph.py
+pypdflite/pdfobjects/pdfgraphformat.py
 pypdflite/pdfobjects/pdfhtml.py
 pypdflite/pdfobjects/pdfimage.py
 pypdflite/pdfobjects/pdfjpg.py
 pypdflite/pdfobjects/pdfline.py
+pypdflite/pdfobjects/pdflinegraph.py
 pypdflite/pdfobjects/pdfmargin.py
 pypdflite/pdfobjects/pdfobject.py
 pypdflite/pdfobjects/pdfpage.py
+pypdflite/pdfobjects/pdfpiechart.py
 pypdflite/pdfobjects/pdfpng.py
 pypdflite/pdfobjects/pdfrectangle.py
 pypdflite/pdfobjects/pdfrow.py
@@ -33,4 +40,5 @@ pypdflite/pdfobjects/pdftable.py
 pypdflite/pdfobjects/pdftext.py
 pypdflite/pdfobjects/pdftransforms.py
 pypdflite/pdfobjects/pdfttfonts.py
+pypdflite/pdfobjects/pdfxyscatter.py
 pypdflite/pdfobjects/ttfonts.py
