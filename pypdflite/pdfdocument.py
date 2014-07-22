@@ -234,7 +234,7 @@ class PDFDocument(object):
         print PDFTTFont.available_fonts()
 
     # Writing
-    def add_text(self, text, cursor=None):
+    def add_text(self, text, cursor=None, justification=None):
         """ Input text, short or long. Writes in order, within the defined page boundaries. Sequential add_text commands will print without
             additional whitespace. """
         if cursor is None:
@@ -242,13 +242,16 @@ class PDFDocument(object):
 
         text = re.sub("\s\s+" , " ", text)
 
+        if justification is None:
+            justification = self.justification
+
         if '\n' in text:
             text_list = text.split('\n')
             for text in text_list:
-                PDFText(self.session, self.page, text, self.font, self.text_color, cursor, self.justification, self.double_spacing)
+                PDFText(self.session, self.page, text, self.font, self.text_color, cursor, justification, self.double_spacing)
                 self.add_newline()
         else:
-            PDFText(self.session, self.page, text, self.font, self.text_color, cursor, self.justification, self.double_spacing)
+            PDFText(self.session, self.page, text, self.font, self.text_color, cursor, justification, self.double_spacing)
 
     def draw_text(self, *args, **kwargs):
         self.add_text(*args, **kwargs)
