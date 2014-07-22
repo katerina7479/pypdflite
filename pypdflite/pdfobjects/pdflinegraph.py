@@ -8,10 +8,10 @@ from pdfellipse import PDFEllipse
 
 class PDFLineGraph(PDFGraph):
     def __init__(self, session, page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors,
-                 background=None, legend=None, dots=None, stroke="S"):
+                 background=None, legend=None, dots=None, style="S"):
         super(PDFLineGraph, self).__init__(session, page, cursor, width, height, title, background, legend)
         self.data = data
-        self.stroke = stroke
+        self.style = style
         self.dots = dots
         self._set_colors(line_colors)
         self._set_range(x_axis_limits, y_axis_limits)
@@ -70,7 +70,7 @@ class PDFLineGraph(PDFGraph):
                     cursor = self.get_coord(pair)
                     self.session._out('%.2f %.2f l' % (cursor.x, cursor.y_prime), self.page)
                     cursors.append(cursor)
-                self.session._out('%s ' % self.stroke, self.page)
+                self.session._out('%s ' % self.style, self.page)
                 self._draw_dots(cursors)
                 i += 1
         if self.legend is not None:

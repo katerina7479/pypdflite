@@ -21,6 +21,7 @@ from pdfobjects.pdflinegraph import PDFLineGraph
 from pdfobjects.pdfxyscatter import PDFXYScatter
 from pdfobjects.pdfpiechart import PDFPieChart
 from pdfobjects.pdfbarchart import PDFBarChart, PDFMultiBarChart
+from pdfobjects.pdfbezier import PDFBezier
 
 
 class PDFDocument(object):
@@ -454,6 +455,13 @@ class PDFDocument(object):
 
         arc = PDFArc(self.session, self.page, center_cursor, radius, starting_angle, arc_angle, inverted, end_angle, border_color, fill_color, style, stroke, size)
         arc._draw()
+
+    def draw_bezier_lines(self, points, color=None, style="S", stroke="solid"):
+        save_draw_color = self.draw_color
+
+        line = PDFBezier(self.session, self.page, points, color, style, stroke)
+
+        self.set_draw_color(save_draw_color)
 
     # Graphs
     def add_line_graph(self, data, cursor, width, height, title=None, x_axis_limits=None, y_axis_limits=None, frequency=None, axis_titles=None, axis_labels=None, axis_font_size=None, line_colors=None,
