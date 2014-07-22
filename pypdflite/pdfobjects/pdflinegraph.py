@@ -8,15 +8,16 @@ from pdfellipse import PDFEllipse
 
 class PDFLineGraph(PDFGraph):
     def __init__(self, session, page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors,
-                 background=None, legend=None, dots=None, style="S"):
-        super(PDFLineGraph, self).__init__(session, page, cursor, width, height, title, background, legend)
+                 background=None, legend=None, dots=None, style="S", axis=True):
+        super(PDFLineGraph, self).__init__(session, page, cursor, width, height, title, background, legend, axis)
         self.data = data
         self.style = style
         self.dots = dots
         self._set_colors(line_colors)
         self._set_range(x_axis_limits, y_axis_limits)
         self._set_frequency(frequency)
-        self.draw_axis_titles(axis_titles[0], axis_titles[1])
+        if axis_titles is not None:
+            self.draw_axis_titles(axis_titles[0], axis_titles[1])
         self.axis_labels = axis_labels
         self.draw_x_axis()
         self.draw_y_axis()

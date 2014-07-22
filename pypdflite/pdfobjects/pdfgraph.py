@@ -7,13 +7,14 @@ from pdfgraphformat import PDFGraphBackground
 
 
 class PDFGraph(object):
-    def __init__(self, session, page, cursor, width, height, title=None, background=None, legend=None):
+    def __init__(self, session, page, cursor, width, height, title=None, background=None, legend=None, axis=True):
         self.session = session
         self.page = page
         self.font = self.session.parent.document.font
         self.origin = cursor
         self.axis_labels = None
         self.legend = legend
+        self.axis = axis
         self.base_color = PDFColor(77, 77, 77)
         if background is None:
             self.background = PDFGraphBackground()
@@ -130,8 +131,9 @@ class PDFGraph(object):
             k += 1
 
         cursor2 = PDFCursor(tick_x, self.origin.y)
-        xaxis = PDFLine(self.session, self.page, self.origin, cursor2, self.base_color, stroke="solid")
-        xaxis._draw()
+        if self.axis:
+            xaxis = PDFLine(self.session, self.page, self.origin, cursor2, self.base_color, stroke="solid")
+            xaxis._draw()
 
     def draw_y_axis(self, zero=True):
         # Draw y axis ticks
@@ -154,14 +156,16 @@ class PDFGraph(object):
 
         # Draw axis lines
         cursor1 = PDFCursor(self.origin.x, tick_y)
-        yaxis = PDFLine(self.session, self.page, cursor1, self.origin, self.base_color, stroke="solid")
-        yaxis._draw()
+        if self.axis:
+            yaxis = PDFLine(self.session, self.page, cursor1, self.origin, self.base_color, stroke="solid")
+            yaxis._draw()
 
     def draw_tick(self, x1, y1, x2, y2):
         x = PDFCursor(x1, y1)
         y = PDFCursor(x2, y2)
-        tick = PDFLine(self.session, self.page, x, y, self.base_color, "solid")
-        tick._draw()
+        if self.axis:
+            tick = PDFLine(self.session, self.page, x, y, self.base_color, "solid")
+            tick._draw()
 
     def draw_x_label(self, i, k, x1, y1):
         if self.axis_labels is None:

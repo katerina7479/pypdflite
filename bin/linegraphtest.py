@@ -26,6 +26,12 @@ def LineGraphTest():
     cursor = PDFCursor(100, 400)
     document.add_line_graph(data, cursor, 400, 300, "Hits over Time", None, None, (3600, 50), ("time (s)", "count"), "Auto", background=BasicBackground, dots=1)
 
+    document.add_page()
+    cursor = PDFCursor(100, 50)
+    data = [{"series1": [(1, 100), (2, 200), (3, 150), (4, 125), (5, 170), (6, 190), (7, 210)]}]
+
+    document.add_line_graph(data, cursor, 200, 150, axis=False)
+
     # Close Document
     writer.close()
 

@@ -465,7 +465,7 @@ class PDFDocument(object):
 
     # Graphs
     def add_line_graph(self, data, cursor, width, height, title=None, x_axis_limits=None, y_axis_limits=None, frequency=None, axis_titles=None, axis_labels=None, axis_font_size=None, line_colors=None,
-                       background=None, legend=None, dots=None):
+                       background=None, legend=None, dots=None, style="S", axis=True):
         save_draw_color = self.draw_color
         save_fill_color = self.fill_color
         save_font_size = self.get_font_size()
@@ -474,7 +474,7 @@ class PDFDocument(object):
         else:
             self.set_font_size(axis_font_size)
 
-        graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, background, legend, dots)
+        graph = PDFLineGraph(self.session, self.page, cursor, data, width, height, title, x_axis_limits, y_axis_limits, frequency, axis_titles, axis_labels, line_colors, background, legend, dots, style, axis)
 
         self.set_font_size(save_font_size)
         self.set_draw_color(save_draw_color)
