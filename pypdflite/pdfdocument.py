@@ -637,33 +637,31 @@ class PDFDocument(object):
     def _output_pages(self):
         """ Called by the PDFLite object to prompt creating
             the page objects."""
-        if self.orientation_changes is None:
+        if not self.orientation_changes:
             self._get_orientation_changes()
-        else:
-            # Page
-            for page in self.pages:
-                obj = self.session._add_object()
-                self.session._out('<</Type /Page')
-                self.session._out('/Parent 1 0 R')
-                if page in self.orientation_changes:
-                    self.session._out(
-                        '/MediaBox [0 0 %.2f %.2f]' %
-                        (page.width, page.height))
-                self.session._out('/Resources 2 0 R')
-                self.session._out('/Group <</Type /Group /S /Transparency /CS /DeviceRGB>>')
-                self.session._out('/Contents %s 0 R>>' % (obj.id + 1))
-                self.session._out('endobj')
 
-                # Page content
-                self.session._add_object()
-                if self.session.compression is True:
-                    textfilter = ' /Filter /FlateDecode '
-                    page._compress()
-                else:
-                    textfilter = ''
-                self.session._out('<<%s/Length %s >>' % (textfilter, len(page.buffer)))
-                self.session._put_stream(page.buffer)
-                self.session._out('endobj')
+        # Page
+        for page in self.pages:
+            obj = self.session._add_object()
+            self.session._out('<</Type /Page')
+            self.session._out('/Parent 1 0 R')
+            if self.orientation_changes:
+                self.session._out('/MediaBox [0 0 %.2f %.2f]' % (page.width, page.height))
+            self.session._out('/Resources 2 0 R')
+            self.session._out('/Group <</Type /Group /S /Transparency /CS /DeviceRGB>>')
+            self.session._out('/Contents %s 0 R>>' % (obj.id + 1))
+            self.session._out('endobj')
+
+            # Page content
+            self.session._add_object()
+            if self.session.compression is True:
+                textfilter = ' /Filter /FlateDecode '
+                page._compress()
+            else:
+                textfilter = ''
+            self.session._out('<<%s/Length %s >>' % (textfilter, len(page.buffer)))
+            self.session._put_stream(page.buffer)
+            self.session._out('endobj')
 
     def _set_page_numbers(self):
         if hasattr(self, 'page_numbers'):

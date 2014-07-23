@@ -8,7 +8,7 @@ def LandscapeTest():
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("generated/Landscape.pdf", orientation="L")
+    writer = PDFLite("generated/Landscape.pdf", orientation="P")
     # If desired (in production code), set compression
     # writer.setCompression(True)
 
@@ -24,6 +24,7 @@ def LandscapeTest():
     document.add_text("Testing Again")
     document.add_newline()
     document.add_page()
+    document.change_page_orientation()
     document.add_text(
         """Lorem ipsum dolor sit amet, consectetur adipiscing elit.\
         Cras et erat dolor. Nullam id aliquam neque. Vivamus nec nibh\
