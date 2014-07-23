@@ -95,7 +95,10 @@ class PDFGraph(object):
         return x_limits, y_limits
 
     def get_frequency(self, limits):
-        return ((limits[1] - limits[0]) / 10.0)
+        if limits[1] != limits[0]:
+            return ((limits[1] - limits[0]) / 10.0)
+        else:
+            return 1
 
     def draw_axis_titles(self, x_title=None, y_title=None):
         if x_title is not None:
@@ -113,7 +116,10 @@ class PDFGraph(object):
     def draw_x_axis(self, zero=True):
         # Draw x axis ticks
         self.x_array = [(0, self.origin.x)]
-        x_delta = self.width / (float(self.x_range[1] - self.x_range[0]) / float(self.frequency[0]))
+        try:
+            x_delta = self.width / (float(self.x_range[1] - self.x_range[0]) / float(self.frequency[0]))
+        except ZeroDivisionError:
+            x_delta = self.width / 2.0
         self.x_delta = x_delta
         y_delta = 3
         tick_x = self.origin.x
@@ -138,7 +144,10 @@ class PDFGraph(object):
     def draw_y_axis(self, zero=True):
         # Draw y axis ticks
         self.y_array = [(self.y_range[0], self.origin.y)]
-        y_delta = self.height / (float(self.y_range[1] - self.y_range[0]) / float(self.frequency[1]))
+        try:
+            y_delta = self.height / (float(self.y_range[1] - self.y_range[0]) / float(self.frequency[1]))
+        except ZeroDivisionError:
+            y_delta = self.height / 2.0
         x_delta = 3
         tick_y = self.origin.y
         j = self.y_range[0]
@@ -199,6 +208,9 @@ class PDFGraph(object):
                 index_high = keys.index(key)
                 break
         index_low = index_high - 1
-        ratio = (item - keys[index_low]) / float((keys[index_high] - keys[index_low]))
+        try:
+            ratio = (item - keys[index_low]) / float((keys[index_high] - keys[index_low]))
+        except ZeroDivisionError:
+            ratio = 1
         value = ratio * (values[index_high] - values[index_low]) + values[index_low]
         return value
