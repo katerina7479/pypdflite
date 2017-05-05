@@ -1,11 +1,12 @@
+import os
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdftext import PDFText
 
 
-def TransformTest():
+def TransformTest(test_dir):
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("generated/Transform.pdf", orientation="P")
+    writer = PDFLite(os.path.join(test_dir, "tests/Transform.pdf"), orientation="P")
     # If desired (in production code), set compression
     writer.set_compression(False)
 

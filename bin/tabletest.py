@@ -1,8 +1,9 @@
+import os
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcolor import PDFColor
 
 
-def TableTest():
+def TableTest(test_dir):
 
     """ Functional test for text, paragraph, and page
     splitting.
@@ -14,7 +15,7 @@ def TableTest():
             ["Cell a3", "Cell b3", "Cell c3"]]
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("generated/TableTest.pdf")
+    writer = PDFLite(os.path.join(test_dir, "tests/TableTest.pdf"))
 
     # If desired (in production code), set compression
     # writer.setCompression(True)

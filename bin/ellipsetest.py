@@ -3,18 +3,19 @@ Created on Mar 15, 2014
 
 @author: tjoneslo
 """
+import os
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcolor import PDFColor
 from pypdflite.pdfobjects.pdfcursor import PDFCursor
 from pypdflite.pdfobjects.pdfellipse import PDFEllipse
 
 
-def EllipseTest():
+def EllipseTest(test_dir):
     """
     Functional test for drawing eclipses
     """
     # Create PDFLite object
-    writer = PDFLite("generated/EllipseTest.pdf")
+    writer = PDFLite(os.path.join(test_dir, "tests/EllipseTest.pdf"))
 
     # Set compression defaults to False
     writer.set_compression(False)

@@ -1,14 +1,15 @@
+import os
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcolor import PDFColor
 from pypdflite.pdfobjects.pdfcursor import PDFCursor
 
 
-def CircleTest():
+def CircleTest(test_dir):
     """
     Functional test for drawing eclipses
     """
     # Create PDFLite object
-    writer = PDFLite("generated/CircleTest.pdf")
+    writer = PDFLite(os.path.join(test_dir, "tests/CircleTest.pdf"))
 
     # Set compression defaults to False
     writer.set_compression(False)

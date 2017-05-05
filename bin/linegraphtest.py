@@ -1,13 +1,15 @@
+import os
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcursor import PDFCursor
 from pypdflite.pdfobjects.pdfgraphformat import BasicBackground
 
-def LineGraphTest():
+
+def LineGraphTest(test_dir):
     """
     Functional test for drawing eclipses
     """
     # Create PDFLite object
-    writer = PDFLite("generated/LineGraph.pdf")
+    writer = PDFLite(os.path.join(test_dir, "tests/LineGraph.pdf"))
 
     # Set compression defaults to False
     writer.set_compression(False)

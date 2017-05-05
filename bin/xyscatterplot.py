@@ -1,14 +1,15 @@
+import os
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcursor import PDFCursor
 from pypdflite.pdfobjects.pdfgraphformat import BasicBackground
 
 
-def XYScatterPlotTest():
+def XYScatterPlotTest(test_dir):
     """
     Functional test for drawing eclipses
     """
     # Create PDFLite object
-    writer = PDFLite("generated/XYScatterPlot.pdf")
+    writer = PDFLite(os.path.join(test_dir, "tests/XYScatterPlot.pdf"))
 
     # Set compression defaults to False
     writer.set_compression(False)

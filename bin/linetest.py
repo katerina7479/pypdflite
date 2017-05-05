@@ -1,14 +1,15 @@
+import os
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcolor import PDFColor
 
 
-def LinesTest():
+def LinesTest(test_dir):
 
     """ Functional tests for creating lines.
 
     """
     # Create PDFLite object
-    writer = PDFLite("generated/LinesTest.pdf")
+    writer = PDFLite(os.path.join(test_dir, "tests/LinesTest.pdf"))
 
     # Set compression defaults to False
     writer.set_compression(False)

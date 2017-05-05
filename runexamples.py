@@ -1,3 +1,5 @@
+import os
+
 from bin.texttest import TextTest
 from bin.truetypetest import TrueTypeTest
 from bin.listtest import ListTest
@@ -24,59 +26,65 @@ from bin.barcharttest import BarChartTest
 from bin.multibartest import MultiBarChartTest
 from bin.graphbackgrounds import GraphBackgroundTest
 
+TEST_DIR = os.path.abspath('bin')
 
 def main():
     print "Running TextTest"
-    TextTest()
+    TextTest(TEST_DIR)
     print "Running TrueTypeTest"
-    TrueTypeTest()
+    TrueTypeTest(TEST_DIR)
     print "Running List Test"
-    ListTest()
+    ListTest(TEST_DIR)
     print "Running Margin Test"
-    MarginTest()
+    MarginTest(TEST_DIR)
     print "Running Underline Test"
-    UnderlineTest()
+    UnderlineTest(TEST_DIR)
     print "Running LandscapeTest"
-    LandscapeTest()
+    LandscapeTest(TEST_DIR)
     print "Running LinesTest"
-    LinesTest()
+    LinesTest(TEST_DIR)
     print "Running TableTest"
-    TableTest()
+    TableTest(TEST_DIR)
     print "Running PNGTest"
-    PNGTest()
+    PNGTest(TEST_DIR)
     print "Running JPGTest"
-    JPGTest()
+    JPGTest(TEST_DIR)
     print "Running PageNumberTest"
-    PageNumberTest()
+    PageNumberTest(TEST_DIR)
     print "Running PNGSizeTest"
-    ImageSizeTest()
+    ImageSizeTest(TEST_DIR)
     print "Running EllipseTest"
-    EllipseTest()
+    EllipseTest(TEST_DIR)
     print "Running CircleTest"
-    CircleTest()
+    CircleTest(TEST_DIR)
     print "Running Arctest"
-    ArcTest()
+    ArcTest(TEST_DIR)
     print "Running TransformTest"
-    TransformTest()
+    TransformTest(TEST_DIR)
     print "Running HTMLTest"
-    HtmlTest()
+    HtmlTest(TEST_DIR)
     print "Running HTMLTest2"
-    HtmlTest2()
+    HtmlTest2(TEST_DIR)
     print "Running Justify Test"
-    JustifyTest()
+    JustifyTest(TEST_DIR)
     print "Running LineGraph Test"
-    LineGraphTest()
+    LineGraphTest(TEST_DIR)
     print "Running XYScatter Test"
-    XYScatterPlotTest()
+    XYScatterPlotTest(TEST_DIR)
     print "Running PieChart Test"
-    PieChartTest()
+    PieChartTest(TEST_DIR)
     print "Running BarChart Test"
-    BarChartTest()
+    BarChartTest(TEST_DIR)
     print "Running MultiBarChart Test"
-    MultiBarChartTest()
+    MultiBarChartTest(TEST_DIR)
     print "Running GraphBackgrounds Test"
-    GraphBackgroundTest()
+    GraphBackgroundTest(TEST_DIR)
 
 
 if __name__ == '__main__':
+    
+    generated_dir = os.path.join(TEST_DIR, 'tests')
+    if not os.path.isdir(generated_dir):
+        print "Creating directory at ".format(generated_dir)
+        os.mkdir(generated_dir)
     main()
