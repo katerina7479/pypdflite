@@ -1,7 +1,8 @@
+import os
 from pypdflite.pdflite import PDFLite
 
 
-def MarginTest():
+def MarginTest(test_dir):
 
     """ Functional test for text, paragraph, and page
     splitting.
@@ -9,7 +10,7 @@ def MarginTest():
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("generated/MarginTest.pdf")
+    writer = PDFLite(os.path.join(test_dir, "tests/MarginTest.pdf"))
 
     # If desired (in production code), set compression
     # writer.setCompression(True)

@@ -1,13 +1,14 @@
+import os
 from pypdflite.pdflite import PDFLite
 
 
-def ImageSizeTest():
+def ImageSizeTest(test_dir):
     """ Functional test for adding images.
 
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("generated/ImageSizeTest.pdf")
+    writer = PDFLite(os.path.join(test_dir, "tests/ImageSizeTest.pdf"))
 
     # If desired (in production code), set compression
     # writer.setCompression(True)
@@ -22,7 +23,7 @@ def ImageSizeTest():
     document.add_text("This is the image")
     document.add_newline(1)
 
-    mylogo = document.add_image("bin/apple_logo.png")
+    mylogo = document.add_image(os.path.join(test_dir, "apple_logo.png"))
     document.draw_image(mylogo)
     document.add_newline(1)
 

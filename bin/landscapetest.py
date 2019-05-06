@@ -1,14 +1,15 @@
+import os
 from pypdflite.pdflite import PDFLite
 
 
-def LandscapeTest():
+def LandscapeTest(test_dir):
 
     """ Test landscape orientation & background images.
 
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("generated/Landscape.pdf", orientation="P")
+    writer = PDFLite(os.path.join(test_dir, "tests/Landscape.pdf"), orientation="P")
     # If desired (in production code), set compression
     # writer.setCompression(True)
 

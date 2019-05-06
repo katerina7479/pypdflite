@@ -1,14 +1,14 @@
+import os
 from pypdflite.pdflite import PDFLite
 
 
-def JPGTest():
+def JPGTest(test_dir):
 
     """ Functional test for adding images.
 
     """
-
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("generated/JPGTest.pdf")
+    writer = PDFLite(os.path.join(test_dir, "tests/JPGTest.pdf"))
 
     # If desired (in production code), set compression
     # writer.setCompression(True)
@@ -23,7 +23,7 @@ def JPGTest():
     document.add_text("This should be before the image.")
     document.add_newline(1)
 
-    mylogo = document.add_image("bin/example.jpg")
+    mylogo = document.add_image(os.path.join(test_dir, "example.jpg"))
     document.draw_image(mylogo)
     document.add_newline(1)
 

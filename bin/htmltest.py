@@ -1,9 +1,10 @@
+import os
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcolor import PDFColor
 
 
-def HtmlTest():
-    writer = PDFLite("generated/HTMLtest.pdf")
+def HtmlTest(test_dir):
+    writer = PDFLite(os.path.join(test_dir, "tests/HTMLtest.pdf"))
     document = writer.get_document()
 
     document.add_text('Sample text')

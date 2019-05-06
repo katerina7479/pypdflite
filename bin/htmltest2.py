@@ -1,14 +1,14 @@
+import os
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcolor import PDFColor
 
 
-def HtmlTest2():
-    writer = PDFLite("generated/HTMLtest2.pdf")
+def HtmlTest2(test_dir):
+    writer = PDFLite(os.path.join(test_dir, "tests/HTMLtest2.pdf"))
     document = writer.get_document()
 
     document.add_text('Sample text')
     document.add_newline(2)
-
 
     red = PDFColor(name="red")
     blue = PDFColor(name='blue')
@@ -19,7 +19,8 @@ def HtmlTest2():
     coolfont = document.set_font('comic sans ms', style='', size=12)
     header2 = document.set_font('helvetica', style='I', size=18)
 
-    html_text = open("bin/test.html")
+    with open(os.path.join(test_dir, "test.html")) as fp:
+        html_text = fp.read()
 
     document.add_html(html_text,
                       context={"daytoday": " Thursday", "location": " California", "destination": " opera", "skiing": " at Stowe."},

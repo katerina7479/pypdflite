@@ -1,15 +1,16 @@
+import os
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcolor import PDFColor
 from pypdflite.pdfobjects.pdfcursor import PDFCursor
 from pypdflite.pdfobjects.pdfgraphformat import PDFGraphBackground
 
 
-def GraphBackgroundTest():
+def GraphBackgroundTest(test_dir):
     """
     Functional test for drawing eclipses
     """
     # Create PDFLite object
-    writer = PDFLite("generated/GraphBackgrounds.pdf")
+    writer = PDFLite(os.path.join(test_dir, "tests/GraphBackgrounds.pdf"))
 
     # Set compression defaults to False
     writer.set_compression(False)

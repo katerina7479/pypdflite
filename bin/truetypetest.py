@@ -1,8 +1,9 @@
+import os
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcolor import PDFColor
 
 
-def TrueTypeTest():
+def TrueTypeTest(test_dir):
 
     """ Functional test for text, paragraph, and page
     splitting.
@@ -10,7 +11,7 @@ def TrueTypeTest():
     """
 
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("generated/TrueTypeTest.pdf")
+    writer = PDFLite(os.path.join(test_dir, "tests/TrueTypeTest.pdf"))
 
     # If desired (in production code), set compression
     # writer.setCompression(True)

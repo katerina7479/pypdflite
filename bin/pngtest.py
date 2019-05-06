@@ -1,14 +1,14 @@
+import os
 from pypdflite.pdflite import PDFLite
 
 
-def PNGTest():
+def PNGTest(test_dir):
 
     """ Functional test for adding images.
 
     """
-
     #Create PDFLITE object, initialize with path & filename.
-    writer = PDFLite("generated/PNGTest.pdf")
+    writer = PDFLite(os.path.join(test_dir, "tests/PNGTest.pdf"))
 
     # If desired (in production code), set compression
     # writer.setCompression(True)
@@ -23,7 +23,7 @@ def PNGTest():
     document.add_text("This should be before the image.")
     document.add_newline(1)
 
-    mylogo = document.add_image("bin/example.png")
+    mylogo = document.add_image(os.path.join(test_dir, "example.png"))
     document.draw_image(mylogo)
     document.add_newline(1)
 
@@ -35,12 +35,12 @@ def PNGTest():
     document.add_text("There it is without a newline")
 
     document.add_newline(3)
-    apple = document.add_image('bin/apple_logo.png')
+    apple = document.add_image(os.path.join(test_dir, 'apple_logo.png'))
     document.draw_image(apple)
 
     document.add_page()
 
-    document.set_background_image("bin/background.png")
+    document.set_background_image(os.path.join(test_dir, "background.png"))
 
     document.add_text("This text, ")
     document.add_text("And this text")

@@ -1,13 +1,14 @@
+import os
 from pypdflite.pdflite import PDFLite
 from pypdflite.pdfobjects.pdfcursor import PDFCursor
 
 
-def MultiBarChartTest():
+def MultiBarChartTest(test_dir):
     """
     Functional test for drawing eclipses
     """
     # Create PDFLite object
-    writer = PDFLite("generated/MultiBarChart.pdf")
+    writer = PDFLite(os.path.join(test_dir, "tests/MultiBarChart.pdf"))
 
     # Set compression defaults to False
     writer.set_compression(False)
