@@ -1,4 +1,4 @@
-from fontref import pdf_character_widths
+from .fontref import pdf_character_widths
 import copy
 
 CORE_FONTS = {

@@ -1,4 +1,4 @@
-from colorref import color_reference
+from .colorref import color_reference
 
 
 class PDFColor(object):

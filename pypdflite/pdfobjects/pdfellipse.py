@@ -3,7 +3,7 @@ Created on Mar 15, 2014
 
 @author: tjoneslo
 """
-from pdfdraw import PDFDraw
+from .pdfdraw import PDFDraw
 
 
 class PDFEllipse(PDFDraw):

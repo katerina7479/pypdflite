@@ -1,5 +1,5 @@
 import os
-from pdfobjects.pdfobject import _PDFObject
+from .pdfobjects.pdfobject import _PDFObject
 
 
 class _Session(object):
@@ -124,7 +124,7 @@ class _Session(object):
         result = ''
         if setbom:
             result = '\xFE\xFF'
-        if not isinstance(utf8, unicode):
+        if not isinstance(utf8, str):
             utf8 = utf8.decode('UTF-8')
         result += utf8.encode('UTF-16BE')
         return result

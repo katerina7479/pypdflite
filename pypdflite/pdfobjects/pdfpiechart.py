@@ -1,11 +1,11 @@
 import math
-from pdfcolor import PDFColor
-from pdfcursor import PDFCursor
-from pdftext import PDFText
-from pdfarc import PDFArc
-from pdfellipse import PDFEllipse
-from pdfgraph import PDFGraph
-from pdfrectangle import PDFRectangle
+from .pdfcolor import PDFColor
+from .pdfcursor import PDFCursor
+from .pdftext import PDFText
+from .pdfarc import PDFArc
+from .pdfellipse import PDFEllipse
+from .pdfgraph import PDFGraph
+from .pdfrectangle import PDFRectangle
 
 
 class PDFPieChart(PDFGraph):

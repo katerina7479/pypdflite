@@ -1,5 +1,5 @@
-from pdfrow import PDFRow
-from pdfcolumn import PDFColumn
+from .pdfrow import PDFRow
+from .pdfcolumn import PDFColumn
 
 
 class PDFTable(object):

@@ -1,8 +1,8 @@
 import re
-from HTMLParser import HTMLParser
-from pdfcolor import PDFColor
-from pdffont import PDFFont
-from pdftext import PDFText
+from html.parser import HTMLParser
+from .pdfcolor import PDFColor
+from .pdffont import PDFFont
+from .pdftext import PDFText
 
 
 class Element(object):
@@ -171,7 +171,7 @@ class OrderedList(Element):
 
     def _output_element(self, item, char):
         if char is None:
-            char = '%s. ' % self.charlist.next()
+            char = '%s. ' % next(self.charlist)
         item.set_dependancies(self.session, self.document, self.formats, self.context)
         char = item.output(char)
         return char

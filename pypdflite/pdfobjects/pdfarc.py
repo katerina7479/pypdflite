@@ -1,6 +1,6 @@
 import math
-from pdfdraw import PDFDraw
-from pdfcursor import PDFCursor
+from .pdfdraw import PDFDraw
+from .pdfcursor import PDFCursor
 
 
 class PDFArc(PDFDraw):

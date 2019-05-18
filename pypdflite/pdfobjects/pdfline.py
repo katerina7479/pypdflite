@@ -1,4 +1,4 @@
-from pdfdraw import PDFDraw
+from .pdfdraw import PDFDraw
 
 
 class PDFLine(PDFDraw):

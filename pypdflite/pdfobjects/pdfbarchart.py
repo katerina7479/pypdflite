@@ -1,8 +1,8 @@
-from pdfgraph import PDFGraph
-from pdfcolor import PDFColor
-from pdfcursor import PDFCursor
-from pdftext import PDFText
-from pdfrectangle import PDFRectangle
+from .pdfgraph import PDFGraph
+from .pdfcolor import PDFColor
+from .pdfcursor import PDFCursor
+from .pdftext import PDFText
+from .pdfrectangle import PDFRectangle
 
 
 class PDFBarChart(PDFGraph):
@@ -133,10 +133,10 @@ class PDFMultiBarChart(PDFBarChart):
 
         j = 0
         for series in self.data:
-            values_list = series.values()[0]
+            values_list = list(series.values())[0]
             draw, fill = self._get_colors(j)
             if self.legend is not None:
-                self._draw_legend_line(j, series.keys()[0])
+                self._draw_legend_line(j, list(series.keys())[0])
             i = 0
             for pair in values_list:
                 cursor1 = PDFCursor(self.new_x_array[j][i][1], self.interpolate(pair[1], self.y_array))
@@ -153,7 +153,7 @@ class PDFMultiBarChart(PDFBarChart):
         max_len = 0
         self.x_labels = []
         for series in self.data:
-            values_list = series.values()[0]
+            values_list = list(series.values())[0]
             if len(values_list) > max_len:
                 max_len = len(values_list)
             for pair in values_list:
@@ -166,7 +166,7 @@ class PDFMultiBarChart(PDFBarChart):
         if y_axis_limits is None:
             y_data = []
             for series in self.data:
-                for pair in series.values()[0]:
+                for pair in list(series.values())[0]:
                     y_data.append(pair[1])
                 _, self.y_range = self.get_axis_limits(None, y_data)
         else:

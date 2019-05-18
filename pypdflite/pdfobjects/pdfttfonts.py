@@ -1,8 +1,8 @@
 import re
 import zlib
 from ..font_loader import FontLoader
-from pdffont import PDFFont
-from ttfonts import TTFontFile
+from .pdffont import PDFFont
+from .ttfonts import TTFontFile
 
 
 class PDFTTFont(PDFFont):
@@ -120,7 +120,7 @@ class PDFTTFont(PDFFont):
         self.session._add_object()
         cw = self.character_widths
         s = '['
-        for i in xrange(32, 256):
+        for i in range(32, 256):
             try:
                 s += str(cw[i]) + ' '
             except KeyError:
