@@ -12,7 +12,7 @@ def BarChartTest(test_dir):
     writer = PDFLite(os.path.join(test_dir, "tests/BarChart.pdf"))
 
     # Set compression defaults to False
-    writer.set_compression(False)
+    writer.set_compression(True)
 
     # Set document metadata
     writer.set_information(title="Testing Bar Chart")  # set optional information

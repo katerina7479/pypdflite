@@ -117,7 +117,7 @@ class PDFLite(object):
         """ Standard first line in a PDF. """
         self.session._out('%%PDF-%s' % self.pdf_version)
         if self.session.compression:
-            self.session.buffer += '%' + chr(235) + chr(236) + chr(237) + chr(238) + "\n"
+            self.session._out('%' + chr(235) + chr(236) + chr(237) + chr(238))
 
     def _put_pages(self):
         """ First, the Document object does the heavy-lifting for the
@@ -288,7 +288,7 @@ class PDFLite(object):
         self.session._out('/ID [ <%s> <%s>]' % (md5.hexdigest(),md5.hexdigest()))
         self.session._out('>>')
         self.session._out('startxref')
-        self.session._out(startxref)
+        self.session._out(str(startxref))
         self.session._out('%%EOF')
 
     def _output_to_file(self):
@@ -300,7 +300,7 @@ class PDFLite(object):
         f = open(self.filepath, 'wb')
         if not f:
             raise Exception('Unable to create output file: ', self.filepath)
-        f.write(self.session.buffer.encode())
+        f.write(self.session.buffer)
         f.close()
 
     def _output_to_string(self):
