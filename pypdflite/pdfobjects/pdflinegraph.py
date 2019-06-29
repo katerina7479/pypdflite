@@ -1,9 +1,9 @@
-from pdfgraph import PDFGraph
-from pdfcolor import PDFColor
-from pdfcursor import PDFCursor
-from pdfline import PDFLine
-from pdftext import PDFText
-from pdfellipse import PDFEllipse
+from .pdfgraph import PDFGraph
+from .pdfcolor import PDFColor
+from .pdfcursor import PDFCursor
+from .pdfline import PDFLine
+from .pdftext import PDFText
+from .pdfellipse import PDFEllipse
 
 
 class PDFLineGraph(PDFGraph):
@@ -34,14 +34,14 @@ class PDFLineGraph(PDFGraph):
         if x_axis_limits == "Auto" or x_axis_limits is None:
             x_data = []
             for series in self.data:
-                mylist = series.values()[0]
+                mylist = list(series.values())[0]
                 for pair in mylist:
                     x_data.append(pair[0])
         y_data = y_axis_limits
         if y_axis_limits == "Auto" or y_axis_limits is None:
             y_data = []
             for series in self.data:
-                mylist = series.values()[0]
+                mylist = list(series.values())[0]
                 for pair in mylist:
                     y_data.append(pair[1])
         self.x_range, self.y_range = self.get_axis_limits(x_data, y_data)
@@ -60,9 +60,9 @@ class PDFLineGraph(PDFGraph):
             self._set_color(i)
             self._set_line_size()
             if self.legend is not None:
-                self._draw_legend_line(i, series.keys()[0])
+                self._draw_legend_line(i, list(series.keys())[0])
 
-            for values in series.itervalues():
+            for values in series.values():
                 cursor = self.get_coord(values[0])
                 s = '%.2f %.2f m' % (cursor.x, cursor.y_prime)
                 self.session._out(s, self.page)

@@ -1,8 +1,8 @@
 import hashlib
 from datetime import datetime
-from font_loader import FontLoader
-from session import _Session
-from pdfdocument import PDFDocument
+from .font_loader import FontLoader
+from .session import _Session
+from .pdfdocument import PDFDocument
 
 
 class PDFLite(object):
@@ -65,7 +65,7 @@ class PDFLite(object):
                      "author": author, "keywords": keywords,
                      "creator": creator}
 
-        for att, value in info_dict.iteritems():
+        for att, value in info_dict.items():
             if hasattr(self, att):
                 if value:
                     setattr(self, att, value)
@@ -133,7 +133,7 @@ class PDFLite(object):
         self.session._add_object(1)
         self.session._out('<</Type /Pages')
         kids = '/Kids ['
-        for i in xrange(0, len(self.document.pages)):
+        for i in range(0, len(self.document.pages)):
             kids += str(3 + 2 * i) + ' 0 R '
         self.session._out(kids + ']')
         self.session._out('/Count %s' % len(self.document.pages))
@@ -222,7 +222,7 @@ class PDFLite(object):
             self.session._out('/OpenAction [3 0 R /FitH null]')
         elif self.zoom_mode == 'real':
             self.session._out('/OpenAction [3 0 R /XYZ null null 1]')
-        elif not isinstance(self.zoom_mode, basestring):
+        elif not isinstance(self.zoom_mode, str):
             self.session._out(
                 '/OpenAction [3 0 R /XYZ null null ' +
                 (self.zoom_mode / 100) + ']')
@@ -248,7 +248,7 @@ class PDFLite(object):
         self.session._out('0 %s' % len(self.session.objects))
         self.session._out('0000000000 65535 f ')
         for obj in self.session.objects:
-            if isinstance(obj, basestring):
+            if isinstance(obj, str):
                 pass
             else:
                 self.session._out('%010d 00000 n ' % obj.offset)
@@ -263,21 +263,21 @@ class PDFLite(object):
         self._put_cross_reference()
         
         md5 = hashlib.md5()
-        md5.update(datetime.now().strftime('%Y%m%d%H%M%S'))
+        md5.update(datetime.now().strftime('%Y%m%d%H%M%S').encode())
         try:
-            md5.update(self.filepath)
+            md5.update(self.filepath.encode())
         except TypeError:
             pass
         if self.title:
-            md5.update(self.title)
+            md5.update(self.title.encode())
         if self.subject:
-            md5.update(self.subject)
+            md5.update(self.subject.encode())
         if self.author:
-            md5.update(self.author)
+            md5.update(self.author.encode())
         if self.keywords:
-            md5.update(self.keywords)
+            md5.update(self.keywords.encode())
         if self.creator:
-            md5.update(self.creator)
+            md5.update(self.creator.encode())
         
         objnum = len(self.session.objects)
         self.session._out('trailer')
@@ -300,7 +300,7 @@ class PDFLite(object):
         f = open(self.filepath, 'wb')
         if not f:
             raise Exception('Unable to create output file: ', self.filepath)
-        f.write(self.session.buffer)
+        f.write(self.session.buffer.encode())
         f.close()
 
     def _output_to_string(self):

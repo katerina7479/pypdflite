@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import os
-import string
 from sys import platform as _platform
 import itertools
 
@@ -21,8 +20,7 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-class FontLoader(object):
-    __metaclass__ = Singleton
+class FontLoader(object, metaclass=Singleton):
 
     def __init__(self, search_path=None):
         self.search_path = search_path
@@ -31,7 +29,7 @@ class FontLoader(object):
         """ Given a search path, find file with requested extension """
         font_dict = {}
         families = []
-        rootdirlist = string.split(self.search_path, os.pathsep)
+        rootdirlist = os.path.split(self.search_path)
 
         #for rootdir in rootdirlist:
         #    rootdir = os.path.expanduser(rootdir)

@@ -1,4 +1,4 @@
-from pdfcell import PDFCell
+from .pdfcell import PDFCell
 
 
 class PDFRow(object):

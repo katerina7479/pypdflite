@@ -1,8 +1,8 @@
-from pdftext import PDFText
-from pdfline import PDFLine
-from pdfcellformat import PDFCellFormat
-from pdfrectangle import PDFRectangle
-from pdfcolor import PDFColor
+from .pdftext import PDFText
+from .pdfline import PDFLine
+from .pdfcellformat import PDFCellFormat
+from .pdfrectangle import PDFRectangle
+from .pdfcolor import PDFColor
 
 
 class PDFCell(object):

@@ -1,6 +1,6 @@
 import os
 import struct
-import urllib
+import urllib.request
 import zlib
 import re
 
@@ -67,7 +67,7 @@ class PDFImage(object):
 
     def _open_file(self):
         if self.path.startswith("http://") or self.path.startswith("https://"):
-            self.file = urllib.urlopen(self.path)
+            self.file = urllib.request.urlopen(self.path)
         else:
             try:
                 self.file = open(self.path, 'rb')
@@ -83,7 +83,7 @@ class PDFImage(object):
     def _initialize(self):
         self._open_file()
 
-        self.initial_data = str(self.file.read())
+        self.initial_data = self.file.read()
         self.file.close()
         if not self.initial_data:
             raise Exception("Can't open image file: ", self.path)
@@ -99,14 +99,14 @@ class PDFImage(object):
     def _parse_image(self):
         self.transparent = None
         self.palette = None
-        image_data = ''
+        image_data = b''
 
         self.file = None
         self._open_file()
         f = self.file
 
         f.read(12)
-        if f.read(4) != 'IHDR':
+        if f.read(4) != b'IHDR':
             raise Exception('Image is broken')
         w = struct.unpack('>HH', f.read(4))[1]
         h = struct.unpack('>HH', f.read(4))[1]
@@ -114,12 +114,12 @@ class PDFImage(object):
         self.height = int(h)
         #self._set_scale()
         # Find bits per component
-        self.bits_per_component = ord(f.read(1))
+        self.bits_per_component = int.from_bytes(f.read(1), byteorder="big")
         if self.bits_per_component > 8:
             raise Exception('16 bit not supported')
 
         # Find ct
-        self.ct = ord(f.read(1))
+        self.ct = int.from_bytes(f.read(1), byteorder="big")
         if self.ct == 0 or self.ct == 4:
             self.colorspace = 'DeviceGray'
             coord = 1
@@ -140,31 +140,33 @@ class PDFImage(object):
         while True:
             last_pos = f.tell()
             header = f.read(4)
-            if header in ('PLTE', 'tRNS', 'IDAT', 'IEND'):
+            if header in (b'PLTE', b'tRNS', b'IDAT', b'IEND'):
                 f.seek(last_pos - 4)
                 test_n = struct.unpack('>HH', f.read(4))[1]
                 f.read(4)
-            if header == 'IHDR':
+            if header == b'IHDR':
                 pass
-            elif header == 'PLTE':
+            elif header == b'PLTE':
                 self.pallet = f.read(test_n)
                 f.read(4)
-            elif header == 'tRNS':
+            elif header == b'tRNS':
                 # Simple transparancy
                 t = f.read(test_n)
                 if self.ct == 0:
-                    self.transparent = [ord(t[1:2]), ]
+                    self.transparent = [int.from_bytes(t[1:2], byteorder="big"), ]
                 elif self.ct == 2:
-                    self.transparent = [ord(t[1:2]), ord(t[3:4]), ord(t[5:6])]
+                    self.transparent = [int.from_bytes(t[1:2], byteorder="big"), 
+                                        int.from_bytes(t[3:4], byteordre="big"), 
+                                        int.from_bytes(t[5:6], byteorder="big")]
                 else:
-                    pos = t.find('\x00')
+                    pos = t.find(b'\x00')
                     if pos != -1:
                         self.transparent = [pos, ]
                 f.read(4)
-            elif header == 'IDAT':
+            elif header == b'IDAT':
                 image_data += f.read(test_n)
                 f.read(4)
-            elif header == 'IEND':
+            elif header == b'IEND':
                 break
             else:
                 f.seek(last_pos + 1)
@@ -177,28 +179,28 @@ class PDFImage(object):
         if self.ct >= 4:
             #print "Color Type >= 4, splitting"
             image_data = zlib.decompress(image_data)
-            color = ''
-            alpha = ''
+            color = bytearray()
+            alpha = bytearray()
             if self.ct == 4:
                 # Grey
                 length = 2 * self.width
                 for i in range(self.height):
                     pos = (1 + length) * i
-                    color += image_data[pos]
-                    alpha += image_data[pos]
-                    line = image_data[pos + 1: pos + 1 + length]
-                    color += re.sub('(.).', lambda m: m.group(1), line, flags=re.DOTALL)
-                    alpha += re.sub('.(.)', lambda m: m.group(1), line, flags=re.DOTALL)
+                    color.append(image_data[pos])
+                    alpha.append(image_data[pos])
+                    line = bytearray(image_data[pos + 1: pos + 1 + length])
+                    color += re.sub(b'(.).', lambda m: m.group(1), line, flags=re.DOTALL)
+                    alpha += re.sub(b'.(.)', lambda m: m.group(1), line, flags=re.DOTALL)
             else:
                 # RGB image
                 length = 4 * self.width
                 for i in range(self.height):
                     pos = (1 + length) * i
-                    color += image_data[pos]
-                    alpha += image_data[pos]
-                    line = image_data[pos + 1: pos + 1 + length]
-                    color += re.sub('(.{3}).', lambda m: m.group(1), line, flags=re.DOTALL)
-                    alpha += re.sub('.{3}(.)', lambda m: m.group(1), line, flags=re.DOTALL)
+                    color.append(image_data[pos])
+                    alpha.append(image_data[pos])
+                    line = bytearray(image_data[pos + 1: pos + 1 + length])
+                    color += re.sub(b'(.{3}).', lambda m: m.group(1), line, flags=re.DOTALL)
+                    alpha += re.sub(b'.{3}(.)', lambda m: m.group(1), line, flags=re.DOTALL)
 
             image_data = zlib.compress(color)
             smdata = zlib.compress(alpha)
@@ -211,7 +213,7 @@ class PDFImage(object):
 
         if self.transparent is not None:
             self.transparent_string = ''
-            for i in xrange(0, len(self.transparent)):
+            for i in range(0, len(self.transparent)):
                 self.transparent_string += '%s %s ' % (self.transparent[i], self.transparent[i])
 
         if smdata is not None:

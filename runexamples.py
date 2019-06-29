@@ -29,55 +29,55 @@ from bin.graphbackgrounds import GraphBackgroundTest
 TEST_DIR = os.path.abspath('bin')
 
 def main():
-    print "Running TextTest"
+    print ("Running TextTest")
     TextTest(TEST_DIR)
-    print "Running TrueTypeTest"
+    print ("Running TrueTypeTest")
     TrueTypeTest(TEST_DIR)
-    print "Running List Test"
+    print ("Running List Test")
     ListTest(TEST_DIR)
-    print "Running Margin Test"
+    print ("Running Margin Test")
     MarginTest(TEST_DIR)
-    print "Running Underline Test"
+    print ("Running Underline Test")
     UnderlineTest(TEST_DIR)
-    print "Running LandscapeTest"
+    print ("Running LandscapeTest")
     LandscapeTest(TEST_DIR)
-    print "Running LinesTest"
+    print ("Running LinesTest")
     LinesTest(TEST_DIR)
-    print "Running TableTest"
+    print ("Running TableTest")
     TableTest(TEST_DIR)
-    print "Running PNGTest"
+    print ("Running PNGTest")
     PNGTest(TEST_DIR)
-    print "Running JPGTest"
+    print ("Running JPGTest")
     JPGTest(TEST_DIR)
-    print "Running PageNumberTest"
+    print ("Running PageNumberTest")
     PageNumberTest(TEST_DIR)
-    print "Running PNGSizeTest"
+    print ("Running PNGSizeTest")
     ImageSizeTest(TEST_DIR)
-    print "Running EllipseTest"
+    print ("Running EllipseTest")
     EllipseTest(TEST_DIR)
-    print "Running CircleTest"
+    print ("Running CircleTest")
     CircleTest(TEST_DIR)
-    print "Running Arctest"
+    print ("Running Arctest")
     ArcTest(TEST_DIR)
-    print "Running TransformTest"
+    print ("Running TransformTest")
     TransformTest(TEST_DIR)
-    print "Running HTMLTest"
+    print ("Running HTMLTest")
     HtmlTest(TEST_DIR)
-    print "Running HTMLTest2"
+    print ("Running HTMLTest2")
     HtmlTest2(TEST_DIR)
-    print "Running Justify Test"
+    print ("Running Justify Test")
     JustifyTest(TEST_DIR)
-    print "Running LineGraph Test"
+    print ("Running LineGraph Test")
     LineGraphTest(TEST_DIR)
-    print "Running XYScatter Test"
+    print ("Running XYScatter Test")
     XYScatterPlotTest(TEST_DIR)
-    print "Running PieChart Test"
+    print ("Running PieChart Test")
     PieChartTest(TEST_DIR)
-    print "Running BarChart Test"
+    print ("Running BarChart Test")
     BarChartTest(TEST_DIR)
-    print "Running MultiBarChart Test"
+    print ("Running MultiBarChart Test")
     MultiBarChartTest(TEST_DIR)
-    print "Running GraphBackgrounds Test"
+    print ("Running GraphBackgrounds Test")
     GraphBackgroundTest(TEST_DIR)
 
 
@@ -85,6 +85,6 @@ if __name__ == '__main__':
     
     generated_dir = os.path.join(TEST_DIR, 'tests')
     if not os.path.isdir(generated_dir):
-        print "Creating directory at ".format(generated_dir)
+        print ("Creating directory at ".format(generated_dir))
         os.mkdir(generated_dir)
     main()

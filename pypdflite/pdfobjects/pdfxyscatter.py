@@ -1,9 +1,9 @@
-from pdfcolor import PDFColor
-from pdfcursor import PDFCursor
-from pdfline import PDFLine
-from pdftext import PDFText
-from pdfellipse import PDFEllipse
-from pdflinegraph import PDFLineGraph
+from .pdfcolor import PDFColor
+from .pdfcursor import PDFCursor
+from .pdfline import PDFLine
+from .pdftext import PDFText
+from .pdfellipse import PDFEllipse
+from .pdflinegraph import PDFLineGraph
 
 
 class PDFXYScatter(PDFLineGraph):
@@ -21,14 +21,13 @@ class PDFXYScatter(PDFLineGraph):
         i = 0
         for series in self.data:
             if self.legend is not None:
-                self._draw_legend_line(i, series.keys()[0])
-            series = series.values()[0]
+                self._draw_legend_line(i, list(series.keys())[0])
             self._set_color(i)
             self.line = LinearRegressionLine()
             i += 1
 
             cursors = []
-            for value in series:
+            for value in list(series.values())[0]:
                 cursor = self.get_coord(value)
                 cursors.append(cursor)
                 self.line.add_data(value)

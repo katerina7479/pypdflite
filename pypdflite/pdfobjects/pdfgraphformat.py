@@ -1,4 +1,4 @@
-from pdfcolor import PDFColor
+from .pdfcolor import PDFColor
 
 
 class PDFGraphBackground(object):

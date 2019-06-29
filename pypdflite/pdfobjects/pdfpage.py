@@ -1,5 +1,5 @@
-from pdfmargin import PDFMargin
-from pdfcursor import PDFCursor
+from .pdfmargin import PDFMargin
+from .pdfcursor import PDFCursor
 from zlib import compress
 
 
@@ -85,7 +85,7 @@ class PDFPage(object):
             setCompression method.
 
         """
-        self.buffer = compress(self.buffer)
+        self.buffer = compress(str.encode(self.buffer))
 
     def _set_index(self, value):
         self.index = value

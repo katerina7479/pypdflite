@@ -1,4 +1,4 @@
-from pdfcolor import PDFColor
+from .pdfcolor import PDFColor
 
 
 class PDFCellFormat(object):
@@ -32,7 +32,7 @@ class PDFCellFormat(object):
                                'padding_right': 2
                                }
         try:
-            for key, value in data.iteritems():
+            for key, value in data.items():
                 self._set_keys(key, value)
         except AttributeError:
             pass

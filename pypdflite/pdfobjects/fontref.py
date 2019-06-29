@@ -7,7 +7,7 @@ pdf_character_widths = {}
 pdf_character_widths['courier'] = {}
 
 # Courier is all 600.
-for i in xrange(0, 256):
+for i in range(0, 256):
     pdf_character_widths['courier'][chr(i)] = 600
     pdf_character_widths['courier_bold'] = pdf_character_widths['courier']
     pdf_character_widths['courier_italic'] = pdf_character_widths['courier']

@@ -1,27 +1,27 @@
 import os
 import re
-from pdfobjects.pdffont import PDFFont, CORE_FONTS
-from pdfobjects.pdfpage import PDFPage
-from pdfobjects.pdftext import PDFText
-from pdfobjects.pdfcursor import PDFCursor
-from pdfobjects.pdfline import PDFLine
-from pdfobjects.pdfcolor import PDFColor
-from pdfobjects.pdfrectangle import PDFRectangle
-from pdfobjects.pdftable import PDFTable
-from pdfobjects.pdfimage import PDFImage
-from pdfobjects.pdfpng import PDFPNG
-from pdfobjects.pdfjpg import PDFJPG
-from pdfobjects.pdfttfonts import PDFTTFont
-from pdfobjects.pdfmargin import PDFMargin
-from pdfobjects.pdfcellformat import PDFCellFormat
-from pdfobjects.pdfhtml import PDFHtml
-from pdfobjects.pdfellipse import PDFEllipse
-from pdfobjects.pdfarc import PDFArc
-from pdfobjects.pdflinegraph import PDFLineGraph
-from pdfobjects.pdfxyscatter import PDFXYScatter
-from pdfobjects.pdfpiechart import PDFPieChart
-from pdfobjects.pdfbarchart import PDFBarChart, PDFMultiBarChart
-from pdfobjects.pdfbezier import PDFBezier
+from .pdfobjects.pdffont import PDFFont, CORE_FONTS
+from .pdfobjects.pdfpage import PDFPage
+from .pdfobjects.pdftext import PDFText
+from .pdfobjects.pdfcursor import PDFCursor
+from .pdfobjects.pdfline import PDFLine
+from .pdfobjects.pdfcolor import PDFColor
+from .pdfobjects.pdfrectangle import PDFRectangle
+from .pdfobjects.pdftable import PDFTable
+from .pdfobjects.pdfimage import PDFImage
+from .pdfobjects.pdfpng import PDFPNG
+from .pdfobjects.pdfjpg import PDFJPG
+from .pdfobjects.pdfttfonts import PDFTTFont
+from .pdfobjects.pdfmargin import PDFMargin
+from .pdfobjects.pdfcellformat import PDFCellFormat
+from .pdfobjects.pdfhtml import PDFHtml
+from .pdfobjects.pdfellipse import PDFEllipse
+from .pdfobjects.pdfarc import PDFArc
+from .pdfobjects.pdflinegraph import PDFLineGraph
+from .pdfobjects.pdfxyscatter import PDFXYScatter
+from .pdfobjects.pdfpiechart import PDFPieChart
+from .pdfobjects.pdfbarchart import PDFBarChart, PDFMultiBarChart
+from .pdfobjects.pdfbezier import PDFBezier
 
 
 class PDFDocument(object):
@@ -232,7 +232,7 @@ class PDFDocument(object):
         return self.font.font_size
 
     def print_available_fonts(self):
-        print PDFTTFont.available_fonts()
+        print (PDFTTFont.available_fonts())
 
     # Writing
     def add_text(self, text, cursor=None, justification=None):

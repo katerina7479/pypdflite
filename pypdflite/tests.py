@@ -1,6 +1,6 @@
 import unittest
 import math
-from mock import Mock
+from unittest.mock import Mock
 from session import _Session
 from pdfobjects.pdfarc import PDFArc
 from pdfobjects.pdfcursor import PDFCursor

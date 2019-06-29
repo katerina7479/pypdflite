@@ -1,5 +1,5 @@
-from pdflite import PDFLite
-from pdfobjects import *
+from .pdflite import PDFLite
+from .pdfobjects import *
 
 
 __all__ = ['PDFLite', 'pdfobjects']

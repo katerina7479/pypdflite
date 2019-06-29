@@ -1,6 +1,6 @@
-from pdfimage import PDFImage
+from .pdfimage import PDFImage
 import struct
-import StringIO
+import io
 
 
 class PDFJPG(PDFImage):
@@ -10,19 +10,19 @@ class PDFJPG(PDFImage):
 
     def _read(self):
         # handle JPEGs
-        if self.initial_data.startswith('\377\330'):
+        if self.initial_data.startswith(bytes([0xFF, 0xD8, 0xFF])):
             self.content_type = 'image/jpeg'
-            jpeg = StringIO.StringIO(self.initial_data)
+            jpeg = io.BytesIO(self.initial_data)
             jpeg.read(2)
             b = jpeg.read(1)
             try:
                 w, h = 0, 0
-                while b and ord(b) != 0xDA:
-                    while ord(b) != 0xFF:
+                while b and b != b'\xDA':
+                    while b != b'\xFF':
                         b = jpeg.read(1)
-                    while ord(b) == 0xFF:
+                    while b == b'\xFF':
                         b = jpeg.read(1)
-                    if 0xC0 <= ord(b) <= 0xC3:
+                    if b'\xC0' <= b <= b'\xC3':
                         jpeg.read(3)
                         h, w = struct.unpack(">HH", jpeg.read(4))
                         break

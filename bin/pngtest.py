@@ -40,7 +40,7 @@ def PNGTest(test_dir):
 
     document.add_page()
 
-    document.set_background_image(os.path.join(test_dir, "background.png"))
+    document.set_background_image(os.path.join(test_dir, "example.png"))
 
     document.add_text("This text, ")
     document.add_text("And this text")

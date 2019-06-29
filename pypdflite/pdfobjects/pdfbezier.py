@@ -1,5 +1,5 @@
-from pdfcursor import PDFCursor
-from pdfcolor import PDFColor
+from .pdfcursor import PDFCursor
+from .pdfcolor import PDFColor
 
 
 class PDFBezier(object):

@@ -1,9 +1,9 @@
-from pdfrectangle import PDFRectangle
-from pdfcolor import PDFColor
-from pdfcursor import PDFCursor
-from pdftext import PDFText
-from pdfline import PDFLine
-from pdfgraphformat import PDFGraphBackground
+from .pdfrectangle import PDFRectangle
+from .pdfcolor import PDFColor
+from .pdfcursor import PDFCursor
+from .pdftext import PDFText
+from .pdfline import PDFLine
+from .pdfgraphformat import PDFGraphBackground
 
 
 class PDFGraph(object):
