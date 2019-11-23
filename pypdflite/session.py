@@ -21,7 +21,7 @@ class _Session(object):
         self.parent = parent
 
         # Central buffer for storing PDF code not in pages.
-        self.buffer = ''
+        self.buffer = b''
 
         # Offest is used to calculate the binary lengths in the cross-reference
         # section
@@ -92,9 +92,12 @@ class _Session(object):
 
         """
         if page is not None:
-            page.buffer += str(stream) + "\n"
+            page.buffer += stream + "\n"
         else:
-            self.buffer += str(stream) + "\n"
+            if isinstance(stream, str):
+                self.buffer += stream.encode() + b"\n"
+            else:
+                self.buffer += stream + "\n".encode()
 
     def _put_stream(self, stream):
         """ Creates a PDF text stream sandwich.

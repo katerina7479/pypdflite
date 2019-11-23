@@ -96,7 +96,6 @@ class TTFontFile:
         self.entrySelector = self.read_ushort()
         self.rangeShift = self.read_ushort()
         
-        print ("Tables: %d, searchRange: %d, Entry: %d, Range: %d" % (self.numTables, self.searchRange, self.entrySelector, self.rangeShift) )
         self.tables = {}
         for _ in range(self.numTables):
             record = {}
