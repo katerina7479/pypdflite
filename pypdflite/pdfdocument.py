@@ -587,10 +587,10 @@ class PDFDocument(object):
                     name = os.path.splitext(image_string)[0]  # Specify it
                 myimage = self._get_image(name)
                 if not myimage:  # New image
-                    extension = os.path.splitext(image_string)[1]
+                    extension = os.path.splitext(image_string)[1].lower()
                     if extension == '.png':
                         myimage = PDFPNG(self.session, image_string, name)
-                    elif extension == '.jpg':
+                    elif extension == '.jpg' or extension == '.jpeg':
                         myimage = PDFJPG(self.session, image_string, name)
                     else:
                         raise Exception("Image format %s not supported" % extension)
