@@ -36,6 +36,7 @@ class PDFTTFont(PDFFont):
         if family is not None:
             family = family.lower()
             if family not in self.TTFONTS:
+                print(self.TTFONTS)
                 raise Exception("%s not a valid font name" % family)
             self.family = family
         else:

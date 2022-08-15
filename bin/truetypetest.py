@@ -23,7 +23,7 @@ def TrueTypeTest(test_dir):
     document = writer.get_document()
 
     # Example for adding short and long text and whitespaces
-    document.set_font('comic sans ms', size=16)
+    document.set_font('calisto mt_bold', size=16)
     document.add_text("Testing")
     document.add_newline(4)
     document.add_text("Testing Again")
